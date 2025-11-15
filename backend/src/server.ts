@@ -1,6 +1,7 @@
 import app from './app';
 import { connectDatabase } from './config/database';
 import { initializeStorage } from './services/storageService';
+import { initializeScheduler } from './services/schedulerService';
 import config from './config';
 
 const startServer = async (): Promise<void> => {
@@ -10,6 +11,9 @@ const startServer = async (): Promise<void> => {
 
     // Initialize MinIO storage
     await initializeStorage();
+
+    // Initialize scheduled tasks (cron jobs)
+    initializeScheduler();
 
     // Start server
     app.listen(config.port, () => {
