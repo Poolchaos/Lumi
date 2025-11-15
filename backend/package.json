@@ -12,9 +12,9 @@
         "lint:fix": "eslint src --ext .ts --fix",
         "format": "prettier --write \"src/**/*.ts\"",
         "format:check": "prettier --check \"src/**/*.ts\"",
-        "test": "dotenv -e .env.test -- jest --passWithNoTests",
-        "test:watch": "dotenv -e .env.test -- jest --watch --passWithNoTests",
-        "test:coverage": "dotenv -e .env.test -- jest --coverage --passWithNoTests"
+        "test": "dotenv -e .env.test -- jest --runInBand --passWithNoTests",
+        "test:watch": "dotenv -e .env.test -- jest --watch --runInBand --passWithNoTests",
+        "test:coverage": "dotenv -e .env.test -- jest --coverage --runInBand --passWithNoTests"
     },
     "keywords": [
         "fitness",
@@ -52,6 +52,7 @@
         "express": "^5.1.0",
         "express-validator": "^7.3.0",
         "jsonwebtoken": "^9.0.2",
-        "mongoose": "^8.19.4"
+        "mongoose": "^8.19.4",
+        "openai": "^6.9.0"
     }
 }

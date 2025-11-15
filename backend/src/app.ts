@@ -2,6 +2,9 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import config from './config';
 import authRoutes from './routes/authRoutes';
+import profileRoutes from './routes/profileRoutes';
+import equipmentRoutes from './routes/equipmentRoutes';
+import workoutRoutes from './routes/workoutRoutes';
 
 const app: Application = express();
 
@@ -20,6 +23,9 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/equipment', equipmentRoutes);
+app.use('/api/workouts', workoutRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
