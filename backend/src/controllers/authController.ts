@@ -11,7 +11,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      const errorMessages = errors.array().map(err => err.msg);
+      res.status(400).json({
+        error: errorMessages.join('. '),
+        details: errors.array()
+      });
       return;
     }
 
