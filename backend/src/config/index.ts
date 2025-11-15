@@ -13,6 +13,12 @@ interface Config {
   openai_api_key: string;
   encryption_secret: string;
   cors_origin: string;
+  minio_endpoint: string;
+  minio_port: number;
+  minio_use_ssl: boolean;
+  minio_access_key: string;
+  minio_secret_key: string;
+  minio_external_url: string;
 }
 
 const config: Config = {
@@ -26,6 +32,12 @@ const config: Config = {
   openai_api_key: process.env.OPENAI_API_KEY || '',
   encryption_secret: process.env.ENCRYPTION_SECRET || process.env.JWT_SECRET || '',
   cors_origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  minio_endpoint: process.env.MINIO_ENDPOINT || 'localhost',
+  minio_port: parseInt(process.env.MINIO_PORT || '9000', 10),
+  minio_use_ssl: process.env.MINIO_USE_SSL === 'true',
+  minio_access_key: process.env.MINIO_ACCESS_KEY || 'minioadmin',
+  minio_secret_key: process.env.MINIO_SECRET_KEY || 'minioadmin123',
+  minio_external_url: process.env.MINIO_EXTERNAL_URL || 'http://localhost:9000',
 };
 
 // Validate required environment variables in production
