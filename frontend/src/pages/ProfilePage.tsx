@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { profileAPI } from '../api';
 import type { UserProfile, UserPreferences } from '../types';
@@ -21,7 +22,11 @@ export default function ProfilePage() {
     mutationFn: profileAPI.updateProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-      alert('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
+      setProfile({});
+    },
+    onError: () => {
+      toast.error('Failed to update profile');
     },
   });
 
@@ -29,7 +34,11 @@ export default function ProfilePage() {
     mutationFn: profileAPI.updatePreferences,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-      alert('Preferences updated successfully!');
+      toast.success('Preferences updated successfully!');
+      setPreferences({});
+    },
+    onError: () => {
+      toast.error('Failed to update preferences');
     },
   });
 

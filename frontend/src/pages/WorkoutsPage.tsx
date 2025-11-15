@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { workoutAPI } from '../api';
 import { Card, Button } from '../design-system';
@@ -16,10 +17,10 @@ export default function WorkoutsPage() {
     mutationFn: workoutAPI.generate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
-      alert('Workout generated successfully!');
+      toast.success('🎉 AI workout generated successfully!');
     },
     onError: (error) => {
-      alert('Failed to generate workout. Make sure OpenAI API key is configured.');
+      toast.error('Failed to generate workout. Make sure OpenAI API key is configured.');
       console.error(error);
     },
   });

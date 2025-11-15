@@ -1,11 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { HeroSection } from '../components/dashboard/HeroSection';
 import { WorkoutStats } from '../components/dashboard/WorkoutStats';
-import { Card, CardHeader, CardTitle, CardContent } from '../design-system';
+import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { profileAPI, accountabilityAPI, sessionAPI } from '../api';
+import { Sparkles } from 'lucide-react';
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const { data: profileData } = useQuery({
     queryKey: ['profile'],
     queryFn: profileAPI.getProfile,
@@ -20,6 +23,36 @@ export default function DashboardPage() {
     queryKey: ['sessions'],
     queryFn: sessionAPI.getAll,
   });
+
+  // Check if profile is incomplete
+  const isProfileIncomplete =
+    profileData &&
+    (!profileData.user.profile.first_name ||
+      !profileData.user.profile.fitness_goals ||
+      profileData.user.profile.fitness_goals.length === 0);
+
+  // Show onboarding banner for incomplete profiles
+  if (isProfileIncomplete) {
+    return (
+      <Layout>
+        <div className="max-w-3xl mx-auto mt-12">
+          <Card className="border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100">
+            <div className="p-8 text-center">
+              <Sparkles className="w-16 h-16 text-primary-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-neutral-900 mb-3">Welcome to PersonalFit!</h2>
+              <p className="text-neutral-600 mb-6">
+                Let's set up your profile and create a personalized fitness plan tailored just for you.
+              </p>
+              <Button onClick={() => navigate('/onboarding')} size="lg" variant="primary">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Start Setup
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import { profileAPI, equipmentAPI, workoutAPI } from '../../api';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../../design-system';
 import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
@@ -41,12 +42,19 @@ export function OnboardingWizard() {
     mutationFn: workoutAPI.generate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
+      toast.success('Your personalized workout plan is ready!');
+      navigate('/dashboard');
+    },
+    onError: () => {
+      toast.error('Failed to generate workout plan. You can try again from the Workouts page.');
       navigate('/dashboard');
     },
   });
 
   const handleComplete = async () => {
     try {
+      toast.loading('Setting up your profile...');
+
       // Update profile
       if (Object.keys(data.profile).length > 0) {
         await updateProfileMutation.mutateAsync(data.profile);
@@ -67,9 +75,14 @@ export function OnboardingWizard() {
         });
       }
 
+      toast.dismiss();
+      toast.loading('Generating your personalized workout plan...');
+
       // Generate initial workout plan
       await generateWorkoutMutation.mutateAsync({});
     } catch (error) {
+      toast.dismiss();
+      toast.error('Something went wrong. Please try again.');
       console.error('Onboarding error:', error);
     }
   };
