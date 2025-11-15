@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import WorkoutSession from '../models/WorkoutSession';
 import ExerciseLog from '../models/ExerciseLog';
 import { AuthRequest } from '../middleware/auth';
+import { updateStreakOnCompletion } from '../services/accountabilityService';
 
 export const createSession = async (
   req: AuthRequest,
@@ -121,9 +122,10 @@ export const updateSession = async (
       return;
     }
 
+    const userId = new mongoose.Types.ObjectId(req.user?.userId);
     const session = await WorkoutSession.findOne({
       _id: req.params.id,
-      user_id: new mongoose.Types.ObjectId(req.user?.userId),
+      user_id: userId,
     });
 
     if (!session) {
@@ -131,9 +133,17 @@ export const updateSession = async (
       return;
     }
 
+    const wasCompleted = session.completion_status === 'completed';
+    const isNowCompleted = req.body.completion_status === 'completed';
+
     // Update allowed fields
     Object.assign(session, req.body);
     await session.save();
+
+    // Update accountability streak if session just completed
+    if (!wasCompleted && isNowCompleted) {
+      await updateStreakOnCompletion(userId, session.session_date);
+    }
 
     res.json({ session });
   } catch (error) {

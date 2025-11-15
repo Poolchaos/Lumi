@@ -203,7 +203,7 @@ describe('AI Configuration Management', () => {
       if (res.status !== 200) {
         console.log('Error response:', res.body);
       }
-      
+
       expect(res.status).toBe(200);
       expect(res.body.ai_config.provider).toBe('local');
       expect(res.body.ai_config.endpoint_url).toBe('http://localhost:11434');

@@ -9,6 +9,7 @@ import sessionRoutes from './routes/sessionRoutes';
 import progressRoutes from './routes/progressRoutes';
 import metricsRoutes from './routes/metricsRoutes';
 import aiConfigRoutes from './routes/aiConfigRoutes';
+import accountabilityRoutes from './routes/accountabilityRoutes';
 
 const app: Application = express();
 
@@ -34,6 +35,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/metrics', metricsRoutes);
 app.use('/api/ai-config', aiConfigRoutes);
+app.use('/api/accountability', accountabilityRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
