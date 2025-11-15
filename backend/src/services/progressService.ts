@@ -206,6 +206,7 @@ const calculatePersonalRecords = async (
 ): Promise<ProgressStats['personal_records']> => {
   const exercises = await ExerciseLog.aggregate([
     { $match: { user_id: userId } },
+    { $unwind: { path: '$set_details', preserveNullAndEmptyArrays: true } },
     {
       $group: {
         _id: '$exercise_name',

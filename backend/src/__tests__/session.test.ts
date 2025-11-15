@@ -33,11 +33,11 @@ beforeEach(async () => {
     password: 'Test123!',
   });
   authToken = signupRes.body.accessToken;
-  userId = signupRes.body.user._id;
+  userId = signupRes.body.user.id;
 
   // Create test workout plan
   const plan = await WorkoutPlan.create({
-    user_id: new mongoose.Types.ObjectId(userId),
+    user_id: userId,
     plan_data: {
       program_name: 'Test Program',
       duration_weeks: 4,
@@ -128,7 +128,7 @@ describe('Workout Session Logging', () => {
       // Create multiple test sessions
       const sessions = [
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
           planned_duration_minutes: 60,
@@ -136,7 +136,7 @@ describe('Workout Session Logging', () => {
           perceived_difficulty: 7,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
           planned_duration_minutes: 45,
@@ -144,7 +144,7 @@ describe('Workout Session Logging', () => {
           perceived_difficulty: 6,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-03'),
           completion_status: 'skipped',
           planned_duration_minutes: 60,
@@ -165,17 +165,17 @@ describe('Workout Session Logging', () => {
     it('should filter sessions by status', async () => {
       await WorkoutSession.insertMany([
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-03'),
           completion_status: 'skipped',
         },
@@ -193,17 +193,17 @@ describe('Workout Session Logging', () => {
     it('should filter sessions by date range', async () => {
       await WorkoutSession.insertMany([
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-05'),
           completion_status: 'skipped',
         },
@@ -220,17 +220,17 @@ describe('Workout Session Logging', () => {
     it('should support pagination', async () => {
       await WorkoutSession.insertMany([
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-03'),
           completion_status: 'skipped',
         },
@@ -249,7 +249,7 @@ describe('Workout Session Logging', () => {
   describe('GET /api/sessions/:id', () => {
     it('should get session with exercises', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'completed',
         planned_duration_minutes: 60,
@@ -260,7 +260,7 @@ describe('Workout Session Logging', () => {
       // Add exercise logs
       await ExerciseLog.create({
         session_id: new mongoose.Types.ObjectId(sessionId),
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Bench Press',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -296,7 +296,7 @@ describe('Workout Session Logging', () => {
   describe('PATCH /api/sessions/:id', () => {
     it('should update session status to completed', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
         planned_duration_minutes: 60,
@@ -321,7 +321,7 @@ describe('Workout Session Logging', () => {
 
     it('should not allow updating other users sessions', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -344,7 +344,7 @@ describe('Workout Session Logging', () => {
   describe('DELETE /api/sessions/:id', () => {
     it('should delete session and cascade delete exercises', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'planned',
       });
@@ -352,7 +352,7 @@ describe('Workout Session Logging', () => {
 
       await ExerciseLog.create({
         session_id: new mongoose.Types.ObjectId(sessionId),
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Squat',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -379,7 +379,7 @@ describe('Exercise Logging', () => {
   describe('POST /api/sessions/:id/exercises', () => {
     it('should log exercise and update session stats', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
         planned_duration_minutes: 60,
@@ -441,7 +441,7 @@ describe('Exercise Logging', () => {
 
     it('should validate exercise type enum', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -461,7 +461,7 @@ describe('Exercise Logging', () => {
 
     it('should validate form rating range (1-5)', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -482,7 +482,7 @@ describe('Exercise Logging', () => {
 
     it('should validate difficulty rating range (1-10)', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -505,7 +505,7 @@ describe('Exercise Logging', () => {
   describe('PUT /api/sessions/:id/exercises/:exerciseId', () => {
     it('should update exercise log', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -513,7 +513,7 @@ describe('Exercise Logging', () => {
 
       const exercise = await ExerciseLog.create({
         session_id: new mongoose.Types.ObjectId(sessionId),
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Squat',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -545,7 +545,7 @@ describe('Exercise Logging', () => {
 
     it('should recalculate volume on update', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -553,7 +553,7 @@ describe('Exercise Logging', () => {
 
       const exercise = await ExerciseLog.create({
         session_id: new mongoose.Types.ObjectId(sessionId),
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Squat',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -586,28 +586,28 @@ describe('Progress Tracking', () => {
       // Create workout history
       const sessions = [
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
           actual_duration_minutes: 60,
           perceived_difficulty: 7,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
           actual_duration_minutes: 55,
           perceived_difficulty: 6,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-03'),
           completion_status: 'completed',
           actual_duration_minutes: 50,
           perceived_difficulty: 5,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-05'),
           completion_status: 'skipped',
         },
@@ -617,7 +617,7 @@ describe('Progress Tracking', () => {
       // Create exercise logs
       await ExerciseLog.create({
         session_id: createdSessions[0]._id,
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Bench Press',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -631,7 +631,7 @@ describe('Progress Tracking', () => {
 
       await ExerciseLog.create({
         session_id: createdSessions[1]._id,
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Bench Press',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -658,25 +658,25 @@ describe('Progress Tracking', () => {
     it('should calculate completion rate correctly', async () => {
       const sessions = [
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
           actual_duration_minutes: 60,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
           actual_duration_minutes: 55,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-03'),
           completion_status: 'completed',
           actual_duration_minutes: 50,
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-05'),
           completion_status: 'skipped',
         },
@@ -696,12 +696,12 @@ describe('Progress Tracking', () => {
     it('should track personal records', async () => {
       const sessions = await WorkoutSession.insertMany([
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
         },
@@ -709,7 +709,7 @@ describe('Progress Tracking', () => {
 
       await ExerciseLog.create({
         session_id: sessions[0]._id,
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Bench Press',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -734,14 +734,14 @@ describe('Progress Tracking', () => {
 
     it('should calculate total volume', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date('2024-01-01'),
         completion_status: 'completed',
       });
 
       await ExerciseLog.create({
         session_id: session._id,
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Squat',
         exercise_type: 'strength',
         sets_completed: 3,
@@ -761,12 +761,12 @@ describe('Progress Tracking', () => {
     it('should track exercise history', async () => {
       const sessions = await WorkoutSession.insertMany([
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-01'),
           completion_status: 'completed',
         },
         {
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           session_date: new Date('2024-01-02'),
           completion_status: 'completed',
         },
@@ -775,7 +775,7 @@ describe('Progress Tracking', () => {
       await ExerciseLog.insertMany([
         {
           session_id: sessions[0]._id,
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           exercise_name: 'Bench Press',
           exercise_type: 'strength',
           sets_completed: 3,
@@ -783,7 +783,7 @@ describe('Progress Tracking', () => {
         },
         {
           session_id: sessions[1]._id,
-          user_id: new mongoose.Types.ObjectId(userId),
+          user_id: userId,
           exercise_name: 'Bench Press',
           exercise_type: 'strength',
           sets_completed: 3,
@@ -808,7 +808,7 @@ describe('Progress Tracking', () => {
   describe('HIIT Exercise Logging', () => {
     it('should log HIIT exercise with interval structure', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
         planned_duration_minutes: 30,
@@ -851,7 +851,7 @@ describe('Progress Tracking', () => {
 
     it('should accept HIIT exercise without sets_completed or set_details', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -876,13 +876,13 @@ describe('Progress Tracking', () => {
 
       expect(res.status).toBe(201);
       expect(res.body.exercise.sets_completed).toBeUndefined();
-      expect(res.body.exercise.set_details).toBeUndefined();
+      expect(res.body.exercise.set_details).toEqual([]);
       expect(res.body.exercise.total_duration_seconds).toBe(180); // (40 + 20) * 3
     });
 
     it('should validate interval_structure work_seconds minimum', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -907,7 +907,7 @@ describe('Progress Tracking', () => {
 
     it('should update HIIT exercise with new interval data', async () => {
       const session = await WorkoutSession.create({
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         session_date: new Date(),
         completion_status: 'in_progress',
       });
@@ -915,7 +915,7 @@ describe('Progress Tracking', () => {
 
       const exercise = await ExerciseLog.create({
         session_id: new mongoose.Types.ObjectId(sessionId),
-        user_id: new mongoose.Types.ObjectId(userId),
+        user_id: userId,
         exercise_name: 'Jump Squats',
         exercise_type: 'hiit',
         interval_structure: {

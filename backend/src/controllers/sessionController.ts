@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { validationResult } from 'express-validator';
+import mongoose from 'mongoose';
 import WorkoutSession from '../models/WorkoutSession';
 import ExerciseLog from '../models/ExerciseLog';
 import { AuthRequest } from '../middleware/auth';
@@ -16,7 +17,7 @@ export const createSession = async (
     }
 
     const session = new WorkoutSession({
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
       ...req.body,
     });
 
@@ -36,7 +37,7 @@ export const getSessions = async (
   try {
     const { status, from_date, to_date, plan_id, limit = 50, skip = 0 } = req.query;
 
-    const filter: Record<string, unknown> = { user_id: req.user?.userId };
+    const filter: Record<string, unknown> = { user_id: new mongoose.Types.ObjectId(req.user?.userId) };
 
     if (status) {
       filter.completion_status = status;
@@ -86,7 +87,7 @@ export const getSession = async (
   try {
     const session = await WorkoutSession.findOne({
       _id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
     }).populate('plan_id');
 
     if (!session) {
@@ -97,7 +98,7 @@ export const getSession = async (
     // Get exercise logs for this session
     const exercises = await ExerciseLog.find({
       session_id: req.params.id,
-    }).sort({ created_at: 1 });
+    });
 
     res.json({
       session,
@@ -122,7 +123,7 @@ export const updateSession = async (
 
     const session = await WorkoutSession.findOne({
       _id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
     });
 
     if (!session) {
@@ -148,7 +149,7 @@ export const deleteSession = async (
   try {
     const session = await WorkoutSession.findOneAndDelete({
       _id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
     });
 
     if (!session) {
@@ -180,7 +181,7 @@ export const logExercise = async (
     // Verify session exists and belongs to user
     const session = await WorkoutSession.findOne({
       _id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
     });
 
     if (!session) {
@@ -190,7 +191,7 @@ export const logExercise = async (
 
     const exerciseLog = new ExerciseLog({
       session_id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
       ...req.body,
     });
 
@@ -231,7 +232,7 @@ export const updateExercise = async (
     const exercise = await ExerciseLog.findOne({
       _id: req.params.exerciseId,
       session_id: req.params.id,
-      user_id: req.user?.userId,
+      user_id: new mongoose.Types.ObjectId(req.user?.userId),
     });
 
     if (!exercise) {
