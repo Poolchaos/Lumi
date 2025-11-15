@@ -1,3 +1,6 @@
+# Private documentation and planning
+docs/
+
 # Environment variables
 .env
 .env.local
@@ -13,24 +16,13 @@ build/
 # Logs
 *.log
 npm-debug.log*
-logs/
 
-# Editor directories
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
-
-# Test coverage
-coverage/
-
-# Docker volumes (if running locally)
-mongo-data/
-
-# Temporary files
-tmp/
-temp/
