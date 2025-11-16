@@ -22,7 +22,7 @@ test.describe('Accountability System', () => {
     await expect(page.locator('text=/0 days/i')).toBeVisible();
 
     // Should show workout goals
-    await expect(page.locator('text=/Weekly|Goal/i')).toBeVisible();
+    await expect(page.locator('text=/Weekly|Goal/i').first()).toBeVisible();
   });
 
   test('should display penalties section', async ({ page }) => {
@@ -39,7 +39,7 @@ test.describe('Accountability System', () => {
     await page.goto('/accountability');
     await expect(page).toHaveURL('/accountability');
 
-    await expect(page.locator('text=/Penalties|Penalty/i')).toBeVisible();
+    await expect(page.locator('text=/Penalties|Penalty/i').first()).toBeVisible();
   });
 
   test('should show weekly progress', async ({ page }) => {
