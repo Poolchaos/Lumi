@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { PageTransition } from '../components/layout/PageTransition';
 import { workoutAPI } from '../api';
 import { Card, Button, WorkoutCardSkeleton } from '../design-system';
-import { Dumbbell, Zap, Clock, TrendingUp } from 'lucide-react';
+import { Dumbbell, Zap, Clock, TrendingUp, Play } from 'lucide-react';
+import { ActiveSession } from '../components/workout/ActiveSession';
+import type { WorkoutPlan } from '../types';
 
 export default function WorkoutsPage() {
   const queryClient = useQueryClient();
+  const [activeWorkout, setActiveWorkout] = useState<WorkoutPlan | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['workouts'],
@@ -25,6 +29,23 @@ export default function WorkoutsPage() {
       console.error(error);
     },
   });
+
+  // Show active session if a workout is started
+  if (activeWorkout) {
+    return (
+      <Layout>
+        <PageTransition>
+          <div className="px-4 py-6 sm:px-0">
+            <ActiveSession
+              workout={activeWorkout}
+              onComplete={() => setActiveWorkout(null)}
+              onCancel={() => setActiveWorkout(null)}
+            />
+          </div>
+        </PageTransition>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -115,6 +136,18 @@ export default function WorkoutsPage() {
                               )}
                             </div>
                           ))}
+                        </div>
+
+                        {/* Start Workout Button */}
+                        <div className="mt-4">
+                          <Button
+                            onClick={() => setActiveWorkout(workout)}
+                            variant="primary"
+                            className="w-full"
+                          >
+                            <Play className="h-4 w-4 mr-2" />
+                            Start Workout
+                          </Button>
                         </div>
                       </div>
                     </div>
