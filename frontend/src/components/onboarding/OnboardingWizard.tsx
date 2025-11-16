@@ -4,10 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { profileAPI, equipmentAPI, workoutAPI } from '../../api';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../../design-system';
-import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Sparkles, Key, User, Target, Dumbbell, Calendar, Zap } from 'lucide-react';
 import type { UserProfile, Equipment } from '../../types';
 
 interface OnboardingData {
+  openai_token?: string;
   profile: Partial<UserProfile>;
   equipment: string[];
   preferences: {
@@ -19,8 +20,9 @@ interface OnboardingData {
 export function OnboardingWizard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0); // Start at step 0 for token
   const [data, setData] = useState<OnboardingData>({
+    openai_token: '',
     profile: {},
     equipment: [],
     preferences: {},
@@ -87,12 +89,69 @@ export function OnboardingWizard() {
     }
   };
 
-  const totalSteps = 5;
-  const progress = (step / totalSteps) * 100;
+  const totalSteps = 6; // Updated to include token step
+  const progress = ((step + 1) / totalSteps) * 100;
+
+  // Helper to get icon and image description for current step
+  const getStepContent = () => {
+    switch (step) {
+      case 0:
+        return {
+          icon: <Key className="w-16 h-16 text-primary-500" />,
+          title: 'AI-Powered Workouts',
+          imageDesc: 'Robot or AI assistant shaking hands with a person holding dumbbells',
+          imageUrl: '/images/onboarding/ai-powered.svg', // Replace with your actual image
+        };
+      case 1:
+        return {
+          icon: <User className="w-16 h-16 text-primary-500" />,
+          title: 'Your Profile',
+          imageDesc: 'Person filling out a profile form with fitness icons around them',
+          imageUrl: '/images/onboarding/profile-setup.svg',
+        };
+      case 2:
+        return {
+          icon: <Target className="w-16 h-16 text-primary-500" />,
+          title: 'Your Goals',
+          imageDesc: 'Person climbing towards a target/bullseye on a mountain peak',
+          imageUrl: '/images/onboarding/goals.svg',
+        };
+      case 3:
+        return {
+          icon: <Dumbbell className="w-16 h-16 text-primary-500" />,
+          title: 'Experience Level',
+          imageDesc: 'Three people of different fitness levels - beginner stretching, intermediate with dumbbells, advanced athlete',
+          imageUrl: '/images/onboarding/experience.svg',
+        };
+      case 4:
+        return {
+          icon: <Calendar className="w-16 h-16 text-primary-500" />,
+          title: 'Workout Schedule',
+          imageDesc: 'Calendar with workout days highlighted and a stopwatch showing workout duration',
+          imageUrl: '/images/onboarding/schedule.svg',
+        };
+      case 5:
+        return {
+          icon: <Dumbbell className="w-16 h-16 text-primary-500" />,
+          title: 'Available Equipment',
+          imageDesc: 'Home gym setup with dumbbells, resistance bands, yoga mat, and pull-up bar',
+          imageUrl: '/images/onboarding/equipment.svg',
+        };
+      default:
+        return {
+          icon: <Sparkles className="w-16 h-16 text-primary-500" />,
+          title: 'Welcome',
+          imageDesc: 'Welcome illustration',
+          imageUrl: '/images/onboarding/welcome.svg',
+        };
+    }
+  };
+
+  const stepContent = getStepContent();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center p-4">
-      <Card className="max-w-2xl w-full">
+      <Card className="max-w-4xl w-full">
         <CardHeader>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-6 h-6 text-primary-500" />
@@ -104,10 +163,67 @@ export function OnboardingWizard() {
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-sm text-neutral-600 mt-2">Step {step} of {totalSteps}</p>
+          <p className="text-sm text-neutral-600 mt-2">Step {step + 1} of {totalSteps}</p>
         </CardHeader>
 
         <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left side - Image/Illustration */}
+            <div className="flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg p-8 min-h-[400px]">
+              <div className="text-center space-y-4">
+                {/* Fallback icon - replace with actual image */}
+                <div className="mb-4">
+                  {stepContent.icon}
+                </div>
+                {/* TODO: Replace with actual images */}
+                <div className="bg-white/50 rounded-lg p-6 max-w-xs">
+                  <p className="text-xs text-primary-600 italic mb-2">Image placeholder:</p>
+                  <p className="text-sm text-primary-800 font-medium">{stepContent.imageDesc}</p>
+                </div>
+                <p className="text-sm text-primary-700 font-medium mt-4">
+                  {stepContent.title}
+                </p>
+              </div>
+            </div>
+
+            {/* Right side - Form content */}
+            <div>
+              {step === 0 && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">OpenAI API Setup</h3>
+                    <p className="text-neutral-600 mb-6">
+                      PersonalFit uses AI to generate personalized workout plans. You'll need an OpenAI API key to get started.
+                    </p>
+                  </div>
+
+                  <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-4">
+                    <h4 className="font-semibold text-primary-900 mb-2 flex items-center gap-2">
+                      <Zap className="w-4 h-4" />
+                      How to get your API key:
+                    </h4>
+                    <ol className="text-sm text-primary-800 space-y-2 ml-4 list-decimal">
+                      <li>Visit <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline font-medium">platform.openai.com/api-keys</a></li>
+                      <li>Sign in or create an OpenAI account</li>
+                      <li>Click "Create new secret key"</li>
+                      <li>Copy the key and paste it below</li>
+                    </ol>
+                  </div>
+
+                  <Input
+                    label="OpenAI API Key"
+                    type="password"
+                    placeholder="sk-..."
+                    value={data.openai_token || ''}
+                    onChange={(e) => setData({ ...data, openai_token: e.target.value })}
+                  />
+
+                  <p className="text-xs text-neutral-500">
+                    Your API key is securely stored and only used to generate your workouts. We never share it with third parties.
+                  </p>
+                </div>
+              )}
+
           {step === 1 && (
             <div className="space-y-6">
               <div>
@@ -311,19 +427,40 @@ export function OnboardingWizard() {
               </div>
             </div>
           )}
+            </div> {/* Close form content div */}
+          </div> {/* Close grid div */}
 
-          <div className="flex justify-between mt-8 pt-6 border-t">
-            {step > 1 ? (
-              <Button variant="outline" onClick={() => setStep(step - 1)}>
-                <ChevronLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-            ) : (
-              <div />
-            )}
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={() => setStep(step - 1)}
+              disabled={step === 0}
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
 
-            {step < totalSteps ? (
-              <Button onClick={() => setStep(step + 1)}>
+            {step < totalSteps - 1 ? (
+              <Button
+                variant="primary"
+                onClick={() => {
+                  // Validate step before proceeding
+                  if (step === 0 && !data.openai_token) {
+                    toast.error('Please enter your OpenAI API key to continue');
+                    return;
+                  }
+                  if (step === 1 && !data.profile.first_name) {
+                    toast.error('Please enter your name to continue');
+                    return;
+                  }
+                  if (step === 2 && (!data.profile.fitness_goals || data.profile.fitness_goals.length === 0)) {
+                    toast.error('Please select at least one fitness goal');
+                    return;
+                  }
+                  setStep(step + 1);
+                }}
+              >
                 Next
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
