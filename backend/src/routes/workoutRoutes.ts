@@ -21,6 +21,11 @@ router.post(
       .optional()
       .isIn(['strength', 'hiit', 'flexibility', 'cardio'])
       .withMessage('Invalid workout modality'),
+    body('fitness_goals').optional().isArray().withMessage('Fitness goals must be an array'),
+    body('experience_level').optional().isString(),
+    body('workout_frequency').optional().isInt({ min: 1, max: 7 }),
+    body('preferred_workout_duration').optional().isInt({ min: 10, max: 180 }),
+    body('equipment').optional().isArray(),
   ],
   createWorkoutPlan
 );

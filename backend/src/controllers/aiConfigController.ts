@@ -128,7 +128,34 @@ export const testAIConfig = async (
         return;
       }
 
-      // TODO: Make actual API call to test the key
+      // Make actual API call to test the key with OpenAI
+      if (user.ai_config.provider === 'openai') {
+        try {
+          const OpenAI = (await import('openai')).default;
+          const testClient = new OpenAI({ apiKey: decryptedKey.trim() });
+
+          // Make a minimal API call to verify the key works
+          await testClient.models.list();
+
+          res.json({
+            success: true,
+            message: 'API key verified successfully with OpenAI',
+            provider: user.ai_config.provider
+          });
+        } catch (apiError: unknown) {
+          const error = apiError as { status?: number; message: string };
+          console.error('OpenAI API key test failed:', error.message);
+          res.status(401).json({
+            error: error.status === 401
+              ? 'Invalid API key. Please check your key at platform.openai.com/api-keys'
+              : `API test failed: ${error.message}`,
+            success: false
+          });
+        }
+        return;
+      }
+
+      // For non-OpenAI providers, just validate format for now
       res.json({
         success: true,
         message: 'AI configuration is valid',

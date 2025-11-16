@@ -1,14 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './store/authStore';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import OnboardingPage from './pages/OnboardingPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
 import EquipmentPage from './pages/EquipmentPage';
 import MetricsPage from './pages/MetricsPage';
 import WorkoutsPage from './pages/WorkoutsPage';
+import GoalsPage from './pages/GoalsPage';
 import AccountabilityPage from './pages/AccountabilityPage';
+import WorkoutPlanReviewPage from './pages/WorkoutPlanReviewPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,10 +31,50 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute>
+                <OnboardingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workout-plan-review"
+            element={
+              <ProtectedRoute>
+                <WorkoutPlanReviewPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -68,6 +112,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <WorkoutsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/goals"
+            element={
+              <ProtectedRoute>
+                <GoalsPage />
               </ProtectedRoute>
             }
           />

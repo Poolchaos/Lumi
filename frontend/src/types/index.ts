@@ -138,6 +138,8 @@ export interface AccountabilityStatus {
   streak: {
     current: number;
     longest: number;
+    freezes_available?: number;
+    freezes_used?: number;
   };
   totals: {
     workouts_completed: number;
