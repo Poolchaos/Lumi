@@ -15,8 +15,8 @@ test.describe('Profile Management', () => {
   });
 
   test('should update personal information', async ({ page }) => {
-    // Navigate to profile
-    await page.click('a[href="/profile"]');
+    // Navigate directly to profile (bypassing onboarding)
+    await page.goto('/profile');
     await expect(page).toHaveURL('/profile');
 
     // Fill personal info
@@ -37,7 +37,7 @@ test.describe('Profile Management', () => {
   });
 
   test('should update fitness preferences', async ({ page }) => {
-    await page.click('a[href="/profile"]');
+    await page.goto('/profile');
     await expect(page).toHaveURL('/profile');
 
     // Scroll to preferences section

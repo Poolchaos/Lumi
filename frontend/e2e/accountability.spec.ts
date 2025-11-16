@@ -13,8 +13,8 @@ test.describe('Accountability System', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/(dashboard|onboarding)/, { timeout: 10000 });
 
-    // Navigate to accountability page
-    await page.click('a[href="/accountability"]');
+    // Navigate directly to accountability page (bypassing onboarding)
+    await page.goto('/accountability');
     await expect(page).toHaveURL('/accountability');
   });
 

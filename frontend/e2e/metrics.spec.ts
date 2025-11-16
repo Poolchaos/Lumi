@@ -14,8 +14,8 @@ test.describe('Body Metrics and Photos', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/(dashboard|onboarding)/, { timeout: 10000 });
 
-    // Navigate to metrics page
-    await page.click('a[href="/metrics"]');
+    // Navigate directly to metrics page (bypassing onboarding)
+    await page.goto('/metrics');
     await expect(page).toHaveURL('/metrics');
   });
 

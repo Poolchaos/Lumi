@@ -13,8 +13,8 @@ test.describe('Equipment Management', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/(dashboard|onboarding)/, { timeout: 10000 });
 
-    // Navigate to equipment page
-    await page.click('a[href="/equipment"]');
+    // Navigate directly to equipment page (bypassing onboarding)
+    await page.goto('/equipment');
     await expect(page).toHaveURL('/equipment');
   });
 

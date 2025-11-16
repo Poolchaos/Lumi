@@ -13,8 +13,8 @@ test.describe('Workout Generation and Management', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/(dashboard|onboarding)/, { timeout: 10000 });
 
-    // Navigate to workouts page
-    await page.click('a[href="/workouts"]');
+    // Navigate directly to workouts page (bypassing onboarding)
+    await page.goto('/workouts');
     await expect(page).toHaveURL('/workouts');
   });
 
