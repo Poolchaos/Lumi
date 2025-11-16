@@ -28,11 +28,19 @@ class OpenAIProvider implements AIProvider {
   private client: OpenAI;
 
   constructor(apiKey: string) {
+    console.log('OpenAIProvider constructor - API key details:', {
+      keyStart: apiKey.substring(0, 20),
+      keyEnd: apiKey.substring(apiKey.length - 10),
+      totalLength: apiKey.length,
+      containsWhitespace: /\s/.test(apiKey),
+      startsWithSk: apiKey.startsWith('sk-'),
+    });
     this.client = new OpenAI({ apiKey });
   }
 
   async generateWorkoutPlan(params: WorkoutGenerationParams): Promise<unknown> {
     // Use the detailed openaiService implementation with research-based prompts
+    // Pass the user's OpenAI client instance to use their API key
     return openaiService.generateWorkoutPlan({
       userProfile: {
         fitness_goals: params.userProfile.fitness_goals,
@@ -50,7 +58,7 @@ class OpenAIProvider implements AIProvider {
         equipment_type: 'other',
       })),
       workoutModality: params.workoutModality,
-    }, this.client); // Pass the user's OpenAI client
+    }, this.client); // CRITICAL: Pass the user's OpenAI client with their API key
   }
 }
 
@@ -62,10 +70,10 @@ class AnthropicProvider implements AIProvider {
   }
 
   async generateWorkoutPlan(_params: WorkoutGenerationParams): Promise<unknown> {
-    // TODO: Implement Anthropic API integration
-    // Will use this.apiKey and _params when implemented
+    // Future feature: Anthropic Claude API integration for workout generation
+    // Will require Anthropic SDK installation and prompt engineering
     console.log('Using Anthropic API key:', this.apiKey.substring(0, 10) + '...');
-    throw new Error('Anthropic provider not yet implemented');
+    throw new Error('Anthropic provider not yet implemented. Please use OpenAI provider.');
   }
 }
 
@@ -77,10 +85,10 @@ class LocalLLMProvider implements AIProvider {
   }
 
   async generateWorkoutPlan(_params: WorkoutGenerationParams): Promise<unknown> {
-    // TODO: Implement local LLM integration (Ollama, etc.)
-    // Will use this.endpointUrl and _params when implemented
+    // Future feature: Local LLM integration (Ollama, LM Studio, etc.)
+    // Will support on-premise AI models for privacy-focused deployments
     console.log('Local LLM endpoint:', this.endpointUrl);
-    throw new Error('Local LLM provider not yet implemented');
+    throw new Error('Local LLM provider not yet implemented. Please use OpenAI provider.');
   }
 }
 
@@ -101,15 +109,32 @@ export const createAIProvider = (user: IUser): AIProvider => {
   }
 
   // Decrypt user's API key
-  const apiKey = aiConfig.api_key_encrypted
+  let apiKey = aiConfig.api_key_encrypted
     ? decrypt(aiConfig.api_key_encrypted)
     : null;
+
+  console.log('Decrypted API key info (before trim):', {
+    hasEncryptedKey: !!aiConfig.api_key_encrypted,
+    hasDecryptedKey: !!apiKey,
+    keyPrefix: apiKey ? apiKey.substring(0, 10) + '...' : 'null',
+    keySuffix: apiKey ? '...' + apiKey.substring(apiKey.length - 10) : 'null',
+    keyLength: apiKey?.length || 0,
+    hasLeadingWhitespace: apiKey ? apiKey !== apiKey.trimStart() : false,
+    hasTrailingWhitespace: apiKey ? apiKey !== apiKey.trimEnd() : false,
+  });
+
+  // Trim whitespace that might have been accidentally copied
+  if (apiKey) {
+    apiKey = apiKey.trim();
+    console.log('After trim - keyLength:', apiKey.length);
+  }
 
   switch (aiConfig.provider) {
     case 'openai':
       if (!apiKey) {
         throw new Error('OpenAI API key not configured');
       }
+      console.log('Creating OpenAIProvider with user key');
       return new OpenAIProvider(apiKey);
 
     case 'anthropic':

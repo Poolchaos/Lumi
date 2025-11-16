@@ -10,7 +10,7 @@ export function useStreak() {
   return {
     currentStreak: data?.streak.current || 0,
     longestStreak: data?.streak.longest || 0,
-    freezesAvailable: 2, // TODO: Add freezes to backend accountability model
+    freezesAvailable: data?.streak.freezes_available || 2,
     nextMilestone: Math.ceil((data?.streak.current || 0) / 7) * 7 + 7, // Next multiple of 7
   };
 }

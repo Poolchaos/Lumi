@@ -24,9 +24,19 @@ export default function WorkoutsPage() {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
       toast.success('🎉 AI workout generated successfully!');
     },
-    onError: (error) => {
-      toast.error('Failed to generate workout. Make sure OpenAI API key is configured.');
-      console.error(error);
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { error?: string }; status?: number } };
+      console.error('Workout generation error:', error);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+
+      if (err.response?.status === 401) {
+        toast.error('Session expired. Please log in again.');
+      } else if (err.response?.data?.error) {
+        toast.error(err.response.data.error);
+      } else {
+        toast.error('Failed to generate workout. Make sure OpenAI API key is configured.');
+      }
     },
   });
 

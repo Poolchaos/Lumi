@@ -16,6 +16,8 @@ export interface IStreak {
   longest_streak: number;
   last_workout_date?: Date;
   streak_start_date?: Date;
+  freezes_available: number;
+  freezes_used: number;
 }
 
 export interface IAccountability extends Document {
@@ -116,6 +118,16 @@ const accountabilitySchema = new Schema<IAccountability>(
       },
       last_workout_date: Date,
       streak_start_date: Date,
+      freezes_available: {
+        type: Number,
+        default: 2,
+        min: 0,
+      },
+      freezes_used: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
     },
     penalties: [penaltySchema],
     weekly_stats: [weeklyStatsSchema],

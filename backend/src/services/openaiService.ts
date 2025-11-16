@@ -109,11 +109,17 @@ Design a traditional strength-focused workout plan:
     modalityGuidance = `
 WORKOUT TYPE: CARDIOVASCULAR TRAINING
 
-Design a cardio-focused workout plan:
+Design a cardio-focused workout plan with varied modalities:
 - Include duration-based exercises
-- Specify intensity levels
+- Specify intensity levels (zones 2-5)
 - Mix steady-state and interval cardio
-- Focus on heart rate zones
+- Focus on heart rate zones for fat loss and endurance
+- Include low-impact options: walking, jogging, cycling
+- Include high-intensity options: running, sprints, jump rope
+- Progressively increase duration or intensity each week
+- For bodyweight: include exercises like jumping jacks, burpees, high knees, mountain climbers
+- For equipment: utilize treadmill, stationary bike, rowing machine, jump rope
+- Example activities: brisk walking (30-60min), jogging intervals (20-40min), jump rope circuits (15-25min)
 `;
   } else if (workoutModality === 'flexibility') {
     modalityGuidance = `
