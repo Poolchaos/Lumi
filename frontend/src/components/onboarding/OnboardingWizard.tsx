@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { profileAPI, equipmentAPI, workoutAPI, aiConfigAPI } from '../../api';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../../design-system';
@@ -14,11 +14,20 @@ export function OnboardingWizard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(0); // Start at step 0 for token
-  const [tokenTested, setTokenTested] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [tokenTested, setTokenTested] = useState(false);
+
+  // Fetch existing AI config to check if API key already exists
+  const { data: aiConfig } = useQuery({
+    queryKey: ['ai-config'],
+    queryFn: aiConfigAPI.get,
+  });
+
+  const hasExistingKey = aiConfig?.ai_config?.has_api_key || false;
+
   const [data, setData] = useState<OnboardingData>({
     openai_token: '',
-    workout_modality: 'strength', // Default to strength
+    workout_modality: 'strength',
     profile: {},
     equipment: [],
     preferences: {},
@@ -64,10 +73,16 @@ export function OnboardingWizard() {
 
   const generateWorkoutMutation = useMutation({
     mutationFn: workoutAPI.generate,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+    onSuccess: async (response) => {
+      // Debug: Log the response from the backend
+      console.log('OnboardingWizard - Generate response:', response);
+      console.log('OnboardingWizard - Response type:', typeof response);
+      console.log('OnboardingWizard - Response keys:', response ? Object.keys(response) : 'no response');
+
+      // Set the generated plan in cache so the review page can access it
+      queryClient.setQueryData(['workouts'], response);
       toast.success('Your personalized workout plan is ready!');
-      navigate('/dashboard');
+      navigate('/workout-plan-review');
     },
     onError: () => {
       toast.error('Failed to generate workout plan. You can try again from the Workouts page.');
@@ -79,8 +94,8 @@ export function OnboardingWizard() {
     try {
       toast.loading('Setting up your profile...');
 
-      // Save OpenAI API key first
-      if (data.openai_token) {
+      // Save OpenAI API key only if it's a new key (not the placeholder)
+      if (data.openai_token && data.openai_token !== 'existing_key_on_file') {
         await updateAIConfigMutation.mutateAsync({
           provider: 'openai',
           api_key: data.openai_token,
@@ -254,23 +269,39 @@ export function OnboardingWizard() {
                     </p>
                   </div>
 
-                  <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-4">
-                    <h4 className="font-semibold text-primary-900 mb-2 flex items-center gap-2">
-                      <Zap className="w-4 h-4" />
-                      How to get your API key:
-                    </h4>
-                    <ol className="text-sm text-primary-800 space-y-2 ml-4 list-decimal">
-                      <li>Visit <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline font-medium">platform.openai.com/api-keys</a></li>
-                      <li>Sign in or create an OpenAI account</li>
-                      <li>Click "Create new secret key"</li>
-                      <li>Copy the key and paste it below</li>
-                    </ol>
-                  </div>
+                  {hasExistingKey && (
+                    <div className="bg-success-50 border border-success-200 rounded-lg p-4 mb-4">
+                      <h4 className="font-semibold text-success-900 mb-1 flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        API Key Already Configured
+                      </h4>
+                      <p className="text-sm text-success-800">
+                        You have an OpenAI API key on file. You can skip this step or update it with a new key below.
+                      </p>
+                    </div>
+                  )}
+
+                  {!hasExistingKey && (
+                    <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-4">
+                      <h4 className="font-semibold text-primary-900 mb-2 flex items-center gap-2">
+                        <Zap className="w-4 h-4" />
+                        How to get your API key:
+                      </h4>
+                      <ol className="text-sm text-primary-800 space-y-2 ml-4 list-decimal">
+                        <li>Visit <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline font-medium">platform.openai.com/api-keys</a></li>
+                        <li>Sign in or create an OpenAI account</li>
+                        <li>Click "Create new secret key"</li>
+                        <li>Copy the key and paste it below</li>
+                      </ol>
+                    </div>
+                  )}
 
                   <Input
-                    label="OpenAI API Key"
+                    label={hasExistingKey ? "Update OpenAI API Key (optional)" : "OpenAI API Key"}
                     type="password"
-                    placeholder="sk-..."
+                    placeholder={hasExistingKey ? "Leave empty to use existing key" : "sk-..."}
                     value={data.openai_token || ''}
                     onChange={(e) => {
                       setData({ ...data, openai_token: e.target.value });
@@ -279,22 +310,32 @@ export function OnboardingWizard() {
                   />
 
                   <div className="flex gap-3">
-                    <Button
-                      onClick={() => testAIConfigMutation.mutate()}
-                      loading={testAIConfigMutation.isPending}
-                      disabled={!data.openai_token || data.openai_token.length < 20}
-                      variant="secondary"
-                      className="flex-1"
-                    >
-                      <Zap className="w-4 h-4 mr-2" />
-                      Test Connection
-                    </Button>
+                    {data.openai_token && (
+                      <Button
+                        onClick={() => testAIConfigMutation.mutate()}
+                        loading={testAIConfigMutation.isPending}
+                        disabled={!data.openai_token || data.openai_token.length < 20}
+                        variant="secondary"
+                        className="flex-1"
+                      >
+                        <Zap className="w-4 h-4 mr-2" />
+                        Test Connection
+                      </Button>
+                    )}
                     {tokenTested && (
                       <div className="flex items-center gap-2 text-success-dark font-medium px-4 py-2 bg-success-50 rounded-lg">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         Verified
+                      </div>
+                    )}
+                    {hasExistingKey && !data.openai_token && (
+                      <div className="flex items-center gap-2 text-success-dark font-medium px-4 py-2 bg-success-50 rounded-lg flex-1">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Using existing key
                       </div>
                     )}
                   </div>
@@ -590,7 +631,7 @@ export function OnboardingWizard() {
               <Button
                 variant="primary"
                 onClick={() => {
-                  if (validateStep(step, data)) {
+                  if (validateStep(step, data, hasExistingKey)) {
                     setStep(step + 1);
                   }
                 }}

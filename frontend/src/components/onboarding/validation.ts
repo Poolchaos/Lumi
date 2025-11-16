@@ -1,10 +1,11 @@
 import toast from 'react-hot-toast';
 import type { OnboardingData } from './types';
 
-export function validateStep(step: number, data: OnboardingData): boolean {
+export function validateStep(step: number, data: OnboardingData, hasExistingKey = false): boolean {
   switch (step) {
     case 0:
-      if (!data.openai_token) {
+      // Allow skipping if there's an existing key on file
+      if (!data.openai_token && !hasExistingKey) {
         toast.error('Please enter your OpenAI API key to continue');
         return false;
       }
