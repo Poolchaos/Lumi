@@ -6,6 +6,7 @@ import { equipmentAPI } from '../api';
 import type { Equipment } from '../types';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { Dumbbell, Plus, Trash2 } from 'lucide-react';
+import { PageTransition } from '../components/layout/PageTransition';
 
 export default function EquipmentPage() {
   const queryClient = useQueryClient();
@@ -46,7 +47,8 @@ export default function EquipmentPage() {
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-0">
+      <PageTransition>
+        <div className="px-4 py-6 sm:px-0">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <Dumbbell className="w-8 h-8 text-primary-500" />
@@ -140,6 +142,7 @@ export default function EquipmentPage() {
           )}
         </div>
       </div>
+      </PageTransition>
     </Layout>
   );
 }

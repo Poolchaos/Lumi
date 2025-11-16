@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Scale, TrendingUp, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
+import { PageTransition } from '../components/layout/PageTransition';
 import { metricsAPI, photosAPI } from '../api';
 import { Card, CardContent, CardHeader, CardTitle } from '../design-system/components/Card';
 import { Button } from '../design-system/components/Button';
@@ -66,7 +67,8 @@ export default function MetricsPage() {
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-0">
+      <PageTransition>
+        <div className="px-4 py-6 sm:px-0">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <Scale className="h-8 w-8 text-primary" />
@@ -213,7 +215,8 @@ export default function MetricsPage() {
             </Card>
           )}
         </div>
-      </div>
+        </div>
+      </PageTransition>
     </Layout>
   );
 }

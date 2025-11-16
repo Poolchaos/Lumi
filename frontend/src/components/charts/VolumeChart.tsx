@@ -37,19 +37,19 @@ export default function VolumeChart({ workouts }: VolumeChartProps) {
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-        <XAxis 
-          dataKey="date" 
+        <XAxis
+          dataKey="date"
           stroke="#6b7280"
           style={{ fontSize: '12px' }}
         />
-        <YAxis 
+        <YAxis
           stroke="#6b7280"
           style={{ fontSize: '12px' }}
           label={{ value: 'Volume (reps)', angle: -90, position: 'insideLeft', style: { fontSize: '12px' } }}
         />
-        <Tooltip 
-          contentStyle={{ 
-            backgroundColor: '#ffffff', 
+        <Tooltip
+          contentStyle={{
+            backgroundColor: '#ffffff',
             border: '1px solid #e5e7eb',
             borderRadius: '0.5rem',
             fontSize: '14px'
@@ -57,9 +57,9 @@ export default function VolumeChart({ workouts }: VolumeChartProps) {
           formatter={(value: number) => [`${value} reps`, 'Total Volume']}
           labelFormatter={(label) => `Date: ${label}`}
         />
-        <Bar 
-          dataKey="volume" 
-          fill="#8b5cf6" 
+        <Bar
+          dataKey="volume"
+          fill="#8b5cf6"
           radius={[4, 4, 0, 0]}
         />
       </BarChart>

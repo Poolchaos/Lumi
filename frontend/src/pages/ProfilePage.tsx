@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
+import { PageTransition } from '../components/layout/PageTransition';
 import { profileAPI } from '../api';
 import type { UserProfile, UserPreferences } from '../types';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../design-system';
@@ -54,7 +55,8 @@ export default function ProfilePage() {
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-0">
+      <PageTransition>
+        <div className="px-4 py-6 sm:px-0">
         <div className="flex items-center gap-3 mb-6">
           <User className="w-8 h-8 text-primary-500" />
           <h1 className="text-3xl font-bold text-neutral-900">Profile Settings</h1>
@@ -122,7 +124,8 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </div>
-      </div>
+        </div>
+      </PageTransition>
     </Layout>
   );
 }

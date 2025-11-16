@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../design-system/compo
 import { Button } from '../design-system/components/Button';
 import { Input } from '../design-system/components/Input';
 import { profileAPI } from '../api';
+import { PageTransition } from '../components/layout/PageTransition';
 
 interface Goal {
   id: string;
@@ -89,11 +90,11 @@ export default function GoalsPage() {
       setGoals([...goals, { ...goal, id: goal.id || now.toString() }]);
       toast.success('Goal added!');
     }
-    
+
     // Update fitness_goals in profile
     const fitnessGoals = [...new Set([...(profileData?.user.profile.fitness_goals || []), goal.category])];
     updateProfileMutation.mutate({ fitness_goals: fitnessGoals });
-    
+
     setShowForm(false);
     setEditingGoal(null);
   };
@@ -112,7 +113,7 @@ export default function GoalsPage() {
     const progress = calculateProgress(current, target);
     const daysLeft = Math.ceil((new Date(deadline).getTime() - currentTime) / (1000 * 60 * 60 * 24));
     const expectedProgress = Math.max(0, 100 - (daysLeft / 90) * 100); // Assuming 90-day goals
-    
+
     if (progress >= expectedProgress * 0.8) return 'bg-green-500';
     if (progress >= expectedProgress * 0.5) return 'bg-yellow-500';
     return 'bg-red-500';
@@ -120,7 +121,8 @@ export default function GoalsPage() {
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-0">
+      <PageTransition>
+        <div className="px-4 py-6 sm:px-0">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Target className="h-8 w-8 text-primary" />
@@ -188,7 +190,7 @@ export default function GoalsPage() {
             goals.map((goal) => {
               const progress = calculateProgress(goal.current, goal.target);
               const daysLeft = Math.ceil((new Date(goal.deadline).getTime() - now) / (1000 * 60 * 60 * 24));
-              
+
               return (
                 <Card key={goal.id} hover>
                   <CardContent className="pt-6">
@@ -256,6 +258,7 @@ export default function GoalsPage() {
           )}
         </div>
       </div>
+      </PageTransition>
     </Layout>
   );
 }
@@ -290,7 +293,7 @@ function GoalForm({ goal, onSave, onCancel }: GoalFormProps) {
         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         required
       />
-      
+
       <div className="grid grid-cols-2 gap-4">
         <Input
           label={`Current ${formData.unit}`}

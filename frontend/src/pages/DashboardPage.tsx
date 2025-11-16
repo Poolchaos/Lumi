@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import { HeroSection } from '../components/dashboard/HeroSection';
 import { WorkoutStats } from '../components/dashboard/WorkoutStats';
 import VolumeChart from '../components/charts/VolumeChart';
+import { PageTransition } from '../components/layout/PageTransition';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { profileAPI, accountabilityAPI, sessionAPI, workoutAPI } from '../api';
 
@@ -41,28 +42,31 @@ export default function DashboardPage() {
   if (isProfileIncomplete) {
     return (
       <Layout>
-        <div className="max-w-3xl mx-auto mt-12">
-          <Card className="border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100">
-            <div className="p-8 text-center">
-              <Sparkles className="w-16 h-16 text-primary-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-neutral-900 mb-3">Welcome to PersonalFit!</h2>
-              <p className="text-neutral-600 mb-6">
-                Let's set up your profile and create a personalized fitness plan tailored just for you.
-              </p>
-              <Button onClick={() => navigate('/onboarding')} size="lg" variant="primary">
-                <Sparkles className="w-5 h-5 mr-2" />
-                Start Setup
-              </Button>
-            </div>
-          </Card>
-        </div>
+        <PageTransition>
+          <div className="max-w-3xl mx-auto mt-12">
+            <Card className="border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100">
+              <div className="p-8 text-center">
+                <Sparkles className="w-16 h-16 text-primary-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-neutral-900 mb-3">Welcome to PersonalFit!</h2>
+                <p className="text-neutral-600 mb-6">
+                  Let's set up your profile and create a personalized fitness plan tailored just for you.
+                </p>
+                <Button onClick={() => navigate('/onboarding')} size="lg" variant="primary">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Start Setup
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </PageTransition>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <div>
+      <PageTransition>
+        <div>
         {/* Hero Section */}
         <HeroSection />
 
@@ -147,7 +151,8 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
+        </div>
+      </PageTransition>
     </Layout>
   );
 }

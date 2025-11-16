@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import { accountabilityAPI } from '../api';
 import { Card, CardContent, CardHeader, CardTitle } from '../design-system/components/Card';
 import { StreakWidget } from '../components/gamification/StreakWidget';
+import { PageTransition } from '../components/layout/PageTransition';
 
 export default function AccountabilityPage() {
   const { data } = useQuery({
@@ -30,7 +31,8 @@ export default function AccountabilityPage() {
 
   return (
     <Layout>
-      <div className="px-4 py-6 sm:px-0">
+      <PageTransition>
+        <div className="px-4 py-6 sm:px-0">
         <div className="flex items-center gap-3 mb-6">
           <Flame className="h-8 w-8 text-orange-500" />
           <h1 className="text-3xl font-bold text-gray-900">Accountability</h1>
@@ -207,6 +209,7 @@ export default function AccountabilityPage() {
           </Card>
         ) : null}
       </div>
+      </PageTransition>
     </Layout>
   );
 }
