@@ -5,6 +5,8 @@ import {
   getWorkoutPlans,
   getWorkoutPlan,
   deactivateWorkoutPlan,
+  setActiveWorkoutPlan,
+  deleteWorkoutPlan,
 } from '../controllers/workoutController';
 import { authenticate } from '../middleware/auth';
 
@@ -38,5 +40,11 @@ router.get('/:id', getWorkoutPlan);
 
 // Deactivate workout plan
 router.patch('/:id/deactivate', deactivateWorkoutPlan);
+
+// Activate workout plan
+router.patch('/:id/activate', setActiveWorkoutPlan);
+
+// Delete workout plan
+router.delete('/:id', deleteWorkoutPlan);
 
 export default router;

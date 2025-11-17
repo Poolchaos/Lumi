@@ -22,6 +22,9 @@ interface WeeklyScheduleGridProps {
 export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProps) {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+  // Get current day of the week
+  const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
   // Map schedule to days of week
   const weekGrid = daysOfWeek.map(day => {
     const daySchedule = schedule.find(s => s.day === day);
@@ -53,91 +56,108 @@ export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProp
         </div>
       </div>
 
-      {/* Weekly Calendar Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+      {/* Weekly Calendar Grid - Row Layout */}
+      <div className="space-y-3">
         {weekGrid.map((dayData, index) => {
           const isWorkoutDay = !!dayData.workout;
+          const isToday = dayData.day === currentDay;
 
           return (
             <motion.div
               key={dayData.day}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
               className={`
-                rounded-xl border-2 overflow-hidden transition-all duration-300 hover:shadow-lg
-                ${isWorkoutDay
-                  ? 'border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100'
+                rounded-xl border-2 overflow-hidden transition-all duration-300 hover:shadow-lg h-24
+                ${isToday && isWorkoutDay
+                  ? 'border-yellow-400 bg-gradient-to-r from-yellow-50 to-yellow-100 ring-2 ring-yellow-300'
+                  : isToday && !isWorkoutDay
+                  ? 'border-neutral-300 bg-neutral-100 ring-2 ring-neutral-300'
+                  : isWorkoutDay
+                  ? 'border-primary-300 bg-gradient-to-r from-primary-50 to-primary-100'
                   : 'border-neutral-200 bg-neutral-50'
                 }
               `}
             >
-              {/* Day Header */}
-              <div className={`p-3 text-center font-semibold ${
-                isWorkoutDay ? 'bg-primary-500 text-white' : 'bg-neutral-200 text-neutral-700'
-              }`}>
-                {dayData.day.substring(0, 3)}
-              </div>
+              <div className="flex items-center h-full">
+                {/* Day Header - Left Side */}
+                <div className={`w-20 h-full flex items-center justify-center font-bold text-base relative ${
+                  isToday && isWorkoutDay
+                    ? 'bg-yellow-500 text-white'
+                    : isToday && !isWorkoutDay
+                    ? 'bg-neutral-400 text-white'
+                    : isWorkoutDay
+                    ? 'bg-primary-500 text-white'
+                    : 'bg-neutral-200 text-neutral-700'
+                }`}>
+                  {dayData.day.substring(0, 3)}
+                  {isToday && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
 
-              {/* Day Content */}
-              <div className="p-4 min-h-[200px] flex flex-col">
-                {isWorkoutDay && dayData.workout ? (
-                  <>
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center">
-                        <Dumbbell className="w-6 h-6 text-white" />
+                {/* Day Content - Right Side */}
+                <div className="flex-1 px-4 py-3 min-w-0">
+                  {isWorkoutDay && dayData.workout ? (
+                    <div className="flex items-center gap-3 h-full">
+                      {/* Icon */}
+                      <div className="w-11 h-11 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Dumbbell className="w-5 h-5 text-white" />
+                      </div>
+
+                      {/* Workout Info */}
+                      <div className="flex-1 min-w-0 pr-2">
+                        <h4 className="font-bold text-sm text-neutral-900 mb-0.5 truncate">
+                          {dayData.workout.name}
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-600 overflow-hidden">
+                          <span className="px-2 py-0.5 bg-primary-200 text-primary-800 rounded-full font-medium whitespace-nowrap flex-shrink-0">
+                            {dayData.workout.focus}
+                          </span>
+                          <span className="text-neutral-400 flex-shrink-0">•</span>
+                          <span className="whitespace-nowrap flex-shrink-0">{dayData.workout.duration_minutes} min</span>
+                          <span className="text-neutral-400 flex-shrink-0">•</span>
+                          <span className="whitespace-nowrap flex-shrink-0">{dayData.workout.exercises.length} exercises</span>
+                        </div>
+                      </div>
+
+                      {/* Target Muscles - Desktop only */}
+                      <div className="hidden xl:flex flex-shrink-0 gap-1.5 max-w-sm overflow-hidden">
+                        {[...new Set(dayData.workout.exercises.flatMap(ex => ex.target_muscles))].slice(0, 4).map((muscle, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded-md text-xs font-medium whitespace-nowrap"
+                          >
+                            {muscle}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* XP Badge */}
+                      <div className="flex items-center text-yellow-600 font-bold text-base flex-shrink-0 ml-2">
+                        <span className="whitespace-nowrap">+{Math.round(xpPerWorkout)} XP</span>
                       </div>
                     </div>
+                  ) : (
+                    <div className="flex items-center gap-3 h-full">
+                      {/* Icon */}
+                      <div className="w-11 h-11 bg-neutral-300 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Moon className="w-5 h-5 text-neutral-500" />
+                      </div>
 
-                    <h4 className="font-bold text-sm text-center text-neutral-900 mb-2">
-                      {dayData.workout.name}
-                    </h4>
-
-                    <div className="text-xs text-center mb-3">
-                      <span className="px-2 py-1 bg-primary-200 text-primary-800 rounded-full font-medium">
-                        {dayData.workout.focus}
-                      </span>
-                    </div>
-
-                    <div className="text-xs text-center text-neutral-600 mb-2">
-                      {dayData.workout.duration_minutes} min
-                    </div>
-
-                    <div className="text-xs text-center text-neutral-600 mb-3">
-                      {dayData.workout.exercises.length} exercises
-                    </div>
-
-                    {/* Target muscles preview */}
-                    <div className="flex flex-wrap gap-1 justify-center mt-auto">
-                      {[...new Set(dayData.workout.exercises.flatMap(ex => ex.target_muscles))].slice(0, 3).map((muscle, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded text-xs"
-                        >
-                          {muscle}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-center gap-1 text-yellow-600 font-bold text-sm mt-3">
-                      <span>+{Math.round(xpPerWorkout)} XP</span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-center mb-3 mt-8">
-                      <div className="w-12 h-12 bg-neutral-300 rounded-full flex items-center justify-center">
-                        <Moon className="w-6 h-6 text-neutral-500" />
+                      {/* Rest Day Info */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-sm text-neutral-600 mb-0.5">
+                          Rest Day
+                        </h4>
+                        <p className="text-xs text-neutral-500">
+                          Recovery & regeneration
+                        </p>
                       </div>
                     </div>
-                    <h4 className="font-bold text-sm text-center text-neutral-600 mb-2">
-                      Rest Day
-                    </h4>
-                    <p className="text-xs text-center text-neutral-500">
-                      Recovery & regeneration
-                    </p>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
             </motion.div>
           );

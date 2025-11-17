@@ -84,34 +84,36 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
       {/* Workout details */}
       <div className="p-6">
         {/* Quick stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
               <Clock className="w-5 h-5 text-primary-600" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-neutral-500">Duration</p>
-              <p className="font-bold text-neutral-900">{workout.workout.duration_minutes}m</p>
+              <p className="font-bold text-neutral-900 text-sm">{workout.workout.duration_minutes}m</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
               <TrendingUp className="w-5 h-5 text-purple-600" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-neutral-500">Focus</p>
-              <p className="font-bold text-neutral-900 truncate">{workout.workout.focus}</p>
+              <p className="font-bold text-neutral-900 text-sm truncate" title={workout.workout.focus}>
+                {workout.workout.focus}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
               <Target className="w-5 h-5 text-orange-600" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-neutral-500">Exercises</p>
-              <p className="font-bold text-neutral-900">{workout.workout.exercises.length}</p>
+              <p className="font-bold text-neutral-900 text-sm">{workout.workout.exercises.length}</p>
             </div>
           </div>
         </div>

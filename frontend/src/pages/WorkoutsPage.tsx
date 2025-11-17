@@ -1,19 +1,27 @@
-import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { PageTransition } from '../components/layout/PageTransition';
 import { workoutAPI } from '../api';
-import { Card, Button, WorkoutCardSkeleton } from '../design-system';
-import { Dumbbell, Zap, Clock, TrendingUp, Play } from 'lucide-react';
-import { ActiveSession } from '../components/workout/ActiveSession';
-import type { WorkoutPlan } from '../types';
+import { Card, Button, WorkoutCardSkeleton, ConfirmModal } from '../design-system';
+import { Dumbbell, Zap, Clock, TrendingUp, Play, Trash2, CheckCircle, Circle } from 'lucide-react';
 
 export default function WorkoutsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [activeWorkout, setActiveWorkout] = useState<WorkoutPlan | null>(null);
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    planId: string;
+    planName: string;
+    isActive: boolean;
+  }>({
+    isOpen: false,
+    planId: '',
+    planName: '',
+    isActive: false,
+  });
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['workouts'],
@@ -34,9 +42,7 @@ export default function WorkoutsPage() {
 
       if (err.response?.status === 401) {
         toast.error('Session expired. Please log in again.');
-        // Don't navigate away - let auth interceptor handle it
       } else if (err.response?.status === 400 && err.response?.data?.error?.includes('profile')) {
-        // Profile incomplete - redirect to onboarding
         toast.error('Please complete your profile first');
         navigate('/onboarding');
       } else if (err.response?.data?.error) {
@@ -47,22 +53,50 @@ export default function WorkoutsPage() {
     },
   });
 
-  // Show active session if a workout is started
-  if (activeWorkout) {
-    return (
-      <Layout>
-        <PageTransition>
-          <div className="px-4 py-6 sm:px-0">
-            <ActiveSession
-              workout={activeWorkout}
-              onComplete={() => setActiveWorkout(null)}
-              onCancel={() => setActiveWorkout(null)}
-            />
-          </div>
-        </PageTransition>
-      </Layout>
-    );
-  }
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => workoutAPI.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+      toast.success('Workout plan deleted successfully');
+      setDeleteModal({ isOpen: false, planId: '', planName: '', isActive: false });
+    },
+    onError: () => {
+      toast.error('Failed to delete workout plan');
+    },
+  });
+
+  const setActiveMutation = useMutation({
+    mutationFn: (id: string) => workoutAPI.setActive(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+      toast.success('Workout plan activated!');
+    },
+    onError: () => {
+      toast.error('Failed to activate workout plan');
+    },
+  });
+
+  const handleDelete = (planId: string, planName: string, isActive: boolean) => {
+    if (isActive) {
+      toast.error('Cannot delete active plan. Please deactivate it first.');
+      return;
+    }
+
+    setDeleteModal({
+      isOpen: true,
+      planId,
+      planName,
+      isActive,
+    });
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate(deleteModal.planId);
+  };
+
+  const handleSetActive = (planId: string) => {
+    setActiveMutation.mutate(planId);
+  };
 
   return (
     <Layout>
@@ -101,77 +135,146 @@ export default function WorkoutsPage() {
           )}
 
           {!isLoading && !isError && data?.workouts && data.workouts.length > 0 ? (
-            data.workouts.map((workout) => (
-              <Card key={workout._id} hover>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-semibold text-neutral-900">{workout.workout_name}</h3>
-                        {workout.ai_generated && (
-                          <span className="flex items-center gap-1 text-xs bg-success-light/20 text-success-dark px-2 py-1 rounded-full">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {data.workouts.map((plan) => {
+                const planOverview = plan.plan_data?.plan_overview;
+                const weeklySchedule = plan.plan_data?.weekly_schedule || [];
+                const planName = planOverview?.program_name || 'Workout Plan';
+
+                return (
+                  <Card
+                    key={plan._id}
+                    hover
+                    className={`relative ${plan.is_active ? 'ring-2 ring-primary-500' : ''}`}
+                  >
+                    <div className="p-6">
+                      {/* Header with Title and Badges */}
+                      <div className="mb-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-xl font-bold text-neutral-900 flex-1 pr-2">
+                            {planName}
+                          </h3>
+                          {plan.is_active && (
+                            <div className="flex items-center gap-1 text-xs bg-primary-500 text-white px-2 py-1 rounded-full font-medium">
+                              <CheckCircle className="w-3 h-3" />
+                              Active
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs text-neutral-600">
+                          <span className="flex items-center gap-1 bg-success-light/20 text-success-dark px-2 py-1 rounded-full">
                             <Zap className="w-3 h-3" />
                             AI Generated
                           </span>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      {planOverview?.program_description && (
+                        <p className="text-sm text-neutral-600 mb-4 line-clamp-2">
+                          {planOverview.program_description}
+                        </p>
+                      )}
+
+                      {/* Stats */}
+                      <div className="flex flex-wrap gap-3 text-sm text-neutral-600 mb-4 pb-4 border-b border-neutral-200">
+                        {planOverview?.duration_weeks && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-4 h-4 text-primary-500" />
+                            {planOverview.duration_weeks} weeks
+                          </span>
+                        )}
+                        {planOverview?.sessions_per_week && (
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4 text-primary-500" />
+                            {planOverview.sessions_per_week}x/week
+                          </span>
+                        )}
+                        {weeklySchedule.length > 0 && (
+                          <span className="flex items-center gap-1">
+                            <Dumbbell className="w-4 h-4 text-primary-500" />
+                            {weeklySchedule.length} days
+                          </span>
                         )}
                       </div>
-                      {workout.description && (
-                        <p className="text-neutral-600 mb-4">{workout.description}</p>
-                      )}
-                      <div className="flex flex-wrap gap-4 text-sm text-neutral-600 mb-4">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {workout.estimated_duration_minutes} min
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="w-4 h-4" />
-                          {workout.difficulty_level}
-                        </span>
-                        <span className="capitalize">{workout.workout_type.replace('_', ' ')}</span>
-                      </div>
 
-                      <div className="space-y-2">
-                        <h4 className="font-semibold text-sm text-neutral-700">Exercises:</h4>
-                        <div className="grid gap-2">
-                          {workout.exercises.map((exercise, idx) => (
-                            <div key={idx} className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
-                              <p className="font-medium text-neutral-900">{exercise.exercise_name}</p>
-                              <p className="text-sm text-neutral-600 mt-1">
-                                {exercise.sets && `${exercise.sets} sets`}
-                                {exercise.reps && ` × ${exercise.reps} reps`}
-                                {exercise.duration_seconds && ` • ${exercise.duration_seconds}s`}
-                                {exercise.rest_seconds && ` • Rest: ${exercise.rest_seconds}s`}
+                      {/* Quick Preview */}
+                      {weeklySchedule.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">
+                            This Week
+                          </h4>
+                          <div className="space-y-1.5">
+                            {weeklySchedule.slice(0, 2).map((daySchedule, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between text-sm bg-neutral-50 px-3 py-2 rounded-lg"
+                              >
+                                <span className="font-medium text-neutral-700">{daySchedule.day}</span>
+                                <span className="text-xs text-neutral-600 truncate ml-2">
+                                  {daySchedule.workout?.name || 'Rest'}
+                                </span>
+                              </div>
+                            ))}
+                            {weeklySchedule.length > 2 && (
+                              <p className="text-xs text-neutral-500 text-center pt-1">
+                                +{weeklySchedule.length - 2} more days
                               </p>
-                              {exercise.muscle_groups && exercise.muscle_groups.length > 0 && (
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                  {exercise.muscle_groups.map((muscle, i) => (
-                                    <span key={i} className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded">
-                                      {muscle}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                            )}
+                          </div>
                         </div>
+                      )}
 
-                        {/* Start Workout Button */}
-                        <div className="mt-4">
+                      {/* Action Buttons */}
+                      <div className="space-y-2">
+                        <Button
+                          onClick={() => navigate(`/workout-plan-review?plan=${plan._id}`)}
+                          variant="primary"
+                          className="w-full"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          View Full Plan
+                        </Button>
+
+                        <div className="flex gap-2">
+                          {!plan.is_active ? (
+                            <Button
+                              onClick={() => handleSetActive(plan._id)}
+                              variant="outline"
+                              className="flex-1"
+                              loading={setActiveMutation.isPending}
+                            >
+                              <Circle className="w-4 h-4 mr-2" />
+                              Set Active
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              className="flex-1"
+                              disabled
+                            >
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Currently Active
+                            </Button>
+                          )}
+
                           <Button
-                            onClick={() => setActiveWorkout(workout)}
-                            variant="primary"
-                            className="w-full"
+                            onClick={() => handleDelete(plan._id, planName, plan.is_active)}
+                            variant="outline"
+                            className="text-error-DEFAULT hover:bg-error-light hover:border-error-DEFAULT"
+                            loading={deleteMutation.isPending}
+                            disabled={plan.is_active}
                           >
-                            <Play className="h-4 w-4 mr-2" />
-                            Start Workout
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </Card>
-            ))
+                  </Card>
+                );
+              })}
+            </div>
           ) : (
             !isLoading && !isError && (
               <Card>
@@ -192,6 +295,19 @@ export default function WorkoutsPage() {
             )
           )}
         </div>
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmModal
+          isOpen={deleteModal.isOpen}
+          onClose={() => setDeleteModal({ isOpen: false, planId: '', planName: '', isActive: false })}
+          onConfirm={confirmDelete}
+          title="Delete Workout Plan"
+          message={`Are you sure you want to delete "${deleteModal.planName}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+          loading={deleteMutation.isPending}
+        />
         </div>
       </PageTransition>
     </Layout>

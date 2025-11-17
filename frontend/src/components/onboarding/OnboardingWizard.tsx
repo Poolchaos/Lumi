@@ -175,8 +175,16 @@ export function OnboardingWizard() {
         await updatePreferencesMutation.mutateAsync(data.preferences);
       }
 
-      // Add equipment
-      for (const equipmentName of data.equipment) {
+      // Add equipment (only new ones that don't exist yet)
+      const existingEquipmentNames = existingEquipment?.equipment
+        ? existingEquipment.equipment.map((eq: Equipment) => eq.equipment_name)
+        : [];
+
+      const newEquipment = data.equipment.filter(
+        (equipmentName: string) => !existingEquipmentNames.includes(equipmentName)
+      );
+
+      for (const equipmentName of newEquipment) {
         await createEquipmentMutation.mutateAsync({
           equipment_name: equipmentName,
           equipment_type: 'other' as Equipment['equipment_type'],

@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Calendar as CalendarIcon, TrendingUp } from 'lucide-react';
+import { Calendar as CalendarIcon, TrendingUp, Dumbbell, Clock, Target, Award } from 'lucide-react';
 import Layout from '../components/Layout';
 import { WeeklyCalendar } from '../components/calendar/WeeklyCalendar';
 import { MonthlyCalendar } from '../components/calendar/MonthlyCalendar';
 import { PageTransition } from '../components/layout/PageTransition';
-import { Card } from '../design-system';
+import { Card, Modal, Button } from '../design-system';
 import { workoutAPI, sessionAPI } from '../api';
 
 type ViewMode = 'weekly' | 'monthly';
@@ -19,6 +19,16 @@ interface WorkoutDay {
     duration_minutes: number;
     focus: string;
     xpEarned?: number;
+    exercises?: Array<{
+      name: string;
+      sets: number;
+      reps: number | string;
+      duration_seconds?: number;
+      rest_seconds?: number;
+      equipment?: string[];
+      target_muscles?: string[];
+      instructions?: string;
+    }>;
   };
   isCompleted: boolean;
   isToday: boolean;
@@ -28,6 +38,8 @@ interface WorkoutDay {
 export default function SchedulePage() {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<ViewMode>('weekly');
+  const [selectedDay, setSelectedDay] = useState<WorkoutDay | null>(null);
+  const [showWorkoutModal, setShowWorkoutModal] = useState(false);
 
   const { data: workoutsData } = useQuery({
     queryKey: ['workouts'],
@@ -85,10 +97,11 @@ export default function SchedulePage() {
           date: dateStr,
           dayName,
           workout: {
-            name: scheduledWorkout.workout.workout_name || `${scheduledWorkout.workout.focus} Day`,
+            name: scheduledWorkout.workout.name || scheduledWorkout.workout.workout_name || `${scheduledWorkout.workout.focus} Day`,
             duration_minutes: duration,
             focus: scheduledWorkout.workout.focus || 'Full Body',
             xpEarned,
+            exercises: exercises,
           },
           isCompleted,
           isToday: dateStr === today.toLocaleDateString('en-US'),
@@ -111,7 +124,8 @@ export default function SchedulePage() {
 
   const handleDayClick = (day: WorkoutDay) => {
     if (day.workout) {
-      navigate('/workouts');
+      setSelectedDay(day);
+      setShowWorkoutModal(true);
     }
   };
 
@@ -212,6 +226,147 @@ export default function SchedulePage() {
             </>
           )}
         </div>
+
+        {/* Workout Details Modal */}
+        {selectedDay && selectedDay.workout && (
+          <Modal
+            isOpen={showWorkoutModal}
+            onClose={() => {
+              setShowWorkoutModal(false);
+              setSelectedDay(null);
+            }}
+            title={selectedDay.workout.name}
+            size="lg"
+          >
+            <div className="space-y-6">
+              {/* Workout Header Info */}
+              <div className="flex flex-wrap gap-4 pb-4 border-b border-neutral-200">
+                <div className="flex items-center gap-2 text-sm text-neutral-600">
+                  <CalendarIcon className="w-4 h-4 text-primary-500" />
+                  <span className="font-medium">{selectedDay.dayName}</span>
+                  <span className="text-neutral-400">•</span>
+                  <span>{selectedDay.date}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-neutral-600">
+                  <Clock className="w-4 h-4 text-primary-500" />
+                  <span>{selectedDay.workout.duration_minutes} minutes</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-neutral-600">
+                  <Target className="w-4 h-4 text-primary-500" />
+                  <span>{selectedDay.workout.focus}</span>
+                </div>
+                {selectedDay.workout.xpEarned && (
+                  <div className="flex items-center gap-2 text-sm text-success-600 font-medium">
+                    <Award className="w-4 h-4" />
+                    <span>{selectedDay.workout.xpEarned} XP Earned</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Exercises List */}
+              {selectedDay.workout.exercises && selectedDay.workout.exercises.length > 0 ? (
+                <div>
+                  <h4 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
+                    <Dumbbell className="w-5 h-5 text-primary-500" />
+                    Exercises ({selectedDay.workout.exercises.length})
+                  </h4>
+                  <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                    {selectedDay.workout.exercises.map((exercise, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-neutral-50 rounded-lg p-4 hover:bg-neutral-100 transition-colors"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h5 className="font-semibold text-neutral-900">{idx + 1}. {exercise.name}</h5>
+                          {exercise.equipment && exercise.equipment.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {exercise.equipment.map((eq, eqIdx) => (
+                                <span
+                                  key={eqIdx}
+                                  className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded"
+                                >
+                                  {eq}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 text-sm text-neutral-600 mb-2">
+                          {exercise.sets && (
+                            <span className="font-medium">
+                              {exercise.sets} sets × {exercise.reps} reps
+                            </span>
+                          )}
+                          {exercise.duration_seconds && (
+                            <span>
+                              {Math.floor(exercise.duration_seconds / 60)}:{(exercise.duration_seconds % 60).toString().padStart(2, '0')} duration
+                            </span>
+                          )}
+                          {exercise.rest_seconds && (
+                            <span className="text-neutral-500">
+                              {exercise.rest_seconds}s rest
+                            </span>
+                          )}
+                        </div>
+
+                        {exercise.target_muscles && exercise.target_muscles.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {exercise.target_muscles.map((muscle, mIdx) => (
+                              <span
+                                key={mIdx}
+                                className="text-xs bg-neutral-200 text-neutral-700 px-2 py-0.5 rounded"
+                              >
+                                {muscle}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {exercise.instructions && (
+                          <p className="text-sm text-neutral-600 mt-2 leading-relaxed">
+                            {exercise.instructions}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-neutral-500">
+                  <Dumbbell className="w-12 h-12 mx-auto mb-3 text-neutral-300" />
+                  <p>No exercise details available</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-neutral-200">
+                {!selectedDay.isCompleted && (
+                  <Button
+                    onClick={() => {
+                      setShowWorkoutModal(false);
+                      navigate('/workout-session');
+                    }}
+                    variant="primary"
+                    className="flex-1"
+                  >
+                    Start Workout
+                  </Button>
+                )}
+                <Button
+                  onClick={() => {
+                    setShowWorkoutModal(false);
+                    setSelectedDay(null);
+                  }}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </Modal>
+        )}
       </PageTransition>
     </Layout>
   );

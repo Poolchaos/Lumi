@@ -86,14 +86,41 @@ export interface BodyMetrics {
 export interface WorkoutPlan {
   _id: string;
   user_id: string;
-  workout_name: string;
-  description?: string;
-  difficulty_level: 'beginner' | 'intermediate' | 'advanced';
-  estimated_duration_minutes: number;
-  workout_type: string;
-  exercises: Exercise[];
-  ai_generated: boolean;
-  ai_provider?: string;
+  plan_data: {
+    plan_overview: {
+      program_name: string;
+      program_description?: string;
+      duration_weeks: number;
+      sessions_per_week: number;
+      equipment_required: string[];
+      fitness_level: string;
+      primary_goals: string[];
+      training_methodology?: string;
+    };
+    weekly_schedule: Array<{
+      day: string;
+      workout?: {
+        name: string;
+        duration_minutes: number;
+        focus: string;
+        exercises: Array<{
+          name: string;
+          sets?: number;
+          reps?: number;
+          duration_seconds?: number;
+          rest_seconds?: number;
+          target_muscles: string[];
+          equipment_needed?: string[];
+          instructions?: string;
+        }>;
+      };
+    }>;
+    progression_notes?: string;
+    warm_up_routine?: string;
+    cool_down_routine?: string;
+  };
+  generation_context?: Record<string, unknown>;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }

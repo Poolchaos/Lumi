@@ -17,7 +17,7 @@ export function XPProgressBar({ currentXP, level, showAnimation = true, size = '
   const xpForCurrentLevel = xpForLevel(level);
 
   // XP progress within current level
-  const xpInCurrentLevel = currentXP - xpForCurrentLevel;
+  const xpInCurrentLevel = Math.max(0, currentXP - xpForCurrentLevel);
   const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
   const progressPercentage = Math.min((xpInCurrentLevel / xpNeededForNextLevel) * 100, 100);
 

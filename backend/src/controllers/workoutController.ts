@@ -268,3 +268,59 @@ export const deactivateWorkoutPlan = async (
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const setActiveWorkoutPlan = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const plan = await WorkoutPlan.findOne({
+      _id: req.params.id,
+      user_id: req.user?.userId,
+    });
+
+    if (!plan) {
+      res.status(404).json({ error: 'Workout plan not found' });
+      return;
+    }
+
+    // Deactivate all other plans
+    await WorkoutPlan.updateMany(
+      { user_id: req.user?.userId, is_active: true },
+      { is_active: false }
+    );
+
+    // Activate this plan
+    plan.is_active = true;
+    await plan.save();
+
+    res.json({ message: 'Workout plan activated successfully', plan });
+  } catch (error) {
+    console.error('Activate workout plan error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteWorkoutPlan = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const plan = await WorkoutPlan.findOne({
+      _id: req.params.id,
+      user_id: req.user?.userId,
+    });
+
+    if (!plan) {
+      res.status(404).json({ error: 'Workout plan not found' });
+      return;
+    }
+
+    await WorkoutPlan.deleteOne({ _id: req.params.id });
+
+    res.json({ message: 'Workout plan deleted successfully' });
+  } catch (error) {
+    console.error('Delete workout plan error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

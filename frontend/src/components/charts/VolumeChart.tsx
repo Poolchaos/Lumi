@@ -7,19 +7,25 @@ interface VolumeChartProps {
 
 export default function VolumeChart({ workouts }: VolumeChartProps) {
   // Calculate volume (sets × reps) for each workout
-  // Note: Weight data not in WorkoutPlan, would need WorkoutSession data
+  // Note: Now calculating from weekly_schedule in workout plans
   const chartData = workouts
-    .map(workout => {
-      const totalVolume = workout.exercises.reduce((sum, exercise) => {
-        const volume = (exercise.sets || 0) * (exercise.reps || 0);
-        return sum + volume;
-      }, 0);
+    .flatMap(plan => {
+      if (!plan.plan_data?.weekly_schedule) return [];
 
-      return {
-        name: workout.workout_name,
-        date: new Date(workout.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        volume: totalVolume,
-      };
+      return plan.plan_data.weekly_schedule
+        .filter(day => day.workout)
+        .map(day => {
+          const totalVolume = day.workout!.exercises.reduce((sum, exercise) => {
+            const volume = (exercise.sets || 0) * (exercise.reps || 0);
+            return sum + volume;
+          }, 0);
+
+          return {
+            name: day.workout!.name,
+            date: new Date(plan.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            volume: totalVolume,
+          };
+        });
     })
     .filter(w => w.volume > 0) // Only show workouts with volume data
     .slice(-30); // Last 30 workouts

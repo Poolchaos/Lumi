@@ -5,6 +5,7 @@ import {
   createEquipment,
   updateEquipment,
   deleteEquipment,
+  cleanDuplicateEquipment,
 } from '../controllers/equipmentController';
 import { authenticate } from '../middleware/auth';
 
@@ -12,6 +13,9 @@ const router = Router();
 
 // All equipment routes require authentication
 router.use(authenticate);
+
+// Clean duplicate equipment (admin/utility endpoint)
+router.post('/clean-duplicates', cleanDuplicateEquipment);
 
 // Get all equipment for user
 router.get('/', getEquipment);

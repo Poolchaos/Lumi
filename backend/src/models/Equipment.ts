@@ -69,4 +69,7 @@ const equipmentSchema = new Schema<IEquipment>(
 // Index for efficient equipment queries by user
 equipmentSchema.index({ user_id: 1, equipment_type: 1 });
 
+// Unique compound index to prevent duplicate equipment per user
+equipmentSchema.index({ user_id: 1, equipment_name: 1 }, { unique: true });
+
 export default mongoose.model<IEquipment>('Equipment', equipmentSchema);

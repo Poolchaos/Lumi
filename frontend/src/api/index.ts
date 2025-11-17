@@ -153,6 +153,16 @@ export const workoutAPI = {
     const { data } = await apiClient.delete(`/api/workouts/${id}`);
     return data;
   },
+
+  setActive: async (id: string): Promise<{ message: string; plan: WorkoutPlan }> => {
+    const { data } = await apiClient.patch(`/api/workouts/${id}/activate`);
+    return data;
+  },
+
+  deactivate: async (id: string): Promise<{ message: string }> => {
+    const { data } = await apiClient.patch(`/api/workouts/${id}/deactivate`);
+    return data;
+  },
 };
 
 // Session API

@@ -15,7 +15,7 @@ import {
   RefreshCw,
   Edit,
   Zap,
-  Calendar
+  Calendar,
 } from 'lucide-react';
 
 // Type for the actual backend response structure
@@ -62,6 +62,7 @@ interface GeneratedPlan {
 export default function WorkoutPlanReviewPage() {
   const navigate = useNavigate();
   const [isAccepted, setIsAccepted] = useState(false);
+  const [activeTab, setActiveTab] = useState<'exercises' | 'schedule'>('schedule');
   const queryClient = useQueryClient();
 
   // First, try to get the cached plan data from the onboarding wizard
@@ -203,95 +204,127 @@ export default function WorkoutPlanReviewPage() {
 
         {/* Plan Details */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Main Plan Info */}
+          {/* Main Plan Info with Tabs */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Detailed Exercises */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Dumbbell className="w-5 h-5" />
-                  Exercise Details
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Your Workout Plan</CardTitle>
+                  {/* Tab Buttons */}
+                  <div className="flex bg-neutral-100 rounded-lg p-1">
+                    <button
+                      onClick={() => setActiveTab('schedule')}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                        activeTab === 'schedule'
+                          ? 'bg-white text-neutral-900 shadow-sm'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      Weekly Schedule
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('exercises')}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                        activeTab === 'exercises'
+                          ? 'bg-white text-neutral-900 shadow-sm'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                      }`}
+                    >
+                      <Dumbbell className="w-4 h-4" />
+                      Exercise Details
+                    </button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <p className="text-neutral-600 mb-6">
                   {plan.plan_data.plan_overview.duration_weeks} week program, {plan.plan_data.plan_overview.sessions_per_week} sessions per week
                 </p>
 
-                {/* Weekly Schedule */}
-                <div className="space-y-6">
-                  {plan.plan_data.weekly_schedule.map((daySchedule, dayIndex) => (
-                    <div key={dayIndex} className="border border-neutral-200 rounded-lg p-4">
-                      <div className="mb-4">
-                        <h3 className="text-xl font-bold text-neutral-900">{daySchedule.day}</h3>
-                        <h4 className="text-lg text-primary-600 font-semibold">{daySchedule.workout.name}</h4>
-                        <div className="flex items-center gap-4 text-sm text-neutral-600 mt-1">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {daySchedule.workout.duration_minutes} min
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Target className="w-4 h-4" />
-                            {daySchedule.workout.focus}
-                          </span>
+                {/* Tab Content */}
+                {activeTab === 'schedule' && (
+                  <WeeklyScheduleGrid
+                    schedule={plan.plan_data.weekly_schedule}
+                    totalXP={totalXP}
+                  />
+                )}
+
+                {activeTab === 'exercises' && (
+                  <div className="space-y-6">
+                    {plan.plan_data.weekly_schedule.map((daySchedule, dayIndex) => (
+                      <div key={dayIndex} className="border border-neutral-200 rounded-lg p-4">
+                        <div className="mb-4">
+                          <h3 className="text-xl font-bold text-neutral-900">{daySchedule.day}</h3>
+                          <h4 className="text-lg text-primary-600 font-semibold">{daySchedule.workout.name}</h4>
+                          <div className="flex items-center gap-4 text-sm text-neutral-600 mt-1">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {daySchedule.workout.duration_minutes} min
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Target className="w-4 h-4" />
+                              {daySchedule.workout.focus}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Exercises for this day */}
+                        <div className="space-y-3">
+                          {daySchedule.workout.exercises.map((exercise, exIndex) => (
+                            <div
+                              key={exIndex}
+                              className="border border-neutral-100 rounded-lg p-3 bg-neutral-50"
+                            >
+                              <h5 className="font-semibold text-neutral-900 mb-2">
+                                {exIndex + 1}. {exercise.name}
+                              </h5>
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                {exercise.target_muscles.map((muscle, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full"
+                                  >
+                                    {muscle}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-2">
+                                {exercise.sets && (
+                                  <div>
+                                    <span className="text-neutral-500">Sets:</span>
+                                    <span className="ml-1 font-semibold">{exercise.sets}</span>
+                                  </div>
+                                )}
+                                {exercise.reps && (
+                                  <div>
+                                    <span className="text-neutral-500">Reps:</span>
+                                    <span className="ml-1 font-semibold">{exercise.reps}</span>
+                                  </div>
+                                )}
+                                {exercise.duration_seconds && (
+                                  <div>
+                                    <span className="text-neutral-500">Duration:</span>
+                                    <span className="ml-1 font-semibold">{formatDuration(exercise.duration_seconds)}</span>
+                                  </div>
+                                )}
+                                {exercise.rest_seconds && (
+                                  <div>
+                                    <span className="text-neutral-500">Rest:</span>
+                                    <span className="ml-1 font-semibold">{formatDuration(exercise.rest_seconds)}</span>
+                                  </div>
+                                )}
+                              </div>
+                              <p className="text-xs text-neutral-600 italic">
+                                💡 {exercise.instructions}
+                              </p>
+                            </div>
+                          ))}
                         </div>
                       </div>
-
-                      {/* Exercises for this day */}
-                      <div className="space-y-3">
-                        {daySchedule.workout.exercises.map((exercise, exIndex) => (
-                          <div
-                            key={exIndex}
-                            className="border border-neutral-100 rounded-lg p-3 bg-neutral-50"
-                          >
-                            <h5 className="font-semibold text-neutral-900 mb-2">
-                              {exIndex + 1}. {exercise.name}
-                            </h5>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                              {exercise.target_muscles.map((muscle, idx) => (
-                                <span
-                                  key={idx}
-                                  className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full"
-                                >
-                                  {muscle}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-2">
-                              {exercise.sets && (
-                                <div>
-                                  <span className="text-neutral-500">Sets:</span>
-                                  <span className="ml-1 font-semibold">{exercise.sets}</span>
-                                </div>
-                              )}
-                              {exercise.reps && (
-                                <div>
-                                  <span className="text-neutral-500">Reps:</span>
-                                  <span className="ml-1 font-semibold">{exercise.reps}</span>
-                                </div>
-                              )}
-                              {exercise.duration_seconds && (
-                                <div>
-                                  <span className="text-neutral-500">Duration:</span>
-                                  <span className="ml-1 font-semibold">{formatDuration(exercise.duration_seconds)}</span>
-                                </div>
-                              )}
-                              {exercise.rest_seconds && (
-                                <div>
-                                  <span className="text-neutral-500">Rest:</span>
-                                  <span className="ml-1 font-semibold">{formatDuration(exercise.rest_seconds)}</span>
-                                </div>
-                              )}
-                            </div>
-                            <p className="text-xs text-neutral-600 italic">
-                              💡 {exercise.instructions}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -405,22 +438,6 @@ export default function WorkoutPlanReviewPage() {
             </div>
           </div>
         </div>
-
-        {/* Full Width Weekly Schedule Grid */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5" />
-              Your Weekly Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WeeklyScheduleGrid
-              schedule={plan.plan_data.weekly_schedule}
-              totalXP={totalXP}
-            />
-          </CardContent>
-        </Card>
       </div>
 
       <style>{`
