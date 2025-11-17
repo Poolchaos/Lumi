@@ -24,8 +24,9 @@ test.describe('Body Metrics and Photos', () => {
   test('should add body metrics', async ({ page }) => {
     await setupUser(page, 'add');
 
-    // Click "+ Add Metrics" button to show form
-    await page.click('button:has-text("Add Metrics")');
+    // Click "+ Add Metrics" button to show form using data-testid
+    const addButton = page.locator('[data-testid="add-metrics-button"]');
+    await addButton.click();
     await page.waitForTimeout(500);
 
     // Fill simplified metrics form (only 3 fields now)
@@ -60,8 +61,10 @@ test.describe('Body Metrics and Photos', () => {
   test('should display metrics history', async ({ page }) => {
     await setupUser(page, 'history');
 
-    // Click "+ Add Metrics" button to show form
-    await page.click('button:has-text("Add Metrics")');
+    // Click "+ Add Metrics" button to show form using data-testid
+    const addButton = page.locator('[data-testid="add-metrics-button"]');
+    await addButton.waitFor({ state: 'visible', timeout: 5000 });
+    await addButton.click();
     await page.waitForTimeout(500);
 
     // Add first set of metrics
@@ -69,9 +72,10 @@ test.describe('Body Metrics and Photos', () => {
     await page.click('button:has-text("Save Metrics")');
     await page.waitForTimeout(1500); // Wait for save and form to close
 
-    // Wait for button to be available again (form closes after save)
-    const addButton = page.locator('button:has-text("Add Metrics")');
+    // Wait for button to be available again (form closes after save, button text reverts)
+    await page.waitForTimeout(1000); // Extra wait for state update
     await addButton.waitFor({ state: 'visible', timeout: 10000 });
+    await expect(addButton).toContainText('Add Metrics'); // Verify form closed
     await addButton.click();
     await page.waitForTimeout(500);
 
