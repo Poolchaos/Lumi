@@ -13,6 +13,7 @@ import WorkoutsPage from './pages/WorkoutsPage';
 import GoalsPage from './pages/GoalsPage';
 import AccountabilityPage from './pages/AccountabilityPage';
 import WorkoutPlanReviewPage from './pages/WorkoutPlanReviewPage';
+import SchedulePage from './pages/SchedulePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +129,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AccountabilityPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schedule"
+            element={
+              <ProtectedRoute>
+                <SchedulePage />
               </ProtectedRoute>
             }
           />
