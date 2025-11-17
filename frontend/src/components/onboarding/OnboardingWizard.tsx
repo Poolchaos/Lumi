@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -23,6 +23,18 @@ export function OnboardingWizard() {
     queryFn: aiConfigAPI.get,
   });
 
+  // Fetch existing profile data
+  const { data: existingProfile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: profileAPI.getProfile,
+  });
+
+  // Fetch existing equipment
+  const { data: existingEquipment } = useQuery({
+    queryKey: ['equipment'],
+    queryFn: equipmentAPI.getAll,
+  });
+
   const hasExistingKey = aiConfig?.ai_config?.has_api_key || false;
 
   const [data, setData] = useState<OnboardingData>({
@@ -32,6 +44,35 @@ export function OnboardingWizard() {
     equipment: [],
     preferences: {},
   });
+
+  // Load existing data when profile/equipment loads
+  useEffect(() => {
+    if (existingProfile?.user) {
+      const user = existingProfile.user;
+      setData((prev) => ({
+        ...prev,
+        profile: {
+          first_name: user.profile?.first_name || prev.profile.first_name,
+          last_name: user.profile?.last_name || prev.profile.last_name,
+          fitness_goals: user.profile?.fitness_goals || prev.profile.fitness_goals,
+          experience_level: user.profile?.experience_level || prev.profile.experience_level,
+        },
+        preferences: {
+          workout_frequency: (user.preferences as { workout_frequency?: number })?.workout_frequency || prev.preferences.workout_frequency || 3,
+          preferred_workout_duration: user.preferences?.preferred_workout_duration || prev.preferences.preferred_workout_duration || 45,
+        },
+      }));
+    }
+
+    if (existingEquipment?.equipment && existingEquipment.equipment.length > 0) {
+      const equipmentNames = existingEquipment.equipment.map((eq: Equipment) => eq.equipment_name);
+      setData((prev) => ({
+        ...prev,
+        equipment: equipmentNames,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateProfileMutation = useMutation({
     mutationFn: profileAPI.updateProfile,

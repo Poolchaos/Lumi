@@ -29,6 +29,10 @@ export interface WorkoutPlanRequest {
     specifications?: Record<string, unknown>;
   }>;
   workoutModality?: 'strength' | 'hiit' | 'flexibility' | 'cardio';
+  weeklySchedule?: {
+    days_per_week: number;
+    session_duration: number;
+  };
 }
 
 export interface WorkoutPlan {
@@ -68,7 +72,7 @@ export const generateWorkoutPlan = async (
   openaiClient?: OpenAI
 ): Promise<WorkoutPlan> => {
   const openai = openaiClient || defaultOpenAI;
-  const { userProfile, preferences, availableEquipment, workoutModality = 'strength' } = request;
+  const { userProfile, preferences, availableEquipment, workoutModality = 'strength', weeklySchedule } = request;
 
   // Build modality-specific context
   let modalityGuidance = '';
@@ -162,9 +166,12 @@ User Profile:
 - Height: ${userProfile.height_cm ? `${userProfile.height_cm} cm` : 'Not specified'}
 - Weight: ${userProfile.weight_kg ? `${userProfile.weight_kg} kg` : 'Not specified'}
 
+Weekly Schedule Requirements:
+- Sessions Per Week: ${weeklySchedule?.days_per_week || preferences.preferred_workout_days?.length || 3}
+- Session Duration: ${weeklySchedule?.session_duration || preferences.preferred_workout_duration || 45} minutes
+
 Preferences:
 - Preferred Workout Days: ${preferences.preferred_workout_days?.join(', ') || 'Flexible'}
-- Preferred Duration: ${preferences.preferred_workout_duration || 45} minutes
 - Preferred Workout Types: ${preferences.preferred_workout_types?.join(', ') || 'Any'}
 
 ${equipmentContext}
@@ -253,18 +260,21 @@ Generate a structured 4-week mesocycle with scientific progression. Format your 
 }
 
 PLAN REQUIREMENTS:
-1. **Evidence-Based Progression**: Apply progressive overload principles across 4 weeks (volume/intensity progression)
-2. **Experience-Appropriate**: Match exercise complexity and volume to user's training age
-3. **Goal-Aligned**: Primary focus on user's stated fitness goals with supporting work
-4. **Equipment-Constrained**: ONLY exercises performable with available equipment
-5. **Injury-Aware**: Provide modifications for any reported injuries or medical conditions
-6. **Warm-up Protocol**: Include 5-10min dynamic preparation before main work
-7. **Safety Emphasis**: Include form cues and injury prevention reminders based on user profile
-8. **Periodization**: Week 4 should be deload (reduced volume, maintained intensity)
-9. **Recovery Guidance**: Include rest day placement and recovery modality suggestions
-10. **Measurable Progression**: Each week should have clear progression markers (reps, sets, tempo, or load recommendations)
+1. **Weekly Schedule**: MUST create exactly ${weeklySchedule?.days_per_week || 3} workout sessions per week, each approximately ${weeklySchedule?.session_duration || 45} minutes
+2. **Evidence-Based Progression**: Apply progressive overload principles across 4 weeks (volume/intensity progression)
+3. **Experience-Appropriate**: Match exercise complexity and volume to user's training age
+4. **Goal-Aligned**: Primary focus on user's stated fitness goals with supporting work
+5. **Equipment-Constrained**: ONLY exercises performable with available equipment
+6. **Injury-Aware**: Provide modifications for any reported injuries or medical conditions
+7. **Warm-up Protocol**: Include 5-10min dynamic preparation before main work
+8. **Safety Emphasis**: Include form cues and injury prevention reminders based on user profile
+9. **Periodization**: Week 4 should be deload (reduced volume, maintained intensity)
+10. **Recovery Guidance**: Include rest day placement and recovery modality suggestions
+11. **Measurable Progression**: Each week should have clear progression markers (reps, sets, tempo, or load recommendations)
 
 VALIDATION CHECKLIST (ensure before responding):
+- [ ] Weekly schedule has EXACTLY ${weeklySchedule?.days_per_week || 3} workout sessions
+- [ ] Each session is approximately ${weeklySchedule?.session_duration || 45} minutes in duration
 - [ ] All exercises use ONLY available equipment
 - [ ] Volume per muscle group falls within evidence-based ranges (10-20 sets/week)
 - [ ] Rest intervals appropriate for training goal
