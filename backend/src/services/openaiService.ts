@@ -293,8 +293,15 @@ VALIDATION CHECKLIST (ensure before responding):
     workout_duration: preferences.preferred_workout_duration,
     workout_days: preferences.preferred_workout_days,
   });
+  console.log('Weekly Schedule:', {
+    days_per_week: weeklySchedule?.days_per_week,
+    session_duration: weeklySchedule?.session_duration,
+  });
   console.log('Workout modality:', workoutModality);
   console.log('Equipment count:', availableEquipment?.length || 0);
+  console.log('\nWeekly Schedule in prompt:');
+  console.log('- Sessions Per Week:', weeklySchedule?.days_per_week || preferences.preferred_workout_days?.length || 3);
+  console.log('- Session Duration:', weeklySchedule?.session_duration || preferences.preferred_workout_duration || 45);
 
   try {
     console.log('Sending request to OpenAI...');
