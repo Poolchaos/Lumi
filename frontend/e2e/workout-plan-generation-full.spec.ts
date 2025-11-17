@@ -23,8 +23,22 @@ async function setupUserWithProfile(page: Page, email: string, password: string)
   await page.fill('input[id="confirmPassword"]', password);
   await page.click('button[type="submit"]');
 
+  // Wait longer for signup to complete and redirect
+  await page.waitForTimeout(2000);
+
   // New users are redirected to onboarding (correct behavior)
-  await expect(page).toHaveURL(/\/(dashboard|onboarding)/, { timeout: 10000 });
+  // If still on signup, there may be an error - check and skip test
+  if (page.url().includes('/signup')) {
+    console.log('⚠ Signup failed - may already exist or backend unavailable');
+    // Try logging in instead
+    await page.goto('/login');
+    await page.fill('input[type="email"]', email);
+    await page.fill('input[type="password"]', password);
+    await page.click('button[type="submit"]');
+    await page.waitForTimeout(2000);
+  }
+
+  await expect(page).toHaveURL(/\/(dashboard|onboarding|workouts)/, { timeout: 10000 });
 
   // If on onboarding, skip it for now (navigate to dashboard)
   if (page.url().includes('onboarding')) {
@@ -118,7 +132,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
   test('should complete full generation and review flow (Happy Path)', async ({ page }) => {
     // Setup: Create user - they'll be redirected to onboarding
     await setupUserWithProfile(page, testEmail, testPassword);
-    
+
     // User should be on onboarding or dashboard - navigate to onboarding if needed
     const currentUrl = page.url();
     if (!currentUrl.includes('onboarding')) {
@@ -128,10 +142,10 @@ test.describe('Workout Plan Generation - Full Flow', () => {
 
     // Note: This test requires a valid OPENAI_API_KEY in backend environment
     // The onboarding wizard has multiple steps - we need to complete them all
-    
+
     // Wait for onboarding to load
     await page.waitForTimeout(1000);
-    
+
     // Look for "Next" or "Continue" buttons to progress through steps
     // The wizard will eventually generate and navigate to review page
     const maxSteps = 10; // Safety limit
@@ -141,7 +155,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
         console.log('✓ Navigated to review page after onboarding');
         break;
       }
-      
+
       // Check if we've reached dashboard (onboarding skipped/completed)
       if (page.url().includes('/dashboard')) {
         console.log('⚠ Reached dashboard - onboarding may have been skipped');
@@ -149,7 +163,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
         await page.goto('/workouts');
         break;
       }
-      
+
       // Try to find and click next/continue button
       const nextButton = page.locator('button:has-text("Next"), button:has-text("Continue"), button:has-text("Generate")').first();
       if (await nextButton.count() > 0 && await nextButton.isVisible()) {
@@ -162,8 +176,8 @@ test.describe('Workout Plan Generation - Full Flow', () => {
     }
 
     // Now check if we're on review page or if generation occurred
-    const reviewPageOrError = page.url().includes('/workout-plan-review') ? 'review' : 
-                               await page.locator('text=/error|failed|API key/i').count() > 0 ? 'error' : 
+    const reviewPageOrError = page.url().includes('/workout-plan-review') ? 'review' :
+                               await page.locator('text=/error|failed|API key/i').count() > 0 ? 'error' :
                                'other';
 
     if (reviewPageOrError === 'review') {

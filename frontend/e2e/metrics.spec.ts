@@ -23,11 +23,11 @@ test.describe('Body Metrics and Photos', () => {
 
   test('should add body metrics', async ({ page }) => {
     await setupUser(page, 'add');
-    
+
     // Click "+ Add Metrics" button to show form
     await page.click('button:has-text("Add Metrics")');
     await page.waitForTimeout(500);
-    
+
     // Fill simplified metrics form (only 3 fields now)
     await page.fill('input[name="weight_kg"]', '75.5');
     await page.fill('input[name="body_fat_percentage"]', '18.5');
@@ -59,24 +59,26 @@ test.describe('Body Metrics and Photos', () => {
 
   test('should display metrics history', async ({ page }) => {
     await setupUser(page, 'history');
-    
+
     // Click "+ Add Metrics" button to show form
     await page.click('button:has-text("Add Metrics")');
     await page.waitForTimeout(500);
-    
+
     // Add first set of metrics
     await page.fill('input[name="weight_kg"]', '76.0');
     await page.click('button:has-text("Save Metrics")');
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500); // Wait for save and form to close
 
-    // Click "+ Add Metrics" again (form closes after save)
-    await page.click('button:has-text("Add Metrics")');
+    // Wait for button to be available again (form closes after save)
+    const addButton = page.locator('button:has-text("Add Metrics")');
+    await addButton.waitFor({ state: 'visible', timeout: 10000 });
+    await addButton.click();
     await page.waitForTimeout(500);
-    
+
     // Add second set
     await page.fill('input[name="weight_kg"]', '75.0');
     await page.click('button:has-text("Save Metrics")');
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     // Should show both entries (check for multiple weight values)
     const weightElements = await page.locator('text=/7[56]\\.0/').count();

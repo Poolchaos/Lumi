@@ -20,24 +20,24 @@ test.describe('Profile Management', () => {
     await expect(page).toHaveURL('/profile');
 
     // Wait for form to load
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
-    // Fill personal info using label-based selectors (inputs don't have name attributes)
-    await page.fill('input[placeholder*="first name" i]', 'John');
-    await page.fill('input[placeholder*="last name" i]', 'Doe');
-    await page.fill('input[placeholder*="170" i]', '175'); // Height
-    await page.fill('input[placeholder*="70" i]', '75'); // Weight
+    // Fill personal info using label-based selectors
+    await page.fill('input[placeholder="Enter first name"]', 'John');
+    await page.fill('input[placeholder="Enter last name"]', 'Doe');
+    await page.fill('input[placeholder="170"]', '175'); // Height
+    await page.fill('input[placeholder="70"]', '75'); // Weight
 
     // Submit form
     await page.click('button:has-text("Save Profile")');
 
     // Should show success (wait for mutation to complete)
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     // Verify data persists - check that form fields have the values
     await page.reload();
-    await page.waitForTimeout(500);
-    await expect(page.locator('input[placeholder*="first name" i]')).toHaveValue('John');
+    await page.waitForTimeout(1000);
+    await expect(page.locator('input[placeholder="Enter first name"]')).toHaveValue('John');
   });
 
   test('should update fitness preferences', async ({ page }) => {
@@ -46,25 +46,25 @@ test.describe('Profile Management', () => {
     await expect(page).toHaveURL('/profile');
 
     // Wait for form to load
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
     // The preferences section is much simpler now - only workout duration
     // Look for "Workout Preferences" heading
     await page.locator('text=Workout Preferences').scrollIntoViewIfNeeded();
 
-    // Fill the workout duration field (placeholder shows "60")
-    const durationInput = page.locator('input[placeholder*="60" i]').last();
+    // Fill the workout duration field
+    const durationInput = page.locator('input[placeholder="60"]').last();
     await durationInput.fill('45');
 
     // Submit preferences
     await page.click('button:has-text("Save Preferences")');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     // Verify change persists
     await page.reload();
-    await page.waitForTimeout(500);
-    const reloadedInput = page.locator('input[placeholder*="60" i]').last();
+    await page.waitForTimeout(1000);
+    const reloadedInput = page.locator('input[placeholder="60"]').last();
     await expect(reloadedInput).toHaveValue('45');
   });
 });

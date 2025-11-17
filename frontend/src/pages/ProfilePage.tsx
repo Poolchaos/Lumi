@@ -72,26 +72,30 @@ export default function ProfilePage() {
                 <Input
                   label="First Name"
                   type="text"
-                  placeholder={data?.user.profile.first_name || 'Enter first name'}
+                  value={profile.first_name ?? data?.user.profile.first_name ?? ''}
+                  placeholder="Enter first name"
                   onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
                 />
                 <Input
                   label="Last Name"
                   type="text"
-                  placeholder={data?.user.profile.last_name || 'Enter last name'}
+                  value={profile.last_name ?? data?.user.profile.last_name ?? ''}
+                  placeholder="Enter last name"
                   onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
                 />
                 <div className="grid grid-cols-2 gap-4">
                   <Input
                     label="Height (cm)"
                     type="number"
-                    placeholder={data?.user.profile.height_cm?.toString() || '170'}
+                    value={profile.height_cm ?? data?.user.profile.height_cm ?? ''}
+                    placeholder="170"
                     onChange={(e) => setProfile({ ...profile, height_cm: Number(e.target.value) })}
                   />
                   <Input
                     label="Weight (kg)"
                     type="number"
-                    placeholder={data?.user.profile.weight_kg?.toString() || '70'}
+                    value={profile.weight_kg ?? data?.user.profile.weight_kg ?? ''}
+                    placeholder="70"
                     onChange={(e) => setProfile({ ...profile, weight_kg: Number(e.target.value) })}
                   />
                 </div>
@@ -114,7 +118,8 @@ export default function ProfilePage() {
                 <Input
                   label="Preferred Workout Duration (minutes)"
                   type="number"
-                  placeholder={data?.user.preferences.preferred_workout_duration?.toString() || '60'}
+                  value={preferences.preferred_workout_duration ?? data?.user.preferences.preferred_workout_duration ?? ''}
+                  placeholder="60"
                   onChange={(e) => setPreferences({ ...preferences, preferred_workout_duration: Number(e.target.value) })}
                 />
                 <Button type="submit" loading={updatePreferencesMutation.isPending} className="w-full">

@@ -70,15 +70,10 @@ test.describe('Authentication Flow', () => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL('/dashboard');
 
-    // Logout - button might be in a dropdown menu or profile menu
-    // Try clicking profile/user menu first if it exists
-    const profileMenu = page.locator('button:has-text("Profile"), [data-testid="user-menu"], button:has(svg):has-text("")').first();
-    if (await profileMenu.count() > 0 && await profileMenu.isVisible()) {
-      await profileMenu.click();
-      await page.waitForTimeout(500);
-    }
-    
-    const logoutButton = page.locator('button:has-text("Logout"), a:has-text("Logout")').first();
+    // Logout - use data-testid for reliable selection
+    await page.waitForTimeout(1000); // Wait for navigation to settle
+
+    const logoutButton = page.locator('[data-testid="logout-button"]');
     await logoutButton.waitFor({ state: 'visible', timeout: 5000 });
     await logoutButton.click();
     await expect(page).toHaveURL('/login', { timeout: 5000 });

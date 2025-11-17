@@ -68,6 +68,7 @@ export default function Layout({ children }: LayoutProps) {
               </span>
               <button
                 onClick={handleLogout}
+                data-testid="logout-button"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
               >
                 <LogOut size={18} />
