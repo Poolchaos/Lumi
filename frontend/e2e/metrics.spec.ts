@@ -53,8 +53,8 @@ test.describe('Body Metrics and Photos', () => {
 
     await page.waitForTimeout(500);
 
-    // Should show preview or upload success
-    await expect(page.locator('img[src*="blob:"]').or(page.locator('text=Upload'))).toBeVisible();
+    // Should show preview or upload success (use .first() to avoid strict mode violation)
+    await expect(page.locator('img[src*="blob:"]').or(page.locator('button:has-text("Upload")')).first()).toBeVisible();
   });
 
   test('should display metrics history', async ({ page }) => {
