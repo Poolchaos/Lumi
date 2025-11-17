@@ -300,6 +300,28 @@ VALIDATION CHECKLIST (ensure before responding):
     return workoutPlan;
   } catch (error) {
     console.error('OpenAI workout generation error:', error);
-    throw new Error('Failed to generate workout plan');
+    
+    // Pass through OpenAI-specific errors with more detail
+    if (error && typeof error === 'object' && 'error' in error) {
+      const openaiError = error as { error?: { message?: string; type?: string; code?: string } };
+      if (openaiError.error?.message) {
+        throw new Error(`OpenAI Error: ${openaiError.error.message}`);
+      }
+    }
+    
+    // Check for authentication/API key errors
+    if (error instanceof Error) {
+      if (error.message.includes('authenticate') || error.message.includes('Incorrect API key')) {
+        throw new Error('Invalid or expired OpenAI API key. Please update your API key in profile settings.');
+      }
+      if (error.message.includes('rate limit')) {
+        throw new Error('OpenAI rate limit exceeded. Please try again in a few moments.');
+      }
+      if (error.message.includes('quota')) {
+        throw new Error('OpenAI API quota exceeded. Please check your OpenAI account billing.');
+      }
+    }
+    
+    throw new Error('Failed to generate workout plan. Please check your OpenAI API configuration.');
   }
 };
