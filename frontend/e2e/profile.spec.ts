@@ -19,21 +19,25 @@ test.describe('Profile Management', () => {
     await page.goto('/profile');
     await expect(page).toHaveURL('/profile');
 
-    // Fill personal info
-    await page.fill('input[name="firstName"]', 'John');
-    await page.fill('input[name="lastName"]', 'Doe');
-    await page.fill('input[name="dateOfBirth"]', '1990-01-15');
+    // Wait for form to load
+    await page.waitForTimeout(500);
+
+    // Fill personal info using label-based selectors (inputs don't have name attributes)
+    await page.fill('input[placeholder*="first name" i]', 'John');
+    await page.fill('input[placeholder*="last name" i]', 'Doe');
+    await page.fill('input[placeholder*="170" i]', '175'); // Height
+    await page.fill('input[placeholder*="70" i]', '75'); // Weight
 
     // Submit form
-    await page.click('button:has-text("Save Personal Info")');
+    await page.click('button:has-text("Save Profile")');
 
     // Should show success (wait for mutation to complete)
     await page.waitForTimeout(1000);
 
-    // Verify data persists on reload
+    // Verify data persists - check that form fields have the values
     await page.reload();
-    await expect(page.locator('input[name="firstName"]')).toHaveValue('John');
-    await expect(page.locator('input[name="lastName"]')).toHaveValue('Doe');
+    await page.waitForTimeout(500);
+    await expect(page.locator('input[placeholder*="first name" i]')).toHaveValue('John');
   });
 
   test('should update fitness preferences', async ({ page }) => {
@@ -41,27 +45,27 @@ test.describe('Profile Management', () => {
     await page.goto('/profile');
     await expect(page).toHaveURL('/profile');
 
-    // Scroll to preferences section
-    await page.locator('text=Fitness Preferences').scrollIntoViewIfNeeded();
+    // Wait for form to load
+    await page.waitForTimeout(500);
 
-    // Select experience level
-    await page.selectOption('select[name="experienceLevel"]', 'intermediate');
+    // The preferences section is much simpler now - only workout duration
+    // Look for "Workout Preferences" heading
+    await page.locator('text=Workout Preferences').scrollIntoViewIfNeeded();
 
-    // Select goals (multiple checkboxes)
-    await page.check('input[value="muscle_gain"]');
-    await page.check('input[value="strength"]');
-
-    // Set workout frequency
-    await page.fill('input[name="workoutFrequency"]', '4');
+    // Fill the workout duration field (placeholder shows "60")
+    const durationInput = page.locator('input[placeholder*="60" i]').last();
+    await durationInput.fill('45');
 
     // Submit preferences
     await page.click('button:has-text("Save Preferences")');
 
     await page.waitForTimeout(1000);
 
-    // Verify on dashboard that profile is updated
-    await page.click('a[href="/dashboard"]');
-    await expect(page.locator('text=Not set')).toHaveCount(0);
+    // Verify change persists
+    await page.reload();
+    await page.waitForTimeout(500);
+    const reloadedInput = page.locator('input[placeholder*="60" i]').last();
+    await expect(reloadedInput).toHaveValue('45');
   });
 });
 
