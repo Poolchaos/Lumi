@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { workoutAPI } from '../api';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { formatDuration } from '../utils/formatDuration';
+import { WeeklyScheduleGrid } from '../components/workout/WeeklyScheduleGrid';
 import {
   Sparkles,
   Dumbbell,
@@ -204,11 +205,28 @@ export default function WorkoutPlanReviewPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Main Plan Info */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Weekly Schedule Grid Visualization */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
-                  {plan.plan_data.weekly_schedule.length} Day Weekly Schedule
+                  Your Weekly Schedule
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <WeeklyScheduleGrid 
+                  schedule={plan.plan_data.weekly_schedule} 
+                  totalXP={totalXP}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Detailed Exercises */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Dumbbell className="w-5 h-5" />
+                  Exercise Details
                 </CardTitle>
               </CardHeader>
               <CardContent>
