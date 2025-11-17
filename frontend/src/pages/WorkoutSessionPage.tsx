@@ -2,11 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Check, 
-  ChevronRight, 
-  ChevronLeft, 
-  Timer, 
+import {
+  Check,
+  ChevronRight,
+  ChevronLeft,
+  Timer,
   Zap,
   Trophy,
   Flame,
@@ -52,13 +52,13 @@ export default function WorkoutSessionPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const activePlan: any = workoutsData.workouts.find((w: any) => w.is_active);
     if (!activePlan?.plan_data?.weekly_schedule) return null;
-    
+
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const schedule: any[] = activePlan.plan_data.weekly_schedule;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const todaySchedule = schedule.find((s: any) => s.day === today);
-    
+
     return todaySchedule?.workout || null;
   })();
 
@@ -126,15 +126,15 @@ export default function WorkoutSessionPage() {
   const toggleSetCompletion = (setIndex: number) => {
     const updatedCompletion = [...completedExercises];
     const exerciseCompletion = updatedCompletion[currentExerciseIndex];
-    
+
     if (exerciseCompletion) {
       exerciseCompletion.sets[setIndex].completed = !exerciseCompletion.sets[setIndex].completed;
-      
+
       // Award XP for completing a set
       if (exerciseCompletion.sets[setIndex].completed) {
         const xpGained = 10;
         setTotalXPEarned(prev => prev + xpGained);
-        
+
         // Show mini XP animation
         toast.success(`+${xpGained} XP`, {
           icon: '⚡',
@@ -146,7 +146,7 @@ export default function WorkoutSessionPage() {
           startRestTimer();
         }
       }
-      
+
       setCompletedExercises(updatedCompletion);
     }
   };
@@ -169,7 +169,7 @@ export default function WorkoutSessionPage() {
 
   const completeWorkout = async () => {
     const sessionDuration = Math.round((new Date().getTime() - sessionStartTime.getTime()) / 1000 / 60);
-    
+
     const completedExercisesList = completedExercises
       .filter(ex => ex.sets.some(set => set.completed))
       .map(ex => ({
@@ -190,7 +190,7 @@ export default function WorkoutSessionPage() {
     try {
       await saveSessionMutation.mutateAsync(sessionData);
       setShowCelebration(true);
-      
+
       // Navigate to dashboard after celebration
       setTimeout(() => {
         navigate('/dashboard');

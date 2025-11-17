@@ -205,22 +205,6 @@ export default function WorkoutPlanReviewPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Main Plan Info */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Weekly Schedule Grid Visualization */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  Your Weekly Schedule
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <WeeklyScheduleGrid 
-                  schedule={plan.plan_data.weekly_schedule} 
-                  totalXP={totalXP}
-                />
-              </CardContent>
-            </Card>
-
             {/* Detailed Exercises */}
             <Card>
               <CardHeader>
@@ -421,6 +405,22 @@ export default function WorkoutPlanReviewPage() {
             </div>
           </div>
         </div>
+
+        {/* Full Width Weekly Schedule Grid */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Your Weekly Schedule
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <WeeklyScheduleGrid
+              schedule={plan.plan_data.weekly_schedule}
+              totalXP={totalXP}
+            />
+          </CardContent>
+        </Card>
       </div>
 
       <style>{`

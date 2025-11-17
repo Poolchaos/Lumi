@@ -21,7 +21,7 @@ interface WeeklyScheduleGridProps {
 
 export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProps) {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  
+
   // Map schedule to days of week
   const weekGrid = daysOfWeek.map(day => {
     const daySchedule = schedule.find(s => s.day === day);
@@ -57,7 +57,7 @@ export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProp
       <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
         {weekGrid.map((dayData, index) => {
           const isWorkoutDay = !!dayData.workout;
-          
+
           return (
             <motion.div
               key={dayData.day}
@@ -66,8 +66,8 @@ export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProp
               transition={{ delay: index * 0.1 }}
               className={`
                 rounded-xl border-2 overflow-hidden transition-all duration-300 hover:shadow-lg
-                ${isWorkoutDay 
-                  ? 'border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100' 
+                ${isWorkoutDay
+                  ? 'border-primary-300 bg-gradient-to-br from-primary-50 to-primary-100'
                   : 'border-neutral-200 bg-neutral-50'
                 }
               `}
@@ -88,11 +88,11 @@ export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProp
                         <Dumbbell className="w-6 h-6 text-white" />
                       </div>
                     </div>
-                    
+
                     <h4 className="font-bold text-sm text-center text-neutral-900 mb-2">
                       {dayData.workout.name}
                     </h4>
-                    
+
                     <div className="text-xs text-center mb-3">
                       <span className="px-2 py-1 bg-primary-200 text-primary-800 rounded-full font-medium">
                         {dayData.workout.focus}
