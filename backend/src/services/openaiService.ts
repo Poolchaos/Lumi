@@ -273,7 +273,24 @@ VALIDATION CHECKLIST (ensure before responding):
 - [ ] Modifications provided for any reported injuries
 - [ ] Week 4 implements deload for recovery`;
 
+  console.log('\n=== OpenAI Workout Generation Request ===');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Model: gpt-4o');
+  console.log('User profile:', {
+    experience_level: userProfile.experience_level,
+    fitness_goals: userProfile.fitness_goals,
+  });
+  console.log('Preferences:', {
+    workout_duration: preferences.preferred_workout_duration,
+    workout_days: preferences.preferred_workout_days,
+  });
+  console.log('Workout modality:', workoutModality);
+  console.log('Equipment count:', availableEquipment?.length || 0);
+
   try {
+    console.log('Sending request to OpenAI...');
+    const requestStartTime = Date.now();
+
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
@@ -291,16 +308,28 @@ VALIDATION CHECKLIST (ensure before responding):
       temperature: 0.7,
     });
 
+    const requestDuration = Date.now() - requestStartTime;
+    console.log('✓ OpenAI request successful');
+    console.log('Request duration:', requestDuration + 'ms');
+    console.log('Response ID:', completion.id);
+    console.log('Model used:', completion.model);
+    console.log('Usage:', JSON.stringify(completion.usage));
+
     const responseContent = completion.choices[0]?.message?.content;
     if (!responseContent) {
+      console.error('✗ No response content from OpenAI');
       throw new Error('No response from OpenAI');
     }
+
+    console.log('Response length:', responseContent.length, 'characters');
+    console.log('=== OpenAI Request Complete ===\n');
 
     const workoutPlan = JSON.parse(responseContent) as WorkoutPlan;
     return workoutPlan;
   } catch (error) {
-    console.error('OpenAI workout generation error:', error);
-    
+    const { logOpenAIError } = await import('../utils/openaiValidator');
+    logOpenAIError(error, 'generateWorkoutPlan');
+
     // Pass through OpenAI-specific errors with more detail
     if (error && typeof error === 'object' && 'error' in error) {
       const openaiError = error as { error?: { message?: string; type?: string; code?: string } };
@@ -308,7 +337,7 @@ VALIDATION CHECKLIST (ensure before responding):
         throw new Error(`OpenAI Error: ${openaiError.error.message}`);
       }
     }
-    
+
     // Check for authentication/API key errors
     if (error instanceof Error) {
       if (error.message.includes('authenticate') || error.message.includes('Incorrect API key')) {
@@ -321,7 +350,7 @@ VALIDATION CHECKLIST (ensure before responding):
         throw new Error('OpenAI API quota exceeded. Please check your OpenAI account billing.');
       }
     }
-    
+
     throw new Error('Failed to generate workout plan. Please check your OpenAI API configuration.');
   }
 };
