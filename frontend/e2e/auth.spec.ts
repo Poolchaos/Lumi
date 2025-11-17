@@ -75,7 +75,7 @@ test.describe('Authentication Flow', () => {
     } else {
       await page.goto('/dashboard');
     }
-    
+
     await page.waitForTimeout(1000); // Wait for page to fully render
 
     // Logout - use data-testid for reliable selection
