@@ -60,13 +60,13 @@ export default function SchedulePage() {
     for (let i = 0; i < 90; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-      
+
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
       const dateStr = date.toLocaleDateString('en-US');
-      
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const scheduledWorkout = schedule.find((s: any) => s.day === dayName);
-      
+
       // Check if this workout was completed (from sessions)
       const isCompleted = sessionsData?.sessions?.some(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

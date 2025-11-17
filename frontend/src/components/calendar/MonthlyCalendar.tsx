@@ -31,22 +31,22 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
-    
+
     // Adjust to make Monday the first day (0 = Monday, 6 = Sunday)
     const adjustedStartDay = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
-    
+
     const days: (Date | null)[] = [];
-    
+
     // Add empty cells for days before the first of the month
     for (let i = 0; i < adjustedStartDay; i++) {
       days.push(null);
     }
-    
+
     // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
-    
+
     return days;
   };
 
@@ -74,7 +74,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
 
   const monthYear = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   const days = getDaysInMonth(currentDate);
-  
+
   const isCurrentMonth = () => {
     const today = new Date();
     return currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear();
@@ -83,7 +83,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
   // Calculate monthly stats
   const monthWorkouts = workouts.filter(w => {
     const workoutDate = new Date(w.date);
-    return workoutDate.getMonth() === currentDate.getMonth() && 
+    return workoutDate.getMonth() === currentDate.getMonth() &&
            workoutDate.getFullYear() === currentDate.getFullYear();
   });
 
@@ -102,7 +102,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
             <p className="text-sm text-neutral-500">{monthYear}</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <button
             onClick={goToPreviousMonth}
@@ -111,7 +111,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
           >
             <ChevronLeft className="w-5 h-5 text-neutral-600" />
           </button>
-          
+
           {!isCurrentMonth() && (
             <button
               onClick={goToCurrentMonth}
@@ -120,7 +120,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
               This Month
             </button>
           )}
-          
+
           <button
             onClick={goToNextMonth}
             className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
@@ -151,7 +151,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
           const hasWorkout = workoutDay?.workout;
           const isCompleted = workoutDay?.isCompleted || false;
           const isRestDay = workoutDay?.isRestDay || !hasWorkout;
-          
+
           return (
             <button
               key={idx}
@@ -181,7 +181,7 @@ export function MonthlyCalendar({ workouts, onDayClick }: MonthlyCalendarProps) 
                       <Dumbbell className="w-3 h-3 text-primary-600" />
                     </div>
                   )}
-                  
+
                   <div className="text-xs text-center">
                     <span className={`font-medium ${isCompleted ? 'text-success-700' : 'text-primary-700'}`}>
                       {workoutDay.workout?.duration_minutes}m

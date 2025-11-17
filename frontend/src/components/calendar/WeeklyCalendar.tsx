@@ -29,7 +29,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
     const currentDay = today.getDay(); // 0 = Sunday, 6 = Saturday
     const monday = new Date(today);
     monday.setDate(today.getDate() - currentDay + (currentDay === 0 ? -6 : 1) + (offset * 7));
-    
+
     return Array.from({ length: 7 }, (_, i) => {
       const date = new Date(monday);
       date.setDate(monday.getDate() + i);
@@ -38,7 +38,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
   };
 
   const weekDays = getWeekDays(currentWeekOffset);
-  
+
   const getWorkoutForDate = (date: Date) => {
     const dateStr = date.toLocaleDateString('en-US');
     return workouts.find(w => w.date === dateStr);
@@ -56,7 +56,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
   const getMonthYear = () => {
     const firstDay = weekDays[0];
     const lastDay = weekDays[6];
-    
+
     if (firstDay.getMonth() === lastDay.getMonth()) {
       return firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     } else {
@@ -75,7 +75,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
             <p className="text-sm text-neutral-500">{getMonthYear()}</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <button
             onClick={goToPreviousWeek}
@@ -84,7 +84,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
           >
             <ChevronLeft className="w-5 h-5 text-neutral-600" />
           </button>
-          
+
           {currentWeekOffset !== 0 && (
             <button
               onClick={goToCurrentWeek}
@@ -93,7 +93,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
               Today
             </button>
           )}
-          
+
           <button
             onClick={goToNextWeek}
             className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
@@ -120,7 +120,7 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
           const hasWorkout = workoutDay?.workout;
           const isCompleted = workoutDay?.isCompleted || false;
           const isRestDay = workoutDay?.isRestDay || !hasWorkout;
-          
+
           return (
             <button
               key={idx}
@@ -151,25 +151,25 @@ export function WeeklyCalendar({ workouts, onDayClick }: WeeklyCalendarProps) {
                       <Check className="w-3 h-3 text-white" />
                     </div>
                   )}
-                  
+
                   {/* Workout name */}
                   <p className="text-xs font-semibold text-neutral-800 truncate">
                     {workoutDay.workout?.name}
                   </p>
-                  
+
                   {/* Duration */}
                   <div className="flex items-center justify-center gap-1 text-xs text-neutral-600">
                     <Clock className="w-3 h-3" />
                     <span>{workoutDay.workout?.duration_minutes}m</span>
                   </div>
-                  
+
                   {/* Focus badge */}
                   <div className="text-center">
                     <span className="inline-block px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full text-xs font-medium">
                       {workoutDay.workout?.focus.split(' ')[0]}
                     </span>
                   </div>
-                  
+
                   {/* XP earned (if completed) */}
                   {isCompleted && workoutDay.workout?.xpEarned && (
                     <div className="flex items-center justify-center gap-1 text-xs text-yellow-600 font-bold">
