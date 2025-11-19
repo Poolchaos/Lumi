@@ -322,7 +322,13 @@ export default function DashboardPage() {
           />
           
           <ActivityHeatmap
-            sessions={sessionsData?.sessions || []}
+            sessions={
+              sessionsData?.sessions.map((session) => ({
+                date: session.session_date,
+                duration: session.duration_minutes,
+                exercises_completed: session.exercises_completed.length,
+              })) || []
+            }
             weeksToShow={12}
           />
         </div>
