@@ -11,6 +11,7 @@ import { Button } from '../design-system/components/Button';
 import { Input } from '../design-system/components/Input';
 import { MetricCardSkeleton } from '../design-system';
 import WeightChart from '../components/charts/WeightChart';
+import { getProgressImage } from '../utils/imageHelpers';
 import type { BodyMetrics } from '../types';
 
 export default function MetricsPage() {
@@ -224,10 +225,20 @@ export default function MetricsPage() {
             </Card>
           ))) || (
             <Card>
-              <CardContent className="pt-6 text-center text-gray-500">
-                <Scale className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
-                <p>No metrics recorded yet</p>
-                <p className="text-sm mt-1">Click "Add Metrics" to track your progress</p>
+              <CardContent className="pt-6">
+                {/* Empty State with Image */}
+                <div className="text-center">
+                  <div className="mb-6 rounded-lg overflow-hidden max-w-md mx-auto">
+                    <img 
+                      src={getProgressImage('body-metrics')} 
+                      alt="Track your progress"
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                  <Scale className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
+                  <p className="text-gray-500 font-medium mb-1">No metrics recorded yet</p>
+                  <p className="text-sm text-gray-400">Click "Add Metrics" to start tracking your progress</p>
+                </div>
               </CardContent>
             </Card>
           )

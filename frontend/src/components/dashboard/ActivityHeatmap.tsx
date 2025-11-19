@@ -30,7 +30,7 @@ export function ActivityHeatmap({ sessions, weeksToShow = 12 }: ActivityHeatmapP
       const dateStr = currentDate.toISOString().split('T')[0];
       const sessionForDay = sessions.filter(s => s.date.startsWith(dateStr));
       const count = sessionForDay.length;
-      
+
       // Calculate intensity (0-4) based on session count
       let intensity = 0;
       if (count === 1) intensity = 1;

@@ -320,7 +320,7 @@ export default function DashboardPage() {
             plannedThisWeek={workoutsPlannedThisWeek}
             totalXP={gamificationData?.xp || 0}
           />
-          
+
           <ActivityHeatmap
             sessions={
               sessionsData?.sessions.map((session) => ({

@@ -7,6 +7,7 @@ import type { Equipment } from '../types';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { Dumbbell, Plus, Trash2 } from 'lucide-react';
 import { PageTransition } from '../components/layout/PageTransition';
+import { getEquipmentImage } from '../utils/imageHelpers';
 
 export default function EquipmentPage() {
   const queryClient = useQueryClient();
@@ -113,18 +114,28 @@ export default function EquipmentPage() {
           {data?.equipment && data.equipment.length > 0 ? (
             data.equipment.map((item) => (
               <Card key={item._id} hover>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold text-neutral-900">{item.equipment_name}</h3>
+                {/* Equipment Image */}
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <img
+                    src={getEquipmentImage(item.equipment_name)}
+                    alt={item.equipment_name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3">
                     <button
                       onClick={() => deleteMutation.mutate(item._id)}
-                      className="text-error-DEFAULT hover:text-error-dark transition-colors"
+                      className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-error-DEFAULT hover:text-error-dark hover:bg-white transition-all shadow-sm"
                       disabled={deleteMutation.isPending}
                       title="Delete equipment"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
+                </div>
+                
+                {/* Equipment Details */}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-3">{item.equipment_name}</h3>
                   <div className="space-y-2 text-sm text-neutral-600">
                     <p><span className="font-medium text-neutral-700">Type:</span> {item.equipment_type.replace('_', ' ')}</p>
                     <p><span className="font-medium text-neutral-700">Quantity:</span> {item.quantity}</p>

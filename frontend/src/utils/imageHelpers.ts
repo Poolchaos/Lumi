@@ -83,3 +83,74 @@ export function getExerciseImage(exerciseName: string): string {
   // Default to pushup demo
   return '/images/exercises/pushup-demo.jpg';
 }
+
+export function getMuscleGroupImage(muscleGroup: string): string {
+  const normalized = muscleGroup.toLowerCase();
+
+  if (normalized.includes('chest') || normalized.includes('pec')) {
+    return '/images/muscle-groups/chest-muscles.jpg';
+  }
+  if (normalized.includes('back') || normalized.includes('lat')) {
+    return '/images/muscle-groups/back-muscles.jpg';
+  }
+  if (normalized.includes('leg') || normalized.includes('quad') || normalized.includes('hamstring') || normalized.includes('calf')) {
+    return '/images/muscle-groups/leg-muscles.jpg';
+  }
+  if (normalized.includes('arm') || normalized.includes('bicep') || normalized.includes('tricep')) {
+    return '/images/muscle-groups/arm-muscles.jpg';
+  }
+  if (normalized.includes('core') || normalized.includes('ab') || normalized.includes('oblique')) {
+    return '/images/muscle-groups/core-muscles.jpg';
+  }
+  if (normalized.includes('shoulder') || normalized.includes('delt')) {
+    return '/images/muscle-groups/shoulder-muscles.jpg';
+  }
+
+  // Default to core
+  return '/images/muscle-groups/core-muscles.jpg';
+}
+
+export function getEquipmentImage(equipmentName: string): string {
+  const normalized = equipmentName.toLowerCase();
+
+  if (normalized.includes('dumbbell')) {
+    return '/images/equipment/dumbbells.jpg';
+  }
+  if (normalized.includes('barbell')) {
+    return '/images/equipment/barbell.jpg';
+  }
+  if (normalized.includes('kettlebell')) {
+    return '/images/equipment/kettlebell.jpg';
+  }
+  if (normalized.includes('resistance') || normalized.includes('band')) {
+    return '/images/equipment/resistance-bands.jpg';
+  }
+  if (normalized.includes('yoga') || normalized.includes('mat')) {
+    return '/images/equipment/yoga-mat.jpg';
+  }
+  if (normalized.includes('pull') || normalized.includes('bar')) {
+    return '/images/equipment/pullup-bar.jpg';
+  }
+  if (normalized.includes('bench')) {
+    return '/images/equipment/workout-bench.jpg';
+  }
+
+  // Default to dumbbells
+  return '/images/equipment/dumbbells.jpg';
+}
+
+export function getProgressImage(type: 'body-metrics' | 'performance-graph'): string {
+  const imageMap = {
+    'body-metrics': '/images/progress/body-metrics.jpg',
+    'performance-graph': '/images/progress/performance-graph.jpg',
+  };
+  return imageMap[type];
+}
+
+export function getBackgroundImage(type: 'sunrise' | 'urban'): string {
+  const imageMap = {
+    'sunrise': '/images/backgrounds/sunrise-motivation.jpg',
+    'urban': '/images/backgrounds/urban-fitness.jpg',
+  };
+  return imageMap[type];
+}

@@ -15,7 +15,7 @@ export function WeeklyProgress({
   plannedThisWeek,
   totalXP,
 }: WeeklyProgressProps) {
-  const completionRate = plannedThisWeek > 0 
+  const completionRate = plannedThisWeek > 0
     ? Math.round((sessionsThisWeek / plannedThisWeek) * 100)
     : 0;
 
@@ -42,7 +42,7 @@ export function WeeklyProgress({
           <span className="text-4xl font-bold text-neutral-900">{completionRate}%</span>
           <span className="text-sm text-neutral-600">completion</span>
         </div>
-        
+
         {/* Progress Bar */}
         <div className="w-full h-3 bg-neutral-100 rounded-full overflow-hidden">
           <motion.div
