@@ -1,4 +1,4 @@
-import { Home, Dumbbell, Calendar, Trophy, User } from 'lucide-react';
+import { Home, Dumbbell, Calendar, Trophy, TrendingUp } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -7,7 +7,7 @@ const tabs = [
   { icon: Dumbbell, label: 'Workouts', path: '/workouts' },
   { icon: Calendar, label: 'Schedule', path: '/schedule' },
   { icon: Trophy, label: 'Goals', path: '/accountability' },
-  { icon: User, label: 'Profile', path: '/profile' },
+  { icon: TrendingUp, label: 'Metrics', path: '/metrics' },
 ];
 
 export function MobileBottomNav() {

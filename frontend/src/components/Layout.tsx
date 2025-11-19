@@ -62,7 +62,6 @@ export default function Layout({ children }: LayoutProps) {
     { path: '/metrics', label: 'Metrics' },
     { path: '/accountability', label: 'Goals' },
     { path: '/equipment', label: 'Equipment' },
-    { path: '/profile', label: 'Profile' },
   ];
 
   return (
@@ -216,6 +215,30 @@ export default function Layout({ children }: LayoutProps) {
                   {item.label}
                 </Link>
               ))}
+
+              {/* Profile & Settings Section */}
+              <div className="border-t border-neutral-200 pt-2 mt-2">
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    location.pathname === '/profile'
+                      ? 'bg-primary-50 text-primary-600'
+                      : 'text-neutral-600 hover:bg-neutral-100'
+                  }`}
+                >
+                  <User className="w-4 h-4" />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-600 hover:bg-neutral-100 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Settings</span>
+                </Link>
+              </div>
             </div>
           </div>
         )}
