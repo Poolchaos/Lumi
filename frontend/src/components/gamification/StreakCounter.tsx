@@ -1,4 +1,4 @@
-import { Flame, TrendingUp } from 'lucide-react';
+import { getGamificationIcon } from '../../utils/imageHelpers';
 
 interface StreakCounterProps {
   currentStreak: number;
@@ -49,7 +49,11 @@ export function StreakCounter({
           </div>
         )}
 
-        <Flame className={`${classes.icon} ${isOnFire ? 'animate-bounce' : ''} relative z-10`} />
+        <img
+          src={getGamificationIcon('streak')}
+          alt="Streak"
+          className={`${classes.icon} ${isOnFire ? 'animate-bounce' : ''} relative z-10`}
+        />
         <div className="relative z-10">
           <div className={`font-bold ${classes.text}`}>
             {currentStreak} Day{currentStreak !== 1 ? 's' : ''}
@@ -62,7 +66,11 @@ export function StreakCounter({
 
       {showLongest && longestStreak > 0 && (
         <div className="flex items-center gap-2 text-neutral-600 text-sm">
-          <TrendingUp className="w-4 h-4" />
+          <img
+            src={getGamificationIcon('xp')}
+            alt="Best Streak"
+            className="w-4 h-4"
+          />
           <span>Best: {longestStreak} day{longestStreak !== 1 ? 's' : ''}</span>
         </div>
       )}

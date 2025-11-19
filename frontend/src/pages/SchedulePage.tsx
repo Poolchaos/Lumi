@@ -9,6 +9,7 @@ import { MonthlyCalendar } from '../components/calendar/MonthlyCalendar';
 import { PageTransition } from '../components/layout/PageTransition';
 import { Card, Modal, Button } from '../design-system';
 import { workoutAPI, sessionAPI } from '../api';
+import { getEmptyStateImage } from '../utils/imageHelpers';
 
 type ViewMode = 'weekly' | 'monthly';
 
@@ -244,18 +245,27 @@ export default function SchedulePage() {
 
           {/* Calendar view */}
           {workoutDays.length === 0 ? (
-            <Card className="p-12 text-center">
-              <CalendarIcon className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-neutral-700 mb-2">No Workout Plan Found</h3>
-              <p className="text-neutral-500 mb-6">
-                Generate your first AI-powered workout plan to get started
-              </p>
-              <button
-                onClick={() => navigate('/workouts')}
-                className="btn-primary"
-              >
-                Generate Workout Plan
-              </button>
+            <Card className="p-12 text-center relative overflow-hidden">
+              <div className="absolute inset-0 opacity-20">
+                <img
+                  src={getEmptyStateImage('no-plan')}
+                  alt="No plan"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="relative z-10">
+                <CalendarIcon className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-neutral-700 mb-2">No Workout Plan Found</h3>
+                <p className="text-neutral-500 mb-6">
+                  Generate your first AI-powered workout plan to get started
+                </p>
+                <button
+                  onClick={() => navigate('/workouts')}
+                  className="btn-primary"
+                >
+                  Generate Workout Plan
+                </button>
+              </div>
             </Card>
           ) : (
             <>

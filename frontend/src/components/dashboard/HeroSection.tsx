@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import { Flame, Trophy, TrendingUp, Zap } from 'lucide-react';
+import { Trophy, TrendingUp, Zap } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useStreak } from '../../hooks/useStreak';
 import { useGamification } from '../../hooks/useGamification';
+import { getGamificationIcon } from '../../utils/imageHelpers';
 
 interface StatCardProps {
   icon: React.ElementType;
@@ -30,8 +31,25 @@ export function HeroSection() {
 
   const firstName = user?.profile?.first_name || 'there';
 
+  // Dynamic background image based on workout status
+  const getHeroImage = () => {
+    if (currentStreak >= 7) {
+      return '/images/dashboard/hero-achievement.jpg';
+    } else if (currentStreak === 0) {
+      return '/images/dashboard/hero-rest-day.jpg';
+    }
+    return '/images/dashboard/hero-workout-motivation.jpg';
+  };
+
   return (
-    <div className="bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-3xl p-6 md:p-8 text-white mb-6 shadow-xl">
+    <div
+      className="relative bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-3xl p-6 md:p-8 text-white mb-6 shadow-xl overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(to bottom right, rgba(0, 184, 230, 0.85), rgba(0, 153, 204, 0.9)), url('${getHeroImage()}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       {/* Greeting */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -65,7 +83,11 @@ export function HeroSection() {
               repeatDelay: 3,
             }}
           >
-            <Flame size={64} className="text-orange-400 drop-shadow-glow" />
+            <img
+              src={getGamificationIcon('streak')}
+              alt="Streak"
+              className="w-16 h-16 drop-shadow-glow"
+            />
           </motion.div>
           {currentStreak > 0 && (
             <div className="absolute inset-0 flex items-center justify-center">

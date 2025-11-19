@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { workoutAPI } from '../api';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
+import { getEmptyStateImage } from '../utils/imageHelpers';
 import { formatDuration } from '../utils/formatDuration';
 import { WeeklyScheduleGrid } from '../components/workout/WeeklyScheduleGrid';
 import {
@@ -106,15 +107,24 @@ export default function WorkoutPlanReviewPage() {
   if (!plan) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full text-center p-8">
-          <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold mb-2">No Workout Plan Found</h2>
-          <p className="text-neutral-600 mb-6">
-            We couldn't find your generated workout plan. Please try generating a new one.
-          </p>
-          <Button onClick={() => navigate('/workouts')}>
-            Go to Workouts
-          </Button>
+        <Card className="max-w-md w-full text-center p-8 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <img
+              src={getEmptyStateImage('no-plan')}
+              alt="No plan"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="relative z-10">
+            <div className="text-6xl mb-4">😕</div>
+            <h2 className="text-2xl font-bold mb-2">No Workout Plan Found</h2>
+            <p className="text-neutral-600 mb-6">
+              We couldn't find your generated workout plan. Please try generating a new one.
+            </p>
+            <Button onClick={() => navigate('/workouts')}>
+              Go to Workouts
+            </Button>
+          </div>
         </Card>
       </div>
     );

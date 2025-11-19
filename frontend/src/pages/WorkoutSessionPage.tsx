@@ -16,6 +16,7 @@ import Layout from '../components/Layout';
 import { PageTransition } from '../components/layout/PageTransition';
 import { Card } from '../design-system';
 import { workoutAPI, sessionAPI } from '../api';
+import { getExerciseImage } from '../utils/imageHelpers';
 import toast from 'react-hot-toast';
 
 interface ExerciseCompletion {
@@ -386,11 +387,22 @@ export default function WorkoutSessionPage() {
 
           {/* Current Exercise Card */}
           {currentExercise && (
-            <Card className="p-6 mb-6">
+            <Card className="p-6 mb-6 overflow-hidden">
+              {/* Exercise Image Preview */}
+              <div className="-m-6 mb-6 h-48 bg-gradient-to-br from-primary-500 to-primary-600 relative overflow-hidden">
+                <img
+                  src={getExerciseImage(currentExercise.name)}
+                  alt={currentExercise.name}
+                  className="w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-6">
+                  <h2 className="text-3xl font-bold text-white drop-shadow-lg">
+                    {currentExercise.name}
+                  </h2>
+                </div>
+              </div>
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-neutral-900 mb-2">
-                  {currentExercise.name}
-                </h2>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {currentExercise.target_muscles?.map((muscle: string, idx: number) => (
                     <span

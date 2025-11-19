@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { PageTransition } from '../components/layout/PageTransition';
 import { workoutAPI } from '../api';
+import { getEmptyStateImage } from '../utils/imageHelpers';
 import { Card, Button, WorkoutCardSkeleton, ConfirmModal } from '../design-system';
 import { Dumbbell, Zap, Clock, TrendingUp, Play, Trash2, CheckCircle, Circle } from 'lucide-react';
 
@@ -277,8 +278,15 @@ export default function WorkoutsPage() {
             </div>
           ) : (
             !isLoading && !isError && (
-              <Card>
-                <div className="p-12 text-center">
+              <Card className="relative overflow-hidden">
+                <div className="absolute inset-0 opacity-30">
+                  <img
+                    src={getEmptyStateImage('no-workouts')}
+                    alt="No workouts"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-12 text-center relative z-10">
                   <Dumbbell className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-neutral-700 mb-2">No workouts yet</h3>
                   <p className="text-neutral-500 mb-4">Generate your first AI-powered workout to get started!</p>

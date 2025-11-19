@@ -1,6 +1,7 @@
 import { Card } from '../../design-system';
 import { Calendar, Clock, Target, Zap, TrendingUp, ChevronRight, Play } from 'lucide-react';
 import { formatDuration } from '../../utils/formatDuration';
+import { getWorkoutTypeImage, getEmptyStateImage } from '../../utils/imageHelpers';
 
 interface Exercise {
   name: string;
@@ -30,8 +31,16 @@ interface TodayWorkoutCardProps {
 export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: TodayWorkoutCardProps) {
   if (!workout) {
     return (
-      <Card className="bg-gradient-to-br from-neutral-50 to-neutral-100 border-2 border-dashed border-neutral-300">
-        <div className="p-8 text-center">
+      <Card className="relative overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 border-2 border-dashed border-neutral-300">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url('${getEmptyStateImage('rest-day')}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <div className="relative p-8 text-center">
           <Calendar className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-neutral-600 mb-2">Rest Day</h3>
           <p className="text-neutral-500">Enjoy your recovery! Tomorrow's workout is ready.</p>
@@ -39,6 +48,8 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
       </Card>
     );
   }
+
+  const workoutImage = getWorkoutTypeImage(workout.workout.focus);
 
   return (
     <Card
@@ -49,7 +60,14 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
       }`}
     >
       {/* Header with completion status */}
-      <div className={`px-6 py-4 ${isCompleted ? 'bg-success-500' : 'bg-primary-500'}`}>
+      <div
+        className={`relative px-6 py-4 ${isCompleted ? 'bg-success-500' : 'bg-primary-500'}`}
+        style={{
+          backgroundImage: `linear-gradient(to right, ${isCompleted ? 'rgba(16, 185, 129, 0.95)' : 'rgba(0, 184, 230, 0.95)'}, ${isCompleted ? 'rgba(5, 150, 105, 0.95)' : 'rgba(0, 153, 204, 0.95)'}), url('${workoutImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${

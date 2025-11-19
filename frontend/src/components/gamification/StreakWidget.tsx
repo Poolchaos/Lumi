@@ -1,4 +1,5 @@
-import { Flame, Snowflake, Calendar } from 'lucide-react';
+import { Snowflake, Calendar } from 'lucide-react';
+import { getGamificationIcon } from '../../utils/imageHelpers';
 import { motion } from 'framer-motion';
 import { useStreak } from '../../hooks/useStreak';
 import { Card, CardHeader, CardTitle, CardContent } from '../../design-system';
@@ -22,7 +23,11 @@ export function StreakWidget() {
               repeatDelay: 3,
             }}
           >
-            <Flame size={32} className="drop-shadow-lg" />
+            <img
+              src={getGamificationIcon('streak')}
+              alt="Streak"
+              className="w-8 h-8 drop-shadow-lg"
+            />
           </motion.div>
         </div>
       </CardHeader>

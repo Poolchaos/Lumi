@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, Award } from 'lucide-react';
+import { getGamificationIcon } from '../../utils/imageHelpers';
 
 interface XPProgressBarProps {
   currentXP: number;
@@ -72,11 +72,19 @@ export function XPProgressBar({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-3 py-1 rounded-full shadow-md">
-            <Award className={iconSizeClasses[size]} />
+            <img
+              src={getGamificationIcon('level-up')}
+              alt="Level"
+              className={iconSizeClasses[size]}
+            />
             <span className={`font-bold ${textSizeClasses[size]}`}>Level {level}</span>
           </div>
           <div className="flex items-center gap-1 text-primary-600">
-            <TrendingUp className={iconSizeClasses[size]} />
+            <img
+              src={getGamificationIcon('xp')}
+              alt="XP"
+              className={iconSizeClasses[size]}
+            />
             <span className={`font-semibold ${textSizeClasses[size]}`}>
               {animatedXP.toLocaleString()} / {xpForNextLevel.toLocaleString()} XP
             </span>

@@ -173,34 +173,34 @@ export default function DashboardPage() {
   };
 
   // Debug: Manual test completion
-  const testCompleteMutation = useMutation({
-    mutationFn: async () => {
-      if (!todayWorkout) return;
-      const today = new Date();
-      const sessionData = {
-        session_date: today.toISOString(),
-        completion_status: 'completed',
-        actual_duration_minutes: todayWorkout?.workout.duration_minutes || 30,
-        exercises_completed: todayWorkout?.workout.exercises?.length || 5,
-        exercises_planned: todayWorkout?.workout.exercises?.length || 5,
-        notes: `Test completion: ${todayWorkout?.workout.name}`,
-      };
-      return sessionAPI.create(sessionData);
-    },
-    onSuccess: () => {
-      toast.success(`Workout completed! Check your XP!`, {
-        icon: '🎉',
-        duration: 4000,
-      });
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      queryClient.invalidateQueries({ queryKey: ['accountability'] });
-      queryClient.invalidateQueries({ queryKey: ['gamification'] });
-    },
-    onError: (error) => {
-      console.error('Test completion error:', error);
-      toast.error('Failed to complete workout. Please try again.');
-    },
-  });
+  // const testCompleteMutation = useMutation({
+  //   mutationFn: async () => {
+  //     if (!todayWorkout) return;
+  //     const today = new Date();
+  //     const sessionData = {
+  //       session_date: today.toISOString(),
+  //       completion_status: 'completed',
+  //       actual_duration_minutes: todayWorkout?.workout.duration_minutes || 30,
+  //       exercises_completed: todayWorkout?.workout.exercises?.length || 5,
+  //       exercises_planned: todayWorkout?.workout.exercises?.length || 5,
+  //       notes: `Test completion: ${todayWorkout?.workout.name}`,
+  //     };
+  //     return sessionAPI.create(sessionData);
+  //   },
+  //   onSuccess: () => {
+  //     toast.success(`Workout completed! Check your XP!`, {
+  //       icon: '🎉',
+  //       duration: 4000,
+  //     });
+  //     queryClient.invalidateQueries({ queryKey: ['sessions'] });
+  //     queryClient.invalidateQueries({ queryKey: ['accountability'] });
+  //     queryClient.invalidateQueries({ queryKey: ['gamification'] });
+  //   },
+  //   onError: (error) => {
+  //     console.error('Test completion error:', error);
+  //     toast.error('Failed to complete workout. Please try again.');
+  //   },
+  // });
 
   // Get current week number
   const getCurrentWeek = () => {
@@ -265,7 +265,7 @@ export default function DashboardPage() {
         </div>
 
         {/* DEBUG: Test Completion Button */}
-        {todayWorkout && !isTodayCompleted && (
+        {/* {todayWorkout && !isTodayCompleted && (
           <div className="mb-4">
             <button
               onClick={() => testCompleteMutation.mutate()}
@@ -275,7 +275,7 @@ export default function DashboardPage() {
               {testCompleteMutation.isPending ? 'Completing...' : '🧪 Test Complete Today\'s Workout'}
             </button>
           </div>
-        )}
+        )} */}
 
         {/* Today & Tomorrow Workouts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
