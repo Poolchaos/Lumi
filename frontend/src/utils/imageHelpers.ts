@@ -113,14 +113,18 @@ export function getMuscleGroupImage(muscleGroup: string): string {
 export function getEquipmentImage(equipmentName: string): string {
   const normalized = equipmentName.toLowerCase();
 
-  if (normalized.includes('dumbbell')) {
-    return '/images/equipment/dumbbells.jpg';
+  // Check for specific equipment first (most specific matches first)
+  if (normalized.includes('jump') && normalized.includes('rope')) {
+    return '/images/equipment/resistance-bands.jpg'; // Placeholder - using bands for jump rope
+  }
+  if (normalized.includes('kettlebell')) {
+    return '/images/equipment/kettlebell.jpg';
   }
   if (normalized.includes('barbell')) {
     return '/images/equipment/barbell.jpg';
   }
-  if (normalized.includes('kettlebell')) {
-    return '/images/equipment/kettlebell.jpg';
+  if (normalized.includes('dumbbell')) {
+    return '/images/equipment/dumbbells.jpg';
   }
   if (normalized.includes('resistance') || normalized.includes('band')) {
     return '/images/equipment/resistance-bands.jpg';
@@ -128,14 +132,17 @@ export function getEquipmentImage(equipmentName: string): string {
   if (normalized.includes('yoga') || normalized.includes('mat')) {
     return '/images/equipment/yoga-mat.jpg';
   }
-  if (normalized.includes('pull') || normalized.includes('bar')) {
+  if (normalized.includes('pull') && normalized.includes('bar')) {
     return '/images/equipment/pullup-bar.jpg';
   }
   if (normalized.includes('bench')) {
     return '/images/equipment/workout-bench.jpg';
   }
+  if (normalized.includes('bodyweight') || normalized.includes('none')) {
+    return '/images/equipment/yoga-mat.jpg'; // Use yoga mat for bodyweight/no equipment
+  }
 
-  // Default to dumbbells
+  // Default fallback - use a neutral option
   return '/images/equipment/dumbbells.jpg';
 }
 
