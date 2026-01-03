@@ -80,7 +80,6 @@ export const createWorkoutPlan = async (
 
     // Validate OpenAI API key before attempting generation
     if (user.ai_config?.provider === 'openai' && user.ai_config.api_key_encrypted) {
-      console.log('\n=== Validating OpenAI API Key ===');
       try {
         const { decrypt } = await import('../utils/encryption');
         const { validateOpenAIKey } = await import('../utils/openaiValidator');
@@ -89,25 +88,14 @@ export const createWorkoutPlan = async (
         const validation = await validateOpenAIKey(decryptedKey);
 
         if (!validation.valid) {
-          console.error('API key validation failed:', {
-            error: validation.error,
-            errorCode: validation.errorCode,
-            errorType: validation.errorType,
-            details: validation.details,
-          });
-
           res.status(401).json({
             error: validation.error || 'API key validation failed',
             errorCode: validation.errorCode,
             errorType: validation.errorType,
-            details: validation.details,
           });
           return;
         }
-
-        console.log('✓ API key validation successful:', validation.details);
       } catch (validationError) {
-        console.error('Error during API key validation:', validationError);
         res.status(500).json({
           error: 'Failed to validate API key',
           details: validationError instanceof Error ? validationError.message : 'Unknown error'

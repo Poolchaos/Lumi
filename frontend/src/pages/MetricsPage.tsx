@@ -229,8 +229,8 @@ export default function MetricsPage() {
                 {/* Empty State with Image */}
                 <div className="text-center">
                   <div className="mb-6 rounded-lg overflow-hidden max-w-md mx-auto">
-                    <img 
-                      src={getProgressImage('body-metrics')} 
+                    <img
+                      src={getProgressImage('body-metrics')}
                       alt="Track your progress"
                       className="w-full h-48 object-cover"
                     />

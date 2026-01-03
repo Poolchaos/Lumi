@@ -26,7 +26,7 @@ describe('Equipment API', () => {
       .post('/api/auth/signup')
       .send({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'Password123',
       });
 
     authToken = signupResponse.body.accessToken;

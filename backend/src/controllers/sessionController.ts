@@ -45,54 +45,60 @@ export const createSession = async (
             current_streak: 0,
             longest_streak: 0,
             achievements: [],
+            total_prs: 0,
+            streak_freezes_available: 2,
+            streak_freezes_used_this_month: 0,
+            gems: 50,
+            total_gems_earned: 50,
           };
         }
 
-        const isFirstWorkout = user.gamification.total_workouts_completed === 0;
+        const gamification = user.gamification;
+        const isFirstWorkout = gamification.total_workouts_completed === 0;
 
         // Update streak
         const streakUpdate = updateStreak({
-          lastWorkoutDate: user.gamification.last_workout_date,
+          lastWorkoutDate: gamification.last_workout_date,
           workoutDate: session.session_date,
-          currentStreak: user.gamification.current_streak,
+          currentStreak: gamification.current_streak,
         });
 
-        user.gamification.current_streak = streakUpdate.newStreak;
-        user.gamification.last_workout_date = session.session_date;
+        gamification.current_streak = streakUpdate.newStreak;
+        gamification.last_workout_date = session.session_date;
 
         // Update longest streak if applicable
-        if (streakUpdate.newStreak > (user.gamification.longest_streak || 0)) {
-          user.gamification.longest_streak = streakUpdate.newStreak;
+        if (streakUpdate.newStreak > (gamification.longest_streak || 0)) {
+          gamification.longest_streak = streakUpdate.newStreak;
         }
 
         // Calculate XP earned
         const xpResult = calculateWorkoutXp({
           isFirstWorkout,
-          currentStreak: user.gamification.current_streak,
-          hadPersonalRecord: false, // TODO: Track PRs in future
+          currentStreak: gamification.current_streak,
+          hadPersonalRecord: false,
         });
 
         // Update user stats
-        user.gamification.xp += xpResult.totalXp;
-        user.gamification.total_workouts_completed += 1;
+        gamification.xp += xpResult.totalXp;
+        gamification.total_workouts_completed += 1;
 
-        const oldLevel = user.gamification.level;
-        const newLevel = calculateLevel(user.gamification.xp);
-        user.gamification.level = newLevel;
+        const oldLevel = gamification.level;
+        const newLevel = calculateLevel(gamification.xp);
+        gamification.level = newLevel;
 
         // Check for new achievements
         const newAchievements = checkAchievements({
-          currentAchievements: user.gamification.achievements,
+          currentAchievements: gamification.achievements,
           stats: {
-            totalWorkouts: user.gamification.total_workouts_completed,
-            currentStreak: user.gamification.current_streak,
-            totalPRs: 0,
+            totalWorkouts: gamification.total_workouts_completed,
+            currentStreak: gamification.current_streak,
+            totalPRs: gamification.total_prs || 0,
             level: newLevel,
           },
         });
 
         if (newAchievements.length > 0) {
-          user.gamification.achievements.push(...newAchievements);
+          gamification.achievements.push(...newAchievements);
         }
 
         await user.save();

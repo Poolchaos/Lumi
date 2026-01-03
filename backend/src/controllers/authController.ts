@@ -120,6 +120,13 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     // Verify refresh token
     const payload = verifyRefreshToken(refreshToken);
 
+    // Verify user still exists and is active
+    const user = await User.findById(payload.userId).select('_id email');
+    if (!user) {
+      res.status(401).json({ error: 'User no longer exists' });
+      return;
+    }
+
     // Generate new access token
     const accessToken = generateAccessToken({
       userId: payload.userId,

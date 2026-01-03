@@ -110,8 +110,8 @@ export const uploadPhoto = async (
     'Content-Type': file.mimetype,
   });
 
-  // Generate URL
-  const url = `${config.minio_external_url}/${BUCKET_NAME}/${filename}`;
+  // Generate presigned URL for secure access (24 hours)
+  const url = await generatePresignedUrl(filename);
 
   return { url, filename };
 };

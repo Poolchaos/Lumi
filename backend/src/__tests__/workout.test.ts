@@ -302,9 +302,9 @@ describe('Workout Plan Generation', () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(res.status).toBe(200);
-      expect(res.body.plans).toHaveLength(2);
+      expect(res.body.workouts).toHaveLength(2);
 
-      const modalities = res.body.plans.map((p: { workout_modality: string }) => p.workout_modality);
+      const modalities = res.body.workouts.map((p: { workout_modality: string }) => p.workout_modality);
       expect(modalities).toContain('strength');
       expect(modalities).toContain('hiit');
     });

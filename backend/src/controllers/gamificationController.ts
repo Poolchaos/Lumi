@@ -41,21 +41,30 @@ export const getGamificationStats = async (
         current_streak: 0,
         longest_streak: 0,
         achievements: [],
+        total_prs: 0,
+        streak_freezes_available: 2,
+        streak_freezes_used_this_month: 0,
+        gems: 50,
+        total_gems_earned: 50,
       };
       await user.save();
     }
 
+    const gamification = user.gamification;
     const stats = {
-      xp: user.gamification.xp,
-      level: user.gamification.level,
-      levelTitle: getLevelTitle(user.gamification.level),
-      levelProgress: getLevelProgress(user.gamification.xp),
-      xpForNextLevel: getXpForNextLevel(user.gamification.level),
-      totalWorkoutsCompleted: user.gamification.total_workouts_completed,
-      currentStreak: user.gamification.current_streak,
-      longestStreak: user.gamification.longest_streak,
-      achievements: user.gamification.achievements,
-      lastWorkoutDate: user.gamification.last_workout_date,
+      xp: gamification.xp,
+      level: gamification.level,
+      levelTitle: getLevelTitle(gamification.level),
+      levelProgress: getLevelProgress(gamification.xp),
+      xpForNextLevel: getXpForNextLevel(gamification.level),
+      totalWorkoutsCompleted: gamification.total_workouts_completed,
+      currentStreak: gamification.current_streak,
+      longestStreak: gamification.longest_streak,
+      achievements: gamification.achievements,
+      lastWorkoutDate: gamification.last_workout_date,
+      totalPRs: gamification.total_prs || 0,
+      gems: gamification.gems || 0,
+      streakFreezesAvailable: gamification.streak_freezes_available || 0,
     };
 
     res.json({ stats });
@@ -97,58 +106,65 @@ export const awardWorkoutXp = async (
         current_streak: 0,
         longest_streak: 0,
         achievements: [],
+        total_prs: 0,
+        streak_freezes_available: 2,
+        streak_freezes_used_this_month: 0,
+        gems: 50,
+        total_gems_earned: 50,
       };
     }
 
-    const isFirstWorkout = user.gamification.total_workouts_completed === 0;
+    const gamification = user.gamification;
+
+    const isFirstWorkout = gamification.total_workouts_completed === 0;
 
     // Update streak
     const streakUpdate = updateStreak({
-      lastWorkoutDate: user.gamification.last_workout_date,
+      lastWorkoutDate: gamification.last_workout_date,
       workoutDate: completionDate,
-      currentStreak: user.gamification.current_streak,
+      currentStreak: gamification.current_streak,
     });
 
-    user.gamification.current_streak = streakUpdate.newStreak;
-    user.gamification.last_workout_date = completionDate;
+    gamification.current_streak = streakUpdate.newStreak;
+    gamification.last_workout_date = completionDate;
 
     // Update longest streak if applicable
     if (
-      streakUpdate.newStreak > (user.gamification.longest_streak || 0)
+      streakUpdate.newStreak > (gamification.longest_streak || 0)
     ) {
-      user.gamification.longest_streak = streakUpdate.newStreak;
+      gamification.longest_streak = streakUpdate.newStreak;
     }
 
     // Calculate XP earned
     const xpResult = calculateWorkoutXp({
       isFirstWorkout,
-      currentStreak: user.gamification.current_streak,
+      currentStreak: gamification.current_streak,
       hadPersonalRecord,
     });
 
     // Update user stats
-    user.gamification.xp += xpResult.totalXp;
-    user.gamification.total_workouts_completed += 1;
+    gamification.xp += xpResult.totalXp;
+    gamification.total_workouts_completed += 1;
 
-    const oldLevel = user.gamification.level;
-    const newLevel = calculateLevel(user.gamification.xp);
+    const oldLevel = gamification.level;
+    const newLevel = calculateLevel(gamification.xp);
     const leveledUp = newLevel > oldLevel;
-    user.gamification.level = newLevel;
+    gamification.level = newLevel;
 
     // Check for new achievements
     const newAchievements = checkAchievements({
-      currentAchievements: user.gamification.achievements,
+      currentAchievements: gamification.achievements,
       stats: {
-        totalWorkouts: user.gamification.total_workouts_completed,
-        currentStreak: user.gamification.current_streak,
-        totalPRs: 0, // TODO: Track PRs in future
+        totalWorkouts: gamification.total_workouts_completed,
+        currentStreak: gamification.current_streak,
+        totalPRs: gamification.total_prs || 0,
         level: newLevel,
       },
     });
 
     // Add new achievements
     if (newAchievements.length > 0) {
-      user.gamification.achievements.push(...newAchievements);
+      gamification.achievements.push(...newAchievements);
     }
 
     await user.save();
@@ -163,7 +179,7 @@ export const awardWorkoutXp = async (
       newLevel,
       newLevelTitle: getLevelTitle(newLevel),
       streakBroken: streakUpdate.streakBroken,
-      currentStreak: user.gamification.current_streak,
+      currentStreak: gamification.current_streak,
       newAchievements: newAchievements.map((id) => {
         const achievement = Object.values(ACHIEVEMENTS).find((a) => a.id === id);
         return achievement
@@ -176,12 +192,12 @@ export const awardWorkoutXp = async (
           : null;
       }).filter(Boolean),
       stats: {
-        xp: user.gamification.xp,
+        xp: gamification.xp,
         level: newLevel,
-        levelProgress: getLevelProgress(user.gamification.xp),
-        totalWorkoutsCompleted: user.gamification.total_workouts_completed,
-        currentStreak: user.gamification.current_streak,
-        longestStreak: user.gamification.longest_streak,
+        levelProgress: getLevelProgress(gamification.xp),
+        totalWorkoutsCompleted: gamification.total_workouts_completed,
+        currentStreak: gamification.current_streak,
+        longestStreak: gamification.longest_streak,
       },
     });
   } catch (error) {

@@ -132,7 +132,7 @@ export default function EquipmentPage() {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Equipment Details */}
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-neutral-900 mb-3">{item.equipment_name}</h3>

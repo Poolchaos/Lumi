@@ -19,12 +19,6 @@ export interface OpenAIValidationResult {
  */
 export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidationResult> {
   const startTime = Date.now();
-
-  console.log('=== OpenAI API Key Validation ===');
-  console.log('Key format:', apiKey.substring(0, 7) + '...' + apiKey.substring(apiKey.length - 4));
-  console.log('Key length:', apiKey.length);
-  console.log('Validation started at:', new Date().toISOString());
-
   try {
     const client = new OpenAI({ apiKey });
     const details: {

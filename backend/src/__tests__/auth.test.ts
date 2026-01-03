@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import app from '../app';
 import User from '../models/User';
 
+// Valid password meeting all requirements: uppercase, lowercase, number
+const VALID_PASSWORD = 'Password123';
+
 describe('Authentication API', () => {
   beforeAll(async () => {
     // Connect to test database
@@ -25,7 +28,7 @@ describe('Authentication API', () => {
         .post('/api/auth/signup')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       expect(response.status).toBe(201);
@@ -40,7 +43,7 @@ describe('Authentication API', () => {
         .post('/api/auth/signup')
         .send({
           email: 'invalid-email',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       expect(response.status).toBe(400);
@@ -62,14 +65,14 @@ describe('Authentication API', () => {
         .post('/api/auth/signup')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       const response = await request(app)
         .post('/api/auth/signup')
         .send({
           email: 'test@example.com',
-          password: 'password456',
+          password: 'Password456',
         });
 
       expect(response.status).toBe(409);
@@ -82,7 +85,7 @@ describe('Authentication API', () => {
         .post('/api/auth/signup')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
     });
 
@@ -91,7 +94,7 @@ describe('Authentication API', () => {
         .post('/api/auth/login')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       expect(response.status).toBe(200);
@@ -105,7 +108,7 @@ describe('Authentication API', () => {
         .post('/api/auth/login')
         .send({
           email: 'test@example.com',
-          password: 'wrongpassword',
+          password: 'WrongPassword123',
         });
 
       expect(response.status).toBe(401);
@@ -116,7 +119,7 @@ describe('Authentication API', () => {
         .post('/api/auth/login')
         .send({
           email: 'nonexistent@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       expect(response.status).toBe(401);
@@ -129,7 +132,7 @@ describe('Authentication API', () => {
         .post('/api/auth/signup')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: VALID_PASSWORD,
         });
 
       const refreshToken = signupResponse.body.refreshToken;

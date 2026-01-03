@@ -47,6 +47,9 @@ if (config.node_env === 'production') {
     'JWT_REFRESH_SECRET',
     'MONGODB_URI',
     'OPENAI_API_KEY',
+    'MINIO_ACCESS_KEY',
+    'MINIO_SECRET_KEY',
+    'ENCRYPTION_SECRET',
   ];
 
   const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);

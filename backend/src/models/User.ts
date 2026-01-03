@@ -34,6 +34,15 @@ export interface IUser extends Document {
     longest_streak: number; // Best streak ever
     last_workout_date?: Date;
     achievements: string[]; // Array of achievement IDs earned
+    // NEW: PR tracking
+    total_prs: number; // Total personal records set
+    // NEW: Streak freeze system
+    streak_freezes_available: number; // Streak freezes user can use
+    streak_freezes_used_this_month: number;
+    last_streak_freeze_date?: Date;
+    // NEW: Gems currency
+    gems: number; // Premium currency for streak freezes, cosmetics
+    total_gems_earned: number;
   };
   ai_config?: {
     provider: 'openai' | 'anthropic' | 'local' | 'custom';
@@ -117,6 +126,30 @@ const userSchema = new Schema<IUser>(
       achievements: {
         type: [String],
         default: [],
+      },
+      // NEW: PR tracking
+      total_prs: {
+        type: Number,
+        default: 0,
+      },
+      // NEW: Streak freeze system
+      streak_freezes_available: {
+        type: Number,
+        default: 2, // Start with 2 free freezes
+      },
+      streak_freezes_used_this_month: {
+        type: Number,
+        default: 0,
+      },
+      last_streak_freeze_date: Date,
+      // NEW: Gems currency
+      gems: {
+        type: Number,
+        default: 50, // Start with 50 gems
+      },
+      total_gems_earned: {
+        type: Number,
+        default: 50,
       },
     },
     ai_config: {

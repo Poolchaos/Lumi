@@ -206,8 +206,10 @@ describe('GamificationService', () => {
 
   describe('checkAchievements', () => {
     it('should return no achievements if all already earned', () => {
+      // With 10 workouts, 7-day streak, and level 2, these achievements would be unlocked:
+      // first_workout, first_week (7+ workouts), streak_3, week_warrior
       const result = checkAchievements({
-        currentAchievements: ['first_workout', 'week_warrior'],
+        currentAchievements: ['first_workout', 'first_week', 'streak_3', 'week_warrior'],
         stats: {
           totalWorkouts: 10,
           currentStreak: 7,

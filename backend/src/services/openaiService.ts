@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import config from '../config';
+import { logOpenAIError } from '../utils/openaiValidator';
 
 // Default client using system API key (fallback)
 const defaultOpenAI = new OpenAI({
@@ -513,7 +514,6 @@ USER SAFETY AND RESEARCH INTEGRITY ARE NON-NEGOTIABLE.`;
     const workoutPlan = JSON.parse(responseContent) as WorkoutPlan;
     return workoutPlan;
   } catch (error) {
-    const { logOpenAIError } = await import('../utils/openaiValidator');
     logOpenAIError(error, 'generateWorkoutPlan');
 
     // Enhanced error handling with full details

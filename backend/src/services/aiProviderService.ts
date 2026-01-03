@@ -30,13 +30,6 @@ class OpenAIProvider implements AIProvider {
   private client: OpenAI;
 
   constructor(apiKey: string) {
-    console.log('OpenAIProvider constructor - API key details:', {
-      keyStart: apiKey.substring(0, 20),
-      keyEnd: apiKey.substring(apiKey.length - 10),
-      totalLength: apiKey.length,
-      containsWhitespace: /\s/.test(apiKey),
-      startsWithSk: apiKey.startsWith('sk-'),
-    });
     this.client = new OpenAI({ apiKey });
   }
 
@@ -68,31 +61,33 @@ class OpenAIProvider implements AIProvider {
 }
 
 class AnthropicProvider implements AIProvider {
-  private apiKey: string;
+  private _apiKey: string;
 
   constructor(apiKey: string) {
-    this.apiKey = apiKey;
+    this._apiKey = apiKey;
   }
 
   async generateWorkoutPlan(_params: WorkoutGenerationParams): Promise<unknown> {
     // Future feature: Anthropic Claude API integration for workout generation
     // Will require Anthropic SDK installation and prompt engineering
-    console.log('Using Anthropic API key:', this.apiKey.substring(0, 10) + '...');
+    // Placeholder to satisfy TypeScript strict mode until implementation
+    void this._apiKey;
     throw new Error('Anthropic provider not yet implemented. Please use OpenAI provider.');
   }
 }
 
 class LocalLLMProvider implements AIProvider {
-  private endpointUrl: string;
+  private _endpointUrl: string;
 
   constructor(endpointUrl: string) {
-    this.endpointUrl = endpointUrl;
+    this._endpointUrl = endpointUrl;
   }
 
   async generateWorkoutPlan(_params: WorkoutGenerationParams): Promise<unknown> {
     // Future feature: Local LLM integration (Ollama, LM Studio, etc.)
     // Will support on-premise AI models for privacy-focused deployments
-    console.log('Local LLM endpoint:', this.endpointUrl);
+    // Placeholder to satisfy TypeScript strict mode until implementation
+    void this._endpointUrl;
     throw new Error('Local LLM provider not yet implemented. Please use OpenAI provider.');
   }
 }
@@ -118,20 +113,9 @@ export const createAIProvider = (user: IUser): AIProvider => {
     ? decrypt(aiConfig.api_key_encrypted)
     : null;
 
-  console.log('Decrypted API key info (before trim):', {
-    hasEncryptedKey: !!aiConfig.api_key_encrypted,
-    hasDecryptedKey: !!apiKey,
-    keyPrefix: apiKey ? apiKey.substring(0, 10) + '...' : 'null',
-    keySuffix: apiKey ? '...' + apiKey.substring(apiKey.length - 10) : 'null',
-    keyLength: apiKey?.length || 0,
-    hasLeadingWhitespace: apiKey ? apiKey !== apiKey.trimStart() : false,
-    hasTrailingWhitespace: apiKey ? apiKey !== apiKey.trimEnd() : false,
-  });
-
   // Trim whitespace that might have been accidentally copied
   if (apiKey) {
     apiKey = apiKey.trim();
-    console.log('After trim - keyLength:', apiKey.length);
   }
 
   switch (aiConfig.provider) {
@@ -139,7 +123,6 @@ export const createAIProvider = (user: IUser): AIProvider => {
       if (!apiKey) {
         throw new Error('OpenAI API key not configured');
       }
-      console.log('Creating OpenAIProvider with user key');
       return new OpenAIProvider(apiKey);
 
     case 'anthropic':
