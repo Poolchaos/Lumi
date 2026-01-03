@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { accountabilityAPI } from '../api';
+import { accountabilityAPI, queryKeys } from '../api';
 
 export function useStreak() {
   const { data } = useQuery({
-    queryKey: ['accountability'],
+    queryKey: queryKeys.accountability.status(),
     queryFn: accountabilityAPI.getStatus,
   });
 

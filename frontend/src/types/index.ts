@@ -43,13 +43,24 @@ export interface SignupData extends LoginCredentials {
   confirmPassword?: string;
 }
 
+export interface EquipmentSpecifications {
+  weight_kg?: number;
+  weight_lbs?: number;
+  resistance_level?: string;
+  size?: string;
+  brand?: string;
+  model?: string;
+  max_weight_capacity_kg?: number;
+  [key: string]: string | number | undefined;
+}
+
 export interface Equipment {
   _id: string;
   user_id: string;
   equipment_name: string;
   equipment_type: 'free_weights' | 'machines' | 'cardio' | 'bodyweight' | 'resistance_bands' | 'other';
   quantity: number;
-  specifications?: Record<string, any>;
+  specifications?: EquipmentSpecifications;
   condition: 'new' | 'good' | 'fair' | 'poor';
   is_available: boolean;
   notes?: string;
@@ -83,6 +94,30 @@ export interface BodyMetrics {
   updated_at: string;
 }
 
+export interface ScheduleExercise {
+  name: string;
+  sets?: number;
+  reps?: number;
+  duration_seconds?: number;
+  rest_seconds?: number;
+  target_muscles: string[];
+  equipment_needed?: string[];
+  instructions?: string;
+}
+
+export interface ScheduleWorkout {
+  name: string;
+  duration_minutes: number;
+  focus: string;
+  type?: string;
+  exercises: ScheduleExercise[];
+}
+
+export interface ScheduleDay {
+  day: string;
+  workout?: ScheduleWorkout;
+}
+
 export interface WorkoutPlan {
   _id: string;
   user_id: string;
@@ -97,24 +132,7 @@ export interface WorkoutPlan {
       primary_goals: string[];
       training_methodology?: string;
     };
-    weekly_schedule: Array<{
-      day: string;
-      workout?: {
-        name: string;
-        duration_minutes: number;
-        focus: string;
-        exercises: Array<{
-          name: string;
-          sets?: number;
-          reps?: number;
-          duration_seconds?: number;
-          rest_seconds?: number;
-          target_muscles: string[];
-          equipment_needed?: string[];
-          instructions?: string;
-        }>;
-      };
-    }>;
+    weekly_schedule: ScheduleDay[];
     progression_notes?: string;
     warm_up_routine?: string;
     cool_down_routine?: string;
@@ -143,6 +161,9 @@ export interface WorkoutSession {
   session_date: string;
   duration_minutes: number;
   exercises_completed: ExerciseLog[];
+  completion_status?: 'planned' | 'completed' | 'skipped' | 'partial';
+  actual_duration_minutes?: number;
+  exercises_planned?: number;
   notes?: string;
   intensity_level?: number;
   created_at: string;

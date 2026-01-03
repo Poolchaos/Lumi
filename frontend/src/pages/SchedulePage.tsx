@@ -10,6 +10,7 @@ import { PageTransition } from '../components/layout/PageTransition';
 import { Card, Modal, Button } from '../design-system';
 import { workoutAPI, sessionAPI } from '../api';
 import { getEmptyStateImage } from '../utils/imageHelpers';
+import type { ScheduleDay, ScheduleWorkout, WorkoutPlan, WorkoutSession } from '../types';
 
 type ViewMode = 'weekly' | 'monthly';
 
@@ -56,14 +57,14 @@ export default function SchedulePage() {
 
   // Manual completion mutation
   const manualCompleteMutation = useMutation({
-    mutationFn: async ({ date, workout }: { date: string; workout: any }) => {
+    mutationFn: async ({ date, workout }: { date: string; workout: WorkoutDay['workout'] }) => {
       const sessionData = {
         session_date: new Date(date).toISOString(),
         completion_status: 'completed',
-        actual_duration_minutes: workout.duration_minutes,
-        exercises_completed: workout.exercises?.length || 0,
-        exercises_planned: workout.exercises?.length || 0,
-        notes: `Manually completed workout: ${workout.name}`,
+        actual_duration_minutes: workout?.duration_minutes || 0,
+        exercises_completed: workout?.exercises?.length || 0,
+        exercises_planned: workout?.exercises?.length || 0,
+        notes: `Manually completed workout: ${workout?.name}`,
       };
       return sessionAPI.create(sessionData);
     },
@@ -99,15 +100,13 @@ export default function SchedulePage() {
       return [];
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const activePlan: any = workoutsData.workouts.find((w: any) => w.is_active);
+    const activePlan = workoutsData.workouts.find((w: WorkoutPlan) => w.is_active);
     if (!activePlan?.plan_data?.weekly_schedule) {
       return [];
     }
 
     const days: WorkoutDay[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const schedule: any[] = activePlan.plan_data.weekly_schedule;
+    const schedule: ScheduleDay[] = activePlan.plan_data.weekly_schedule;
 
     // Generate workout days for the next 90 days (3 months)
     const today = new Date();
@@ -118,13 +117,11 @@ export default function SchedulePage() {
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
       const dateStr = date.toLocaleDateString('en-US');
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const scheduledWorkout = schedule.find((s: any) => s.day === dayName);
+      const scheduledWorkout = schedule.find((s: ScheduleDay) => s.day === dayName);
 
       // Check if this workout was completed (from sessions)
       const isCompleted = sessionsData?.sessions?.some(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (session: any) => {
+        (session: WorkoutSession) => {
           const sessionDate = new Date(session.session_date).toLocaleDateString('en-US');
           return sessionDate === dateStr && session.completion_status === 'completed';
         }

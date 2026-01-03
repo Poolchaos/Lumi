@@ -18,6 +18,17 @@ import { Card, Confetti } from '../design-system';
 import { workoutAPI, sessionAPI } from '../api';
 import { getExerciseImage } from '../utils/imageHelpers';
 import toast from 'react-hot-toast';
+import type { ScheduleDay, ScheduleExercise, WorkoutPlan, WorkoutSession } from '../types';
+
+interface SessionCreateData {
+  plan_id?: string;
+  session_date: string;
+  completion_status: 'planned' | 'completed' | 'skipped' | 'partial';
+  actual_duration_minutes: number;
+  exercises_completed: number;
+  exercises_planned: number;
+  notes?: string;
+}
 
 interface ExerciseCompletion {
   exerciseId: string;
@@ -50,15 +61,12 @@ export default function WorkoutSessionPage() {
   // Get today's workout from active plan
   const todayWorkout = (() => {
     if (!workoutsData?.workouts) return null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const activePlan: any = workoutsData.workouts.find((w: any) => w.is_active);
+    const activePlan = workoutsData.workouts.find((w: WorkoutPlan) => w.is_active);
     if (!activePlan?.plan_data?.weekly_schedule) return null;
 
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const schedule: any[] = activePlan.plan_data.weekly_schedule;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const todaySchedule = schedule.find((s: any) => s.day === today);
+    const schedule: ScheduleDay[] = activePlan.plan_data.weekly_schedule;
+    const todaySchedule = schedule.find((s: ScheduleDay) => s.day === today);
 
     return todaySchedule?.workout || null;
   })();
@@ -68,8 +76,7 @@ export default function WorkoutSessionPage() {
 
   // Save session mutation
   const saveSessionMutation = useMutation({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mutationFn: (sessionData: any) => sessionAPI.create(sessionData),
+    mutationFn: (sessionData: SessionCreateData) => sessionAPI.create(sessionData),
     onSuccess: async () => {
       // Invalidate and refetch gamification data immediately
       await queryClient.invalidateQueries({ queryKey: ['gamification'] });
@@ -82,9 +89,8 @@ export default function WorkoutSessionPage() {
   // Initialize exercise completion tracking
   useEffect(() => {
     if (exercises.length > 0 && completedExercises.length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const initialCompletion = exercises.map((exercise: any) => ({
-        exerciseId: exercise.id || exercise.name,
+      const initialCompletion = exercises.map((exercise: ScheduleExercise) => ({
+        exerciseId: exercise.name,
         sets: Array(exercise.sets || 3).fill(null).map(() => ({
           reps: exercise.reps || 10,
           weight: 0,
@@ -176,13 +182,12 @@ export default function WorkoutSessionPage() {
     const completedExercisesList = completedExercises
       .filter(ex => ex.sets.some(set => set.completed))
       .map(ex => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        exercise: exercises.find((e: any) => (e.id || e.name) === ex.exerciseId),
+        exercise: exercises.find((e: ScheduleExercise) => e.name === ex.exerciseId),
         setsCompleted: ex.sets.filter(set => set.completed).length,
         totalSets: ex.sets.length,
       }));
 
-    const sessionData = {
+    const sessionData: SessionCreateData = {
       plan_id: workoutId || undefined,
       session_date: new Date().toISOString(),
       completion_status: 'completed',

@@ -16,6 +16,7 @@ import type {
 
 export { gamificationAPI } from './gamification';
 export type { GamificationStats, XPGainResponse } from './gamification';
+export { queryKeys, invalidationKeys } from './queryKeys';
 
 // Auth API
 export const authAPI = {

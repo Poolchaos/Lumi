@@ -16,24 +16,25 @@ import { XPProgressBar } from '../components/gamification/XPProgressBar';
 import { StreakCounter } from '../components/gamification/StreakCounter';
 import { PageTransition } from '../components/layout/PageTransition';
 import { Card } from '../design-system';
-import { profileAPI, workoutAPI, gamificationAPI, sessionAPI } from '../api';
+import { profileAPI, workoutAPI, gamificationAPI, sessionAPI, queryKeys } from '../api';
+import type { ScheduleDay, WorkoutPlan, WorkoutSession } from '../types';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: profileData } = useQuery({
-    queryKey: ['profile'],
+    queryKey: queryKeys.profile.all,
     queryFn: profileAPI.getProfile,
   });
 
   const { data: workoutsData } = useQuery({
-    queryKey: ['workouts'],
+    queryKey: queryKeys.workouts.all,
     queryFn: workoutAPI.getAll,
   });
 
   const { data: gamificationData } = useQuery({
-    queryKey: ['gamification'],
+    queryKey: queryKeys.gamification.stats(),
     queryFn: gamificationAPI.getStats,
     staleTime: 0, // Always refetch gamification data
     refetchOnMount: 'always', // Refetch when component mounts
@@ -44,7 +45,7 @@ export default function DashboardPage() {
   }, [gamificationData]);
 
   const { data: sessionsData } = useQuery({
-    queryKey: ['sessions'],
+    queryKey: queryKeys.sessions.all,
     queryFn: sessionAPI.getAll,
   });
 
@@ -63,11 +64,9 @@ export default function DashboardPage() {
   // Extract today and tomorrow workouts from the active plan
   const { todayWorkout, tomorrowWorkout, yesterdayWorkout } = useMemo(() => {
     if (workoutsData?.workouts && workoutsData.workouts.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const activePlan: any = workoutsData.workouts.find((w: any) => w.is_active);
+      const activePlan = workoutsData.workouts.find((w: WorkoutPlan) => w.is_active);
       if (activePlan?.plan_data?.weekly_schedule) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const schedule: any[] = activePlan.plan_data.weekly_schedule;
+        const schedule: ScheduleDay[] = activePlan.plan_data.weekly_schedule;
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
         const tomorrowDate = new Date();
         tomorrowDate.setDate(tomorrowDate.getDate() + 1);
@@ -77,12 +76,9 @@ export default function DashboardPage() {
         const yesterday = yesterdayDate.toLocaleDateString('en-US', { weekday: 'long' });
 
         return {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          todayWorkout: schedule.find((s: any) => s.day === today) || null,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          tomorrowWorkout: schedule.find((s: any) => s.day === tomorrow) || null,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          yesterdayWorkout: schedule.find((s: any) => s.day === yesterday) || null,
+          todayWorkout: schedule.find((s: ScheduleDay) => s.day === today) || null,
+          tomorrowWorkout: schedule.find((s: ScheduleDay) => s.day === tomorrow) || null,
+          yesterdayWorkout: schedule.find((s: ScheduleDay) => s.day === yesterday) || null,
         };
       }
     }
@@ -96,12 +92,10 @@ export default function DashboardPage() {
   // Calculate planned workouts this week from the active plan
   const workoutsPlannedThisWeek = useMemo(() => {
     if (workoutsData?.workouts && workoutsData.workouts.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const activePlan: any = workoutsData.workouts.find((w: any) => w.is_active);
+      const activePlan = workoutsData.workouts.find((w: WorkoutPlan) => w.is_active);
       if (activePlan?.plan_data?.weekly_schedule) {
         // Count non-rest days in the weekly schedule
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return activePlan.plan_data.weekly_schedule.filter((day: any) =>
+        return activePlan.plan_data.weekly_schedule.filter((day: ScheduleDay) =>
           day.workout && day.workout.type !== 'Rest Day'
         ).length;
       }
@@ -114,7 +108,7 @@ export default function DashboardPage() {
     if (!sessionsData?.sessions) return false;
     const today = new Date().toLocaleDateString('en-US');
     return sessionsData.sessions.some(
-      (session: any) => {
+      (session: WorkoutSession) => {
         const sessionDate = new Date(session.session_date).toLocaleDateString('en-US');
         return sessionDate === today && session.completion_status === 'completed';
       }
@@ -128,7 +122,7 @@ export default function DashboardPage() {
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toLocaleDateString('en-US');
     return sessionsData.sessions.some(
-      (session: any) => {
+      (session: WorkoutSession) => {
         const sessionDate = new Date(session.session_date).toLocaleDateString('en-US');
         return sessionDate === yesterdayStr && session.completion_status === 'completed';
       }
@@ -159,9 +153,9 @@ export default function DashboardPage() {
         icon: '🎉',
         duration: 4000,
       });
-      queryClient.invalidateQueries({ queryKey: ['sessions'] });
-      queryClient.invalidateQueries({ queryKey: ['accountability'] });
-      queryClient.invalidateQueries({ queryKey: ['gamification'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.accountability.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.gamification.all });
     },
     onError: (error) => {
       console.error('Manual completion error:', error);

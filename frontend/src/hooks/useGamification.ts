@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { gamificationAPI } from '../api';
+import { gamificationAPI, queryKeys } from '../api';
 
 export function useGamification() {
   const { data: gamificationData } = useQuery({
-    queryKey: ['gamification'],
+    queryKey: queryKeys.gamification.stats(),
     queryFn: gamificationAPI.getStats,
     staleTime: 0,
     refetchOnMount: 'always',

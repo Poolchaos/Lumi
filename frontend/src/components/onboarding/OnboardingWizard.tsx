@@ -2,13 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { profileAPI, equipmentAPI, workoutAPI, aiConfigAPI } from '../../api';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../../design-system';
+import { profileAPI, equipmentAPI, workoutAPI, aiConfigAPI, queryKeys } from '../../api';
+import { Card, CardHeader, CardTitle, CardContent, Button } from '../../design-system';
 import { ChevronRight, ChevronLeft, Sparkles, Key, User, Target, Dumbbell, Calendar, Zap } from 'lucide-react';
 import type { Equipment } from '../../types';
 import { GeneratingWorkoutLoader } from './GeneratingWorkoutLoader';
 import type { OnboardingData } from './types';
 import { validateStep } from './validation';
+import {
+  Step0APIKey,
+  Step1Profile,
+  Step2Modality,
+  Step3Goals,
+  Step4Experience,
+  Step5Schedule,
+  Step6Equipment,
+} from './steps';
 
 export function OnboardingWizard() {
   const navigate = useNavigate();
@@ -19,19 +28,19 @@ export function OnboardingWizard() {
 
   // Fetch existing AI config to check if API key already exists
   const { data: aiConfig } = useQuery({
-    queryKey: ['ai-config'],
+    queryKey: queryKeys.aiConfig.all,
     queryFn: aiConfigAPI.get,
   });
 
   // Fetch existing profile data
   const { data: existingProfile } = useQuery({
-    queryKey: ['profile'],
+    queryKey: queryKeys.profile.all,
     queryFn: profileAPI.getProfile,
   });
 
   // Fetch existing equipment
   const { data: existingEquipment } = useQuery({
-    queryKey: ['equipment'],
+    queryKey: queryKeys.equipment.all,
     queryFn: equipmentAPI.getAll,
   });
 
@@ -126,7 +135,7 @@ export function OnboardingWizard() {
       console.log('OnboardingWizard - Response keys:', response ? Object.keys(response) : 'no response');
 
       // Set the generated plan in cache so the review page can access it
-      queryClient.setQueryData(['workouts'], response);
+      queryClient.setQueryData(queryKeys.workouts.all, response);
       toast.success('Your personalized workout plan is ready!');
       navigate('/workout-plan-review');
     },
