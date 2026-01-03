@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -55,7 +69,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               required
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               value={credentials.password}
               onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
             />
@@ -90,7 +104,7 @@ export default function LoginPage() {
 
         <div className="mt-8 text-center text-white text-sm">
           <p>Your self-hosted fitness companion</p>
-          <p className="mt-1">Zero cost • Full privacy • Complete control</p>
+          <p className="mt-1">Zero cost â€¢ Full privacy â€¢ Complete control</p>
         </div>
       </div>
     </div>

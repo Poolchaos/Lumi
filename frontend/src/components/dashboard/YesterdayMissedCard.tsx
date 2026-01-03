@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { Card } from '../../design-system';
 import { AlertCircle, Calendar, Clock, Target, Zap } from 'lucide-react';
 
@@ -53,7 +67,7 @@ export function YesterdayMissedCard({ workout, xpAvailable, onComplete, isComple
             </div>
             <div>
               <p className="text-sm font-medium opacity-90">
-                {isCompleted ? "✅ Completed Yesterday's Workout" : "Yesterday's Missed Workout"}
+                {isCompleted ? "âœ… Completed Yesterday's Workout" : "Yesterday's Missed Workout"}
               </p>
               <h2 className="text-2xl font-bold">{workout.workout.name}</h2>
             </div>
@@ -122,7 +136,7 @@ export function YesterdayMissedCard({ workout, xpAvailable, onComplete, isComple
             {isCompleting
               ? 'Completing...'
               : isCompleted
-                ? '🧪 Test: Complete Again'
+                ? 'ðŸ§ª Test: Complete Again'
                 : 'Complete This Workout'}
           </span>
         </button>

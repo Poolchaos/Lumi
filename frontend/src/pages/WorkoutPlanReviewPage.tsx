@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -116,7 +130,7 @@ export default function WorkoutPlanReviewPage() {
             />
           </div>
           <div className="relative z-10">
-            <div className="text-6xl mb-4">😕</div>
+            <div className="text-6xl mb-4">ðŸ˜•</div>
             <h2 className="text-2xl font-bold mb-2">No Workout Plan Found</h2>
             <p className="text-neutral-600 mb-6">
               We couldn't find your generated workout plan. Please try generating a new one.
@@ -328,7 +342,7 @@ export default function WorkoutPlanReviewPage() {
                                 )}
                               </div>
                               <p className="text-xs text-neutral-600 italic">
-                                💡 {exercise.instructions}
+                                ðŸ’¡ {exercise.instructions}
                               </p>
                             </div>
                           ))}

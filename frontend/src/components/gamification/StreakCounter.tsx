@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { getGamificationIcon } from '../../utils/imageHelpers';
 
 interface StreakCounterProps {
@@ -32,8 +46,8 @@ export function StreakCounter({
   };
 
   const getStreakMessage = () => {
-    if (isLegendary) return '🏆 LEGENDARY STREAK!';
-    if (isOnFire) return '🔥 ON FIRE!';
+    if (isLegendary) return 'ðŸ† LEGENDARY STREAK!';
+    if (isOnFire) return 'ðŸ”¥ ON FIRE!';
     if (currentStreak >= 3) return 'Great momentum!';
     if (currentStreak === 0) return 'Start your streak today!';
     return 'Keep it going!';
@@ -83,7 +97,7 @@ export function StreakCounter({
 
       {currentStreak > 0 && currentStreak < 7 && (
         <p className="text-xs text-neutral-500">
-          {7 - currentStreak} more day{7 - currentStreak !== 1 ? 's' : ''} to reach 🔥 ON FIRE status!
+          {7 - currentStreak} more day{7 - currentStreak !== 1 ? 's' : ''} to reach ðŸ”¥ ON FIRE status!
         </p>
       )}
     </div>

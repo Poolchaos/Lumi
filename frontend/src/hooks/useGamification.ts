@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useQuery } from '@tanstack/react-query';
 import { gamificationAPI, queryKeys } from '../api';
 
@@ -9,7 +23,7 @@ export function useGamification() {
     refetchOnMount: 'always',
   });
 
-  console.log('🎮 useGamification hook data:', gamificationData);
+  console.log('ðŸŽ® useGamification hook data:', gamificationData);
 
   const level = gamificationData?.level || 1;
   const xp = gamificationData?.xp || 0;

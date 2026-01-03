@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import * as Minio from 'minio';
 import config from '../config';
 import { Readable } from 'stream';
@@ -23,7 +37,7 @@ export const initializeStorage = async (): Promise<void> => {
     const exists = await minioClient.bucketExists(BUCKET_NAME);
     if (!exists) {
       await minioClient.makeBucket(BUCKET_NAME, 'us-east-1');
-      console.log(`✓ MinIO bucket '${BUCKET_NAME}' created successfully`);
+      console.log(`âœ“ MinIO bucket '${BUCKET_NAME}' created successfully`);
 
       // Set bucket policy to allow read access for authenticated users
       const policy = {
@@ -39,7 +53,7 @@ export const initializeStorage = async (): Promise<void> => {
       };
       await minioClient.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy));
     } else {
-      console.log(`✓ MinIO bucket '${BUCKET_NAME}' already exists`);
+      console.log(`âœ“ MinIO bucket '${BUCKET_NAME}' already exists`);
     }
   } catch (error) {
     console.error('Failed to initialize MinIO storage:', error);

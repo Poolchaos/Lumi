@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -92,7 +106,7 @@ export default function SignupPage() {
               id="password"
               type="password"
               required
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               error={validationErrors.length > 0 && formData.password.length > 0 ? validationErrors.join(', ') : undefined}
@@ -104,7 +118,7 @@ export default function SignupPage() {
               id="confirmPassword"
               type="password"
               required
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               value={formData.confirmPassword || ''}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               success={passwordsMatch ? 'Passwords match' : undefined}

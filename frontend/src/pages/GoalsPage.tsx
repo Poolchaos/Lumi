@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Target, TrendingUp, Plus, Trash2, CheckCircle2 } from 'lucide-react';
@@ -248,7 +262,7 @@ export default function GoalsPage() {
                     {progress >= 100 && (
                       <div className="mt-4 flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-md">
                         <CheckCircle2 className="h-5 w-5" />
-                        <span className="font-medium">Goal achieved! 🎉</span>
+                        <span className="font-medium">Goal achieved! ðŸŽ‰</span>
                       </div>
                     )}
                   </CardContent>

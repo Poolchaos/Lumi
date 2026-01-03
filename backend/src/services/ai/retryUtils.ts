@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 /**
  * Retry Utility - Exponential backoff with model fallback
  * Provides resilient AI request handling with configurable retry strategies
@@ -34,7 +48,7 @@ function calculateDelay(
   // Exponential backoff: baseDelay * (exponentialBase ^ attempt)
   const exponentialDelay = config.baseDelayMs * Math.pow(config.exponentialBase, attempt);
 
-  // Add jitter (±25%) to prevent thundering herd
+  // Add jitter (Â±25%) to prevent thundering herd
   const jitter = exponentialDelay * 0.25 * (Math.random() * 2 - 1);
 
   // Clamp to max delay

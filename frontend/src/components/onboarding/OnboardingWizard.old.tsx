@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -57,7 +71,7 @@ export function OnboardingWizard() {
     },
     onSuccess: () => {
       setTokenTested(true);
-      toast.success('✅ API key verified successfully!');
+      toast.success('âœ… API key verified successfully!');
     },
     onError: (error: unknown) => {
       const err = error as { response?: { data?: { error?: string } } };

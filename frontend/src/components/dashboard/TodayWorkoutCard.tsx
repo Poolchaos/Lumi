@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { Card } from '../../design-system';
 import { Calendar, Clock, Target, Zap, TrendingUp, ChevronRight, Play } from 'lucide-react';
 import { formatDuration } from '../../utils/formatDuration';
@@ -81,7 +95,7 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
             </div>
             <div>
               <p className="text-sm font-medium opacity-90">
-                {isCompleted ? '✅ Completed' : 'Today\'s Workout'}
+                {isCompleted ? 'âœ… Completed' : 'Today\'s Workout'}
               </p>
               <h2 className="text-2xl font-bold">{workout.workout.name}</h2>
             </div>
@@ -156,8 +170,8 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
                     <p className="font-medium text-neutral-900">{exercise.name}</p>
                     <p className="text-xs text-neutral-500">
                       {exercise.sets && `${exercise.sets} sets`}
-                      {exercise.reps && ` × ${exercise.reps} reps`}
-                      {exercise.duration_seconds && ` • ${formatDuration(exercise.duration_seconds)}`}
+                      {exercise.reps && ` Ã— ${exercise.reps} reps`}
+                      {exercise.duration_seconds && ` â€¢ ${formatDuration(exercise.duration_seconds)}`}
                     </p>
                   </div>
                 </div>
@@ -199,7 +213,7 @@ export function TodayWorkoutCard({ workout, isCompleted, xpToEarn, onStart }: To
         {isCompleted && (
           <div className="bg-success-100 border-2 border-success-300 rounded-xl p-4 text-center">
             <p className="text-success-800 font-semibold">
-              🎉 Great work! You earned {xpToEarn} XP today!
+              ðŸŽ‰ Great work! You earned {xpToEarn} XP today!
             </p>
           </div>
         )}

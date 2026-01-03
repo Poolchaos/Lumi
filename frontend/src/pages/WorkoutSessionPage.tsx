@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -114,7 +128,7 @@ export default function WorkoutSessionPage() {
       setTimeout(() => {
         setIsRestTimerActive(false);
         toast.success('Rest time over! Ready for your next set?', {
-          icon: '💪',
+          icon: 'ðŸ’ª',
           duration: 3000,
         });
       }, 0);
@@ -146,7 +160,7 @@ export default function WorkoutSessionPage() {
 
         // Show mini XP animation
         toast.success(`+${xpGained} XP`, {
-          icon: '⚡',
+          icon: 'âš¡',
           duration: 1500,
         });
 
@@ -238,7 +252,7 @@ export default function WorkoutSessionPage() {
         <PageTransition>
           <div className="max-w-2xl mx-auto mt-12">
             <Card className="p-8 text-center">
-              <div className="text-6xl mb-4">😴</div>
+              <div className="text-6xl mb-4">ðŸ˜´</div>
               <h2 className="text-2xl font-bold text-neutral-900 mb-3">No Workout Scheduled</h2>
               <p className="text-neutral-600 mb-6">
                 Today is a rest day! Take time to recover and come back stronger.
@@ -286,7 +300,7 @@ export default function WorkoutSessionPage() {
                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     className="text-8xl mb-6"
                   >
-                    🎉
+                    ðŸŽ‰
                   </motion.div>
                   <h2 className="text-4xl font-bold text-white mb-4">Workout Complete!</h2>
                   <div className="flex items-center justify-center gap-4 text-white text-xl mb-6">
@@ -380,7 +394,7 @@ export default function WorkoutSessionPage() {
                     <div className="text-5xl font-bold text-blue-600 mb-4">
                       {Math.floor(restTimeRemaining / 60)}:{(restTimeRemaining % 60).toString().padStart(2, '0')}
                     </div>
-                    <p className="text-neutral-600 mb-4">Take a breather, you're doing great! 💪</p>
+                    <p className="text-neutral-600 mb-4">Take a breather, you're doing great! ðŸ’ª</p>
                     <button
                       onClick={skipRestTimer}
                       className="btn-secondary"
@@ -459,7 +473,7 @@ export default function WorkoutSessionPage() {
                             <p className="font-semibold text-neutral-900">Set {setIndex + 1}</p>
                             <p className="text-sm text-neutral-600">
                               {currentExercise.reps || 10} reps
-                              {currentExercise.weight && ` × ${currentExercise.weight}lbs`}
+                              {currentExercise.weight && ` Ã— ${currentExercise.weight}lbs`}
                             </p>
                           </div>
                         </div>

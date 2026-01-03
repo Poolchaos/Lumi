@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { TrendingUp, Dumbbell, Flame, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -76,7 +90,7 @@ export function WorkoutStats({
         label="Consistency"
         value={consistency}
         change={consistencyChange}
-        changeType={consistencyChange && consistencyChange.includes('↑') ? 'positive' : consistencyChange && consistencyChange.includes('↓') ? 'negative' : 'neutral'}
+        changeType={consistencyChange && consistencyChange.includes('â†‘') ? 'positive' : consistencyChange && consistencyChange.includes('â†“') ? 'negative' : 'neutral'}
       />
     </div>
   );

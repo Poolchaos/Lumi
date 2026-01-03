@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -108,7 +122,7 @@ describe('Workout Generation Flow - Integration Tests', () => {
     );
   };
 
-  describe('Complete Flow: Onboarding → Generation → Review', () => {
+  describe('Complete Flow: Onboarding â†’ Generation â†’ Review', () => {
     it('should successfully complete entire workout generation flow', async () => {
       // Setup mocks
       vi.mocked(api.aiConfigAPI.get).mockResolvedValue({

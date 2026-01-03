@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { motion } from 'framer-motion';
 import { Trophy, TrendingUp, Zap } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
@@ -57,7 +71,7 @@ export function HeroSection() {
         transition={{ duration: 0.4 }}
       >
         <h1 className="text-3xl md:text-4xl font-bold mb-2">
-          Welcome back, {firstName}! 👋
+          Welcome back, {firstName}! ðŸ‘‹
         </h1>
         <p className="text-primary-100 text-lg">
           Let's crush today's workout

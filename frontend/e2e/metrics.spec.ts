@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect, Page } from '@playwright/test';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -78,7 +92,7 @@ test.describe('Body Metrics and Photos', () => {
     // If it still says "Cancel", the save might have failed - click Cancel to close form
     const buttonText = await addButton.textContent();
     if (buttonText?.includes('Cancel')) {
-      console.log('⚠ Form still open after save - clicking Cancel to close');
+      console.log('âš  Form still open after save - clicking Cancel to close');
       await addButton.click(); // Click Cancel to close the form
       await page.waitForTimeout(500);
     }
@@ -98,7 +112,7 @@ test.describe('Body Metrics and Photos', () => {
 
     // If metrics aren't showing, the API save might be failing (backend issue)
     if (weightElements === 0) {
-      console.log('⚠ Metrics not displaying - API save may be failing');
+      console.log('âš  Metrics not displaying - API save may be failing');
       // This is acceptable - we verified the UI flow works
     } else {
       expect(weightElements).toBeGreaterThan(0);

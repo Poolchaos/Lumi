@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { WorkoutPlan } from '../../types';
 
@@ -6,7 +20,7 @@ interface VolumeChartProps {
 }
 
 export default function VolumeChart({ workouts }: VolumeChartProps) {
-  // Calculate volume (sets × reps) for each workout
+  // Calculate volume (sets Ã— reps) for each workout
   // Note: Now calculating from weekly_schedule in workout plans
   const chartData = workouts
     .flatMap(plan => {

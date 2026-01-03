@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import OpenAI from 'openai';
 import config from '../config';
 import { logOpenAIError } from '../utils/openaiValidator';
@@ -171,7 +185,7 @@ User Profile:
 - Weight: ${userProfile.weight_kg ? `${userProfile.weight_kg} kg` : 'Not specified'}
 
 ${userProfile.injuries_and_restrictions ? `
-⚠️ CRITICAL SAFETY ALERT - INJURIES & RESTRICTIONS ⚠️
+âš ï¸ CRITICAL SAFETY ALERT - INJURIES & RESTRICTIONS âš ï¸
 ${userProfile.injuries_and_restrictions}
 
 MANDATORY REQUIREMENTS:
@@ -183,11 +197,11 @@ MANDATORY REQUIREMENTS:
 6. When in doubt about safety, EXCLUDE the exercise
 
 Examples of restrictions to respect:
-- "Knee injury" → NO squats, lunges, jumping, or knee flexion under load
-- "Pilonidal sinus" → NO situps, crunches, or exercises with direct pressure on lower back/tailbone
-- "Shoulder injury" → NO overhead press, pull-ups, or shoulder-intensive movements
-- "Back problems" → NO deadlifts, heavy spinal loading, or high-impact exercises
-- "Missing limb" → Design unilateral alternatives and balance-focused modifications
+- "Knee injury" â†’ NO squats, lunges, jumping, or knee flexion under load
+- "Pilonidal sinus" â†’ NO situps, crunches, or exercises with direct pressure on lower back/tailbone
+- "Shoulder injury" â†’ NO overhead press, pull-ups, or shoulder-intensive movements
+- "Back problems" â†’ NO deadlifts, heavy spinal loading, or high-impact exercises
+- "Missing limb" â†’ Design unilateral alternatives and balance-focused modifications
 
 USER SAFETY IS PARAMOUNT. When programming, constantly ask: "Could this exercise harm someone with these specific conditions?" If yes, EXCLUDE IT.
 ` : ''}
@@ -211,11 +225,11 @@ ${userContext}
 
 ${modalityGuidance}
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 CRITICAL QUALITY CONTROL RULES - STRICT COMPLIANCE REQUIRED
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-⚠️ NO GUESSING OR ASSUMPTIONS ALLOWED ⚠️
+âš ï¸ NO GUESSING OR ASSUMPTIONS ALLOWED âš ï¸
 
 You MUST follow these non-negotiable quality standards:
 
@@ -266,7 +280,7 @@ You MUST follow these non-negotiable quality standards:
 
 7. **PROGRESSIVE OVERLOAD VERIFICATION**
    Every week MUST show measurable progression through:
-   - Increased volume (sets × reps)
+   - Increased volume (sets Ã— reps)
    - Increased intensity (load, tempo, leverage)
    - Increased complexity (exercise variation)
 
@@ -279,7 +293,7 @@ You MUST follow these non-negotiable quality standards:
    - Strategic rest day placement (avoid back-to-back high-intensity)
    - Week 4 deload is MANDATORY for recovery
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 EVIDENCE-BASED PRINCIPLES (Research-Backed Standards):
 
@@ -375,9 +389,9 @@ PLAN REQUIREMENTS:
 11. **Measurable Progression**: Each week should have clear progression markers (reps, sets, tempo, or load recommendations)
 12. **NO GUESSING**: If any aspect is unclear from user data, use conservative evidence-based defaults
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 MANDATORY PRE-RESPONSE VALIDATION CHECKLIST
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 Before submitting your workout plan, you MUST verify ALL of the following:
 
@@ -442,7 +456,7 @@ QUALITY CONTROL:
 - [ ] NO exercises inappropriate for experience level
 - [ ] NO exercises that conflict with injuries/restrictions
 
-═══════════════════════════════════════════════════════════════════════════════
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 IF YOU CANNOT CHECK ALL BOXES ABOVE, DO NOT SUBMIT THE PLAN.
 Revise until 100% compliant with evidence-based standards and user constraints.
@@ -496,7 +510,7 @@ USER SAFETY AND RESEARCH INTEGRITY ARE NON-NEGOTIABLE.`;
     });
 
     const requestDuration = Date.now() - requestStartTime;
-    console.log('✓ OpenAI request successful');
+    console.log('âœ“ OpenAI request successful');
     console.log('Request duration:', requestDuration + 'ms');
     console.log('Response ID:', completion.id);
     console.log('Model used:', completion.model);
@@ -504,7 +518,7 @@ USER SAFETY AND RESEARCH INTEGRITY ARE NON-NEGOTIABLE.`;
 
     const responseContent = completion.choices[0]?.message?.content;
     if (!responseContent) {
-      console.error('✗ No response content from OpenAI');
+      console.error('âœ— No response content from OpenAI');
       throw new Error('No response from OpenAI');
     }
 

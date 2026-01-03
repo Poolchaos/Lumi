@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect } from '@playwright/test';
 import { registerAndLogin } from './helpers';
 
@@ -25,7 +39,7 @@ test.describe('Workout Plan - Navigation and UI', () => {
     // Verify we're on workouts page
     await expect(page).toHaveURL('/workouts');
 
-    console.log('✓ Workouts page navigation working');
+    console.log('âœ“ Workouts page navigation working');
   });
 
   test('should display workouts page correctly', async ({ page }) => {
@@ -43,7 +57,7 @@ test.describe('Workout Plan - Navigation and UI', () => {
     expect(bodyContent).toBeTruthy();
     expect(bodyContent?.length || 0).toBeGreaterThan(50);
 
-    console.log('✓ Workouts page renders content');
+    console.log('âœ“ Workouts page renders content');
   });
 
   test('should show workout plan review page', async ({ page }) => {
@@ -65,7 +79,7 @@ test.describe('Workout Plan - Navigation and UI', () => {
     const bodyContent = await page.locator('body').textContent();
     expect(bodyContent).toBeTruthy();
 
-    console.log('✓ Review page loads correctly');
+    console.log('âœ“ Review page loads correctly');
   });
 });
 
@@ -85,9 +99,9 @@ test.describe('Workout Plan - Empty States', () => {
 
     if (await noPlantHeading.count() > 0) {
       await expect(noPlantHeading.first()).toBeVisible({ timeout: 5000 });
-      console.log('✓ Empty state message displayed');
+      console.log('âœ“ Empty state message displayed');
     } else {
-      console.log('⚠ User may have existing plans or different empty state');
+      console.log('âš  User may have existing plans or different empty state');
     }
   });
 
@@ -104,7 +118,7 @@ test.describe('Workout Plan - Empty States', () => {
     const buttons = await page.locator('button, a[role="button"]').count();
     expect(buttons).toBeGreaterThan(0);
 
-    console.log(`✓ Found ${buttons} interactive elements on page`);
+    console.log(`âœ“ Found ${buttons} interactive elements on page`);
   });
 });
 
@@ -126,7 +140,7 @@ test.describe('Workout Plan - Profile Integration', () => {
     // Verify we're on profile page
     await expect(page).toHaveURL('/profile');
 
-    console.log('✓ Profile page accessible');
+    console.log('âœ“ Profile page accessible');
   });
 
   test('should display profile form fields', async ({ page }) => {
@@ -142,7 +156,7 @@ test.describe('Workout Plan - Profile Integration', () => {
     const inputs = await page.locator('input, select, textarea').count();
     expect(inputs).toBeGreaterThan(0);
 
-    console.log(`✓ Profile form has ${inputs} input fields`);
+    console.log(`âœ“ Profile form has ${inputs} input fields`);
   });
 });
 
@@ -160,7 +174,7 @@ test.describe('Workout Plan - Equipment Integration', () => {
     // Verify we're on equipment page
     await expect(page).toHaveURL('/equipment');
 
-    console.log('✓ Equipment page accessible');
+    console.log('âœ“ Equipment page accessible');
   });
 
   test('should display equipment list or add form', async ({ page }) => {
@@ -177,7 +191,7 @@ test.describe('Workout Plan - Equipment Integration', () => {
     expect(hasContent).toBeTruthy();
     expect(hasContent?.length || 0).toBeGreaterThan(20);
 
-    console.log('✓ Equipment page renders content');
+    console.log('âœ“ Equipment page renders content');
   });
 });
 
@@ -201,7 +215,7 @@ test.describe('Workout Plan - Data Persistence', () => {
     await page.goto('/profile');
     await expect(page).toHaveURL('/profile');
 
-    console.log('✓ Session persists across navigation');
+    console.log('âœ“ Session persists across navigation');
   });
 
   test('should handle direct URL access to protected routes', async ({ page }) => {
@@ -217,7 +231,7 @@ test.describe('Workout Plan - Data Persistence', () => {
     // Should still be on review page (not redirected to login)
     await expect(page).toHaveURL('/workout-plan-review');
 
-    console.log('✓ Direct URL access works with active session');
+    console.log('âœ“ Direct URL access works with active session');
   });
 });
 
@@ -238,7 +252,7 @@ test.describe('Workout Plan - Error Handling', () => {
     // Should still be on review page
     await expect(page).toHaveURL('/workout-plan-review');
 
-    console.log('✓ Page reload handling works');
+    console.log('âœ“ Page reload handling works');
   });
 
   test('should handle browser back navigation', async ({ page }) => {
@@ -260,6 +274,6 @@ test.describe('Workout Plan - Error Handling', () => {
     // Should be back on workouts page
     await expect(page).toHaveURL('/workouts');
 
-    console.log('✓ Browser back button works correctly');
+    console.log('âœ“ Browser back button works correctly');
   });
 });

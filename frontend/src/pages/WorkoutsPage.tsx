@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -33,7 +47,7 @@ export default function WorkoutsPage() {
     mutationFn: workoutAPI.generate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
-      toast.success('🎉 AI workout generated successfully!');
+      toast.success('ðŸŽ‰ AI workout generated successfully!');
     },
     onError: (error: unknown) => {
       const err = error as { response?: { data?: { error?: string }; status?: number } };

@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { motion } from 'framer-motion';
 import { Check, Dumbbell, Moon } from 'lucide-react';
 
@@ -115,9 +129,9 @@ export function WeeklyScheduleGrid({ schedule, totalXP }: WeeklyScheduleGridProp
                           <span className="px-2 py-0.5 bg-primary-200 text-primary-800 rounded-full font-medium whitespace-nowrap flex-shrink-0">
                             {dayData.workout.focus}
                           </span>
-                          <span className="text-neutral-400 flex-shrink-0">•</span>
+                          <span className="text-neutral-400 flex-shrink-0">â€¢</span>
                           <span className="whitespace-nowrap flex-shrink-0">{dayData.workout.duration_minutes} min</span>
-                          <span className="text-neutral-400 flex-shrink-0">•</span>
+                          <span className="text-neutral-400 flex-shrink-0">â€¢</span>
                           <span className="whitespace-nowrap flex-shrink-0">{dayData.workout.exercises.length} exercises</span>
                         </div>
                       </div>

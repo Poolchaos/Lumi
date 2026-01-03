@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -52,7 +66,7 @@ export default function MetricsPage() {
       }));
 
       setShowForm(false);
-      toast.success('📊 Metrics recorded!');
+      toast.success('ðŸ“Š Metrics recorded!');
       return { previousData };
     },
     onError: (_err, _newMetrics, context) => {
@@ -71,7 +85,7 @@ export default function MetricsPage() {
       photosAPI.upload(file, type, date),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.metrics.history() });
-      toast.success('📸 Photo uploaded successfully!');
+      toast.success('ðŸ“¸ Photo uploaded successfully!');
       setPhotoFile(null);
     },
     onError: () => {

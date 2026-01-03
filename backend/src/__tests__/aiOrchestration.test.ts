@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 /**
  * AI Orchestration Layer Tests
  * Tests for token management, retry logic, validation, and orchestration
@@ -323,7 +337,7 @@ Let me know if you need changes!`;
     it('should create validation error prompt', () => {
       const errors = [
         { path: 'name', message: 'String must contain at least 1 character(s)', code: 'too_small' },
-        { path: 'durationWeeks', message: 'Number must be at most 52', code: 'too_big', expected: '≤52' },
+        { path: 'durationWeeks', message: 'Number must be at most 52', code: 'too_big', expected: 'â‰¤52' },
       ];
 
       const prompt = createValidationErrorPrompt(errors);

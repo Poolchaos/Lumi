@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +55,7 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    console.log('📊 Dashboard gamificationData state:', gamificationData);
+    console.log('ðŸ“Š Dashboard gamificationData state:', gamificationData);
   }, [gamificationData]);
 
   const { data: sessionsData } = useQuery({
@@ -150,7 +164,7 @@ export default function DashboardPage() {
     },
     onSuccess: () => {
       toast.success(`Yesterday's workout completed! You earned ${yesterdayXP} XP!`, {
-        icon: '🎉',
+        icon: 'ðŸŽ‰',
         duration: 4000,
       });
       queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
@@ -184,7 +198,7 @@ export default function DashboardPage() {
   //   },
   //   onSuccess: () => {
   //     toast.success(`Workout completed! Check your XP!`, {
-  //       icon: '🎉',
+  //       icon: 'ðŸŽ‰',
   //       duration: 4000,
   //     });
   //     queryClient.invalidateQueries({ queryKey: ['sessions'] });
@@ -267,7 +281,7 @@ export default function DashboardPage() {
               disabled={testCompleteMutation.isPending}
               className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
             >
-              {testCompleteMutation.isPending ? 'Completing...' : '🧪 Test Complete Today\'s Workout'}
+              {testCompleteMutation.isPending ? 'Completing...' : 'ðŸ§ª Test Complete Today\'s Workout'}
             </button>
           </div>
         )} */}

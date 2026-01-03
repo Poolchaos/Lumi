@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect, Page } from '@playwright/test';
 import { registerAndLogin } from './helpers';
 
@@ -38,7 +52,7 @@ test.describe('Workout Plan Management - Multiple Plans', () => {
     const hasPlansSection = await page.locator('text=/Your Plans|My Plans|Workout Plans|Library/i').count() > 0;
 
     if (hasPlansSection) {
-      console.log('✓ Plans section found');
+      console.log('âœ“ Plans section found');
 
       // Count plans
       const planCount = await checkForExistingPlans(page);
@@ -49,14 +63,14 @@ test.describe('Workout Plan Management - Multiple Plans', () => {
         // Should show empty state
         const hasEmptyState = await page.locator('text=/No workouts|No plans|empty|Get started/i').count() > 0;
         expect(hasEmptyState).toBeTruthy();
-        console.log('✓ Empty state displays correctly');
+        console.log('âœ“ Empty state displays correctly');
       } else {
         // Should show plan cards
         expect(planCount).toBeGreaterThan(0);
-        console.log('✓ Plan list displays correctly');
+        console.log('âœ“ Plan list displays correctly');
       }
     } else {
-      console.log('⚠ Plans section not found - UI may have changed');
+      console.log('âš  Plans section not found - UI may have changed');
     }
   });
 
@@ -74,17 +88,17 @@ test.describe('Workout Plan Management - Multiple Plans', () => {
       const hasInactiveIndicator = await page.locator('text=/Inactive|Archived|Past/i, [class*="inactive"], [data-status="inactive"]').count() > 0;
 
       if (hasActiveIndicator) {
-        console.log('✓ Active plan indicator found');
+        console.log('âœ“ Active plan indicator found');
       }
 
       if (hasInactiveIndicator) {
-        console.log('✓ Inactive plan indicator found');
+        console.log('âœ“ Inactive plan indicator found');
       }
 
       // At least one type should be present
       expect(hasActiveIndicator || hasInactiveIndicator).toBeTruthy();
     } else {
-      console.log('⚠ No plans to test - skipping');
+      console.log('âš  No plans to test - skipping');
       test.skip();
     }
   });
@@ -109,14 +123,14 @@ test.describe('Workout Plan Management - Multiple Plans', () => {
       expect(hasModality).toBeTruthy();
 
       if (hasDuration) {
-        console.log('✓ Duration metadata present');
+        console.log('âœ“ Duration metadata present');
       }
 
       if (hasDate) {
-        console.log('✓ Date metadata present');
+        console.log('âœ“ Date metadata present');
       }
     } else {
-      console.log('⚠ No plans to test - skipping');
+      console.log('âš  No plans to test - skipping');
       test.skip();
     }
   });
@@ -152,9 +166,9 @@ test.describe('Workout Plan Management - Plan Actions', () => {
       const hasPlanContent = await page.locator('text=/exercise|workout|session|schedule/i').count() > 0;
       expect(hasPlanContent).toBeTruthy();
 
-      console.log('✓ Plan details navigation working');
+      console.log('âœ“ Plan details navigation working');
     } else {
-      console.log('⚠ No plans to view - skipping');
+      console.log('âš  No plans to view - skipping');
       test.skip();
     }
   });
@@ -182,16 +196,16 @@ test.describe('Workout Plan Management - Plan Actions', () => {
           const isNowInactive = await activePlan.locator('text=/inactive|archived/i').count() > 0;
           expect(isNowInactive).toBeTruthy();
 
-          console.log('✓ Plan deactivation working');
+          console.log('âœ“ Plan deactivation working');
         } else {
-          console.log('⚠ No deactivate button found - feature may not be implemented');
+          console.log('âš  No deactivate button found - feature may not be implemented');
         }
       } else {
-        console.log('⚠ No active plan found - skipping');
+        console.log('âš  No active plan found - skipping');
         test.skip();
       }
     } else {
-      console.log('⚠ No plans to deactivate - skipping');
+      console.log('âš  No plans to deactivate - skipping');
       test.skip();
     }
   });
@@ -219,16 +233,16 @@ test.describe('Workout Plan Management - Plan Actions', () => {
           const isNowActive = await inactivePlan.locator('text=/active|current/i').count() > 0;
           expect(isNowActive).toBeTruthy();
 
-          console.log('✓ Plan reactivation working');
+          console.log('âœ“ Plan reactivation working');
         } else {
-          console.log('⚠ Reactivate feature not implemented - this is expected');
+          console.log('âš  Reactivate feature not implemented - this is expected');
         }
       } else {
-        console.log('⚠ No inactive plan found - skipping');
+        console.log('âš  No inactive plan found - skipping');
         test.skip();
       }
     } else {
-      console.log('⚠ No plans to reactivate - skipping');
+      console.log('âš  No plans to reactivate - skipping');
       test.skip();
     }
   });
@@ -259,12 +273,12 @@ test.describe('Workout Plan Management - Plan Actions', () => {
         const finalPlanCount = await checkForExistingPlans(page);
         expect(finalPlanCount).toBeLessThan(initialPlanCount);
 
-        console.log('✓ Plan deletion working');
+        console.log('âœ“ Plan deletion working');
       } else {
-        console.log('⚠ Delete feature not implemented - this is acceptable');
+        console.log('âš  Delete feature not implemented - this is acceptable');
       }
     } else {
-      console.log('⚠ No plans to delete - skipping');
+      console.log('âš  No plans to delete - skipping');
       test.skip();
     }
   });
@@ -298,12 +312,12 @@ test.describe('Workout Plan Management - Filtering and Sorting', () => {
         const inactivePlans = await page.locator('[data-status="inactive"]').count();
         expect(inactivePlans).toBe(0);
 
-        console.log('✓ Filter by active status working');
+        console.log('âœ“ Filter by active status working');
       } else {
-        console.log('⚠ Filter options not found');
+        console.log('âš  Filter options not found');
       }
     } else {
-      console.log('⚠ Filter feature not implemented - acceptable for MVP');
+      console.log('âš  Filter feature not implemented - acceptable for MVP');
     }
   });
 
@@ -326,9 +340,9 @@ test.describe('Workout Plan Management - Filtering and Sorting', () => {
       const nonStrengthPlans = await page.locator('[data-modality="cardio"], [data-modality="hiit"]').count();
       expect(nonStrengthPlans).toBe(0);
 
-      console.log('✓ Filter by modality working');
+      console.log('âœ“ Filter by modality working');
     } else {
-      console.log('⚠ Modality filter not implemented - acceptable for MVP');
+      console.log('âš  Modality filter not implemented - acceptable for MVP');
     }
   });
 
@@ -356,12 +370,12 @@ test.describe('Workout Plan Management - Filtering and Sorting', () => {
         const hasError = await page.locator('.error, [role="alert"].error').count();
         expect(hasError).toBe(0);
 
-        console.log('✓ Sort controls present and functional');
+        console.log('âœ“ Sort controls present and functional');
       } else {
-        console.log('⚠ Sort feature not implemented - acceptable for MVP');
+        console.log('âš  Sort feature not implemented - acceptable for MVP');
       }
     } else {
-      console.log('⚠ Not enough plans to test sorting - skipping');
+      console.log('âš  Not enough plans to test sorting - skipping');
       test.skip();
     }
   });
@@ -380,15 +394,15 @@ test.describe('Workout Plan Management - Empty States', () => {
     const hasEmptyState = await page.locator('text=/No workouts|No plans|empty|Get started|Generate your first/i').count() > 0;
 
     if (hasEmptyState) {
-      console.log('✓ Empty state displays correctly');
+      console.log('âœ“ Empty state displays correctly');
 
       // Should have CTA button to generate first plan
       const hasCTA = await page.locator('button:has-text("Generate"), a:has-text("Get Started")').count() > 0;
       expect(hasCTA).toBeTruthy();
 
-      console.log('✓ Empty state CTA present');
+      console.log('âœ“ Empty state CTA present');
     } else {
-      console.log('⚠ Empty state not showing - user may already have plans');
+      console.log('âš  Empty state not showing - user may already have plans');
     }
   });
 
@@ -413,9 +427,9 @@ test.describe('Workout Plan Management - Empty States', () => {
       const hasError = await page.locator('text=/error|failed/i').count();
 
       expect(hasLoading + hasWorkout + hasError).toBeGreaterThan(0);
-      console.log('✓ Empty state CTA triggers generation');
+      console.log('âœ“ Empty state CTA triggers generation');
     } else {
-      console.log('⚠ No CTA button found');
+      console.log('âš  No CTA button found');
     }
   });
 });
@@ -434,7 +448,7 @@ test.describe('Workout Plan Management - Performance', () => {
 
     // Should load within 3 seconds
     expect(loadTime).toBeLessThan(3000);
-    console.log(`✓ Page loaded in ${loadTime}ms`);
+    console.log(`âœ“ Page loaded in ${loadTime}ms`);
   });
 
   test('should handle large number of plans efficiently', async ({ page }) => {
@@ -449,9 +463,9 @@ test.describe('Workout Plan Management - Performance', () => {
       const hasPagination = await page.locator('[data-testid*="pagination"], .pagination').count() > 0;
 
       if (hasPagination) {
-        console.log('✓ Pagination present for large lists');
+        console.log('âœ“ Pagination present for large lists');
       } else {
-        console.log('✓ All plans loaded (no pagination needed for this count)');
+        console.log('âœ“ All plans loaded (no pagination needed for this count)');
       }
 
       // Verify no performance issues (page still responsive)

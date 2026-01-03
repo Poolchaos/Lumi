@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useMemo } from 'react';
@@ -75,7 +89,7 @@ export function WeeklyProgress({
         {/* Total XP */}
         <div className="bg-achievement-50 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xl">⚡</span>
+            <span className="text-xl">âš¡</span>
             <span className="text-xs font-medium text-neutral-700">XP Earned</span>
           </div>
           <p className="text-2xl font-bold text-achievement-dark">

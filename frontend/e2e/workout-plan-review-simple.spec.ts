@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect } from '@playwright/test';
 import { registerAndLogin } from './helpers';
 
@@ -30,9 +44,9 @@ test.describe('Workout Plan Review Page - Basic Tests', () => {
     // Check if heading exists and is visible
     if (await noPlantHeading.count() > 0) {
       await expect(noPlantHeading.first()).toBeVisible({ timeout: 5000 });
-      console.log('✓ Empty state heading displays correctly');
+      console.log('âœ“ Empty state heading displays correctly');
     } else {
-      console.log('⚠ No empty state found - user may have existing plans');
+      console.log('âš  No empty state found - user may have existing plans');
     }
 
     // Should have button to navigate to workouts
@@ -40,9 +54,9 @@ test.describe('Workout Plan Review Page - Basic Tests', () => {
 
     if (await goButton.count() > 0) {
       await expect(goButton.first()).toBeVisible();
-      console.log('✓ Navigation button present');
+      console.log('âœ“ Navigation button present');
     } else {
-      console.log('⚠ Go to Workouts button not found');
+      console.log('âš  Go to Workouts button not found');
     }
   });
 
@@ -65,9 +79,9 @@ test.describe('Workout Plan Review Page - Basic Tests', () => {
 
       // Verify navigation to workouts page
       await expect(page).toHaveURL('/workouts', { timeout: 3000 });
-      console.log('✓ Navigation from empty state working');
+      console.log('âœ“ Navigation from empty state working');
     } else {
-      console.log('⚠ Go button not found - test skipped');
+      console.log('âš  Go button not found - test skipped');
       test.skip();
     }
   });
@@ -90,7 +104,7 @@ test.describe('Workout Plan Review Page - Basic Tests', () => {
     const hasHeading = await page.locator('h1, h2').filter({ hasText: /workout/i }).count() > 0;
     expect(hasHeading).toBeTruthy();
 
-    console.log('✓ Workouts page loads correctly');
+    console.log('âœ“ Workouts page loads correctly');
   });
 });
 
@@ -117,6 +131,6 @@ test.describe('Workout Plan Review Page - Data Persistence', () => {
     const hasContent = await page.locator('body').count() > 0;
     expect(hasContent).toBeTruthy();
 
-    console.log('✓ Direct navigation and page reloading works');
+    console.log('âœ“ Direct navigation and page reloading works');
   });
 });

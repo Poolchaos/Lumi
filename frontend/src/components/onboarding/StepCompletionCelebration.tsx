@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -114,7 +128,7 @@ export function StepCompletionCelebration({
               transition={{ delay: 0.2 }}
               className="text-2xl font-bold text-neutral-900 mb-2"
             >
-              Step Complete! 🎉
+              Step Complete! ðŸŽ‰
             </motion.h2>
 
             <motion.p
@@ -143,7 +157,7 @@ export function StepCompletionCelebration({
               transition={{ delay: 0.6 }}
               className="text-sm text-neutral-500 mt-4"
             >
-              Keep going! You're doing great! 💪
+              Keep going! You're doing great! ðŸ’ª
             </motion.p>
           </motion.div>
         </motion.div>

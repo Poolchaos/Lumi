@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { Card } from '../../design-system';
 import { Calendar, Clock, Target, Zap, ArrowRight } from 'lucide-react';
 
@@ -47,7 +61,7 @@ export function TomorrowPreviewCard({ workout, xpToEarn }: TomorrowPreviewCardPr
               <Calendar className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-xs text-purple-600 font-medium">Tomorrow • {workout.day}</p>
+              <p className="text-xs text-purple-600 font-medium">Tomorrow â€¢ {workout.day}</p>
               <h3 className="font-bold text-neutral-900">{workout.workout.name}</h3>
             </div>
           </div>
@@ -110,7 +124,7 @@ export function TomorrowPreviewCard({ workout, xpToEarn }: TomorrowPreviewCardPr
         {/* Motivational message */}
         <div className="mt-4 p-3 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-lg">
           <p className="text-xs text-purple-900 font-medium text-center">
-            💪 Get ready to crush it tomorrow!
+            ðŸ’ª Get ready to crush it tomorrow!
           </p>
         </div>
       </div>

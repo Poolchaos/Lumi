@@ -1,7 +1,21 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect, Page } from '@playwright/test';
 
 /**
- * E2E Tests: Workout Plan Generation → Review → Accept Flow
+ * E2E Tests: Workout Plan Generation â†’ Review â†’ Accept Flow
  *
  * Test Priority: CRITICAL
  * Coverage: Complete user journey from plan generation to acceptance
@@ -29,7 +43,7 @@ async function setupUserWithProfile(page: Page, email: string, password: string)
   // New users are redirected to onboarding (correct behavior)
   // If still on signup or login, there may be an error - try logging in
   if (page.url().includes('/signup') || page.url().includes('/login')) {
-    console.log('⚠ Signup may have failed - attempting login');
+    console.log('âš  Signup may have failed - attempting login');
     if (!page.url().includes('/login')) {
       await page.goto('/login');
     }
@@ -42,7 +56,7 @@ async function setupUserWithProfile(page: Page, email: string, password: string)
   // Check if we successfully logged in
   const currentUrl = page.url();
   if (currentUrl.includes('/login') || currentUrl.includes('/signup')) {
-    console.log('⚠ Login failed - backend may be unavailable or credentials invalid');
+    console.log('âš  Login failed - backend may be unavailable or credentials invalid');
     // Skip this test gracefully
     return false;
   }
@@ -146,7 +160,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
 
     // Skip test if setup failed
     if (!setupSuccess) {
-      console.log('⚠ Skipping happy path test - user setup failed');
+      console.log('âš  Skipping happy path test - user setup failed');
       return;
     }
 
@@ -169,13 +183,13 @@ test.describe('Workout Plan Generation - Full Flow', () => {
     for (let i = 0; i < maxSteps; i++) {
       // Check if we've reached the review page
       if (page.url().includes('/workout-plan-review')) {
-        console.log('✓ Navigated to review page after onboarding');
+        console.log('âœ“ Navigated to review page after onboarding');
         break;
       }
 
       // Check if we've reached dashboard (onboarding skipped/completed)
       if (page.url().includes('/dashboard')) {
-        console.log('⚠ Reached dashboard - onboarding may have been skipped');
+        console.log('âš  Reached dashboard - onboarding may have been skipped');
         // Navigate to workouts to check for generated plan
         await page.goto('/workouts');
         break;
@@ -187,7 +201,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
         await nextButton.click();
         await page.waitForTimeout(1500); // Wait for step transition or generation
       } else {
-        console.log(`⚠ No next button found at step ${i}`);
+        console.log(`âš  No next button found at step ${i}`);
         break;
       }
     }
@@ -219,23 +233,23 @@ test.describe('Workout Plan Generation - Full Flow', () => {
         await expect(page.locator('button:has-text("Customize"), button:has-text("Edit")')).toBeVisible();
         await expect(page.locator('button:has-text("Generate New"), button:has-text("Regenerate")')).toBeVisible();
 
-        console.log('✓ Workout plan generated and displayed successfully');
+        console.log('âœ“ Workout plan generated and displayed successfully');
 
       } else if (reviewPageOrError === 'error') {
         // ERROR PATH: API key missing or invalid (expected in test environments)
-        console.log('⚠ Error detected - API key may be missing');
+        console.log('âš  Error detected - API key may be missing');
 
       } else {
         // OTHER: Check if we're on workouts page with generated workout
         if (page.url().includes('/workouts')) {
           const hasWorkout = await page.locator('text=/Exercise|Start Workout/i').count();
           if (hasWorkout > 0) {
-            console.log('✓ Workout generated and visible on workouts page');
+            console.log('âœ“ Workout generated and visible on workouts page');
           } else {
-            console.log('⚠ On workouts page but no workout visible');
+            console.log('âš  On workouts page but no workout visible');
           }
         } else {
-          console.log('⚠ Unexpected page state:', page.url());
+          console.log('âš  Unexpected page state:', page.url());
         }
       }
   });
@@ -246,7 +260,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
 
     // Skip test if setup failed (backend unavailable)
     if (!setupSuccess) {
-      console.log('⚠ Skipping test - user setup failed');
+      console.log('âš  Skipping test - user setup failed');
       return;
     }
 
@@ -271,9 +285,9 @@ test.describe('Workout Plan Generation - Full Flow', () => {
       // Error should appear somewhere
       expect(hasError).toBeGreaterThan(0);
 
-      console.log('✓ Missing API key error handled correctly');
+      console.log('âœ“ Missing API key error handled correctly');
     } else {
-      console.log('⚠ Generate button not found - UI may have changed');
+      console.log('âš  Generate button not found - UI may have changed');
     }
   });
 
@@ -287,7 +301,7 @@ test.describe('Workout Plan Generation - Full Flow', () => {
     const hasPlanContent = await page.locator('text=/Monday|Tuesday|Wednesday/i').count() > 0;
 
     if (hasPlanContent) {
-      console.log('✓ Plan persists in cache');
+      console.log('âœ“ Plan persists in cache');
 
       // Navigate away
       await page.goto('/dashboard');
@@ -300,13 +314,13 @@ test.describe('Workout Plan Generation - Full Flow', () => {
       await expect(page.locator('text=/Monday|Tuesday|Wednesday/i')).toBeVisible({ timeout: 5000 });
 
     } else if (hasNoPlanMessage) {
-      console.log('✓ No plan found message displays correctly when cache is empty');
+      console.log('âœ“ No plan found message displays correctly when cache is empty');
 
       // Verify "Go to Workouts" button present
       await expect(page.locator('button:has-text("Go to Workouts")')).toBeVisible();
 
     } else {
-      console.log('⚠ Unable to determine page state');
+      console.log('âš  Unable to determine page state');
     }
   });
 });
@@ -338,10 +352,10 @@ test.describe('Workout Plan Review - Interactions', () => {
       // Verify navigation to dashboard
       await expect(page).toHaveURL('/dashboard', { timeout: 5000 });
 
-      console.log('✓ Plan acceptance flow completed');
+      console.log('âœ“ Plan acceptance flow completed');
 
     } else {
-      console.log('⚠ No plan available to accept - test skipped');
+      console.log('âš  No plan available to accept - test skipped');
       test.skip();
     }
   });
@@ -367,10 +381,10 @@ test.describe('Workout Plan Review - Interactions', () => {
       const finalUrl = page.url();
       expect(finalUrl).toMatch(/\/(onboarding|workouts)/);
 
-      console.log('✓ Regenerate navigation working');
+      console.log('âœ“ Regenerate navigation working');
 
     } else {
-      console.log('⚠ No regenerate button found - test skipped');
+      console.log('âš  No regenerate button found - test skipped');
       test.skip();
     }
   });
@@ -402,13 +416,13 @@ test.describe('Workout Plan Review - Interactions', () => {
         // Verify navigation to edit page
         await expect(page).toHaveURL(`/workouts/${planId}/edit`, { timeout: 3000 });
 
-        console.log('✓ Customize navigation working');
+        console.log('âœ“ Customize navigation working');
       } else {
-        console.log('⚠ Could not extract plan ID - test skipped');
+        console.log('âš  Could not extract plan ID - test skipped');
         test.skip();
       }
     } else {
-      console.log('⚠ No customize button found - test skipped');
+      console.log('âš  No customize button found - test skipped');
       test.skip();
     }
   });
@@ -433,9 +447,9 @@ test.describe('Workout Plan Review - Data Display', () => {
       const hasFocusAreas = await page.locator('text=/strength|cardio|muscle|endurance/i').count() > 0;
       expect(hasFocusAreas).toBeTruthy();
 
-      console.log('✓ Plan overview displays correctly');
+      console.log('âœ“ Plan overview displays correctly');
     } else {
-      console.log('⚠ No plan to display - test skipped');
+      console.log('âš  No plan to display - test skipped');
       test.skip();
     }
   });
@@ -456,9 +470,9 @@ test.describe('Workout Plan Review - Data Display', () => {
       const hasExercises = await page.locator('[data-testid="exercise-card"], .exercise, [class*="exercise"]').count() > 0;
       expect(hasExercises).toBeTruthy();
 
-      console.log('✓ Weekly schedule displays correctly');
+      console.log('âœ“ Weekly schedule displays correctly');
     } else {
-      console.log('⚠ No schedule to display - test skipped');
+      console.log('âš  No schedule to display - test skipped');
       test.skip();
     }
   });
@@ -479,9 +493,9 @@ test.describe('Workout Plan Review - Data Display', () => {
       const hasInstructions = await page.locator('text=/instructions|perform|keep|maintain/i').count() > 0;
       expect(hasInstructions).toBeTruthy();
 
-      console.log('✓ Exercise details display correctly');
+      console.log('âœ“ Exercise details display correctly');
     } else {
-      console.log('⚠ No exercise details found - test skipped');
+      console.log('âš  No exercise details found - test skipped');
       test.skip();
     }
   });
@@ -498,9 +512,9 @@ test.describe('Workout Plan Review - Data Display', () => {
       // Verify guidance content is visible
       await expect(page.locator('text=/progression|safety|reminder/i').first()).toBeVisible();
 
-      console.log('✓ Progression and safety guidance displays correctly');
+      console.log('âœ“ Progression and safety guidance displays correctly');
     } else {
-      console.log('⚠ No guidance sections found - acceptable if not in design');
+      console.log('âš  No guidance sections found - acceptable if not in design');
     }
   });
 });
@@ -522,7 +536,7 @@ test.describe('Workout Plan Review - Error States', () => {
     // Should have button to navigate to workouts
     await expect(page.locator('button:has-text("Go to Workouts")')).toBeVisible();
 
-    console.log('✓ Empty state displays correctly');
+    console.log('âœ“ Empty state displays correctly');
   });
 
   test('should handle navigation from empty state', async ({ page }) => {
@@ -541,9 +555,9 @@ test.describe('Workout Plan Review - Error States', () => {
       // Verify navigation to workouts page
       await expect(page).toHaveURL('/workouts', { timeout: 3000 });
 
-      console.log('✓ Navigation from empty state working');
+      console.log('âœ“ Navigation from empty state working');
     } else {
-      console.log('⚠ Go button not found - test skipped');
+      console.log('âš  Go button not found - test skipped');
       test.skip();
     }
   });

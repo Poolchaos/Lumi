@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import OpenAI from 'openai';
 
 export interface OpenAIValidationResult {
@@ -44,10 +58,10 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
         modelArray.push(model.id);
       }
       details.canAccessModels = true;
-      console.log('✓ Models accessible:', modelArray.length, 'models found');
+      console.log('âœ“ Models accessible:', modelArray.length, 'models found');
       console.log('Sample models:', modelArray.slice(0, 3).join(', '));
     } catch (error) {
-      console.error('✗ Model list failed:', error);
+      console.error('âœ— Model list failed:', error);
       result.error = 'Cannot access models';
       result.errorCode = (error as { code?: string }).code;
       result.errorType = (error as { type?: string }).type;
@@ -65,7 +79,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
 
       details.canCreateCompletions = true;
       details.organizationId = (completion as { organization?: string }).organization;
-      console.log('✓ Completion successful');
+      console.log('âœ“ Completion successful');
       console.log('Response ID:', completion.id);
       console.log('Model used:', completion.model);
       console.log('Organization:', details.organizationId || 'N/A');
@@ -76,7 +90,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
         details.quotaRemaining = true;
       }
     } catch (error) {
-      console.error('✗ Completion failed:', error);
+      console.error('âœ— Completion failed:', error);
       const err = error as {
         status?: number;
         code?: string;
@@ -102,7 +116,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
     // All tests passed
     result.valid = true;
     const duration = Date.now() - startTime;
-    console.log('\n✓ All validation tests passed');
+    console.log('\nâœ“ All validation tests passed');
     console.log('Validation duration:', duration + 'ms');
     console.log('=== Validation Complete ===\n');
 
@@ -110,7 +124,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
 
   } catch (error) {
     const duration = Date.now() - startTime;
-    console.error('\n✗ Validation failed with exception');
+    console.error('\nâœ— Validation failed with exception');
     console.error('Duration:', duration + 'ms');
     console.error('Error:', error);
     console.error('=== Validation Failed ===\n');

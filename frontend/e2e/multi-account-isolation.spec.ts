@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { test, expect } from '@playwright/test';
 import { registerAndLogin, logout, generateTestEmail, TEST_PASSWORD } from './helpers';
 
@@ -8,8 +22,8 @@ import { registerAndLogin, logout, generateTestEmail, TEST_PASSWORD } from './he
  * and that React Query cache is cleared on signup/logout to prevent data leakage.
  *
  * Current Status:
- * - ✅ Profile data isolation test: PASSING - validates the critical bug fix
- * - ⏸️  Other tests: SKIPPED - need onboarding navigation updates
+ * - âœ… Profile data isolation test: PASSING - validates the critical bug fix
+ * - â¸ï¸  Other tests: SKIPPED - need onboarding navigation updates
  *
  * The profile isolation test validates the core bug fix where new users
  * were seeing previous users' data in onboarding forms due to stale React Query cache.

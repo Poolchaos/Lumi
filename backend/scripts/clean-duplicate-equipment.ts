@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Artemis Innovations. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: licensing@artemis-innovations.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import mongoose from 'mongoose';
 import Equipment from '../src/models/Equipment';
 import dotenv from 'dotenv';
@@ -47,7 +61,7 @@ async function cleanDuplicateEquipment() {
       }
     }
 
-    console.log(`\n✅ Cleanup complete!`);
+    console.log(`\nâœ… Cleanup complete!`);
     console.log(`   Deleted ${deletedCount} duplicate items`);
     console.log(`   Remaining equipment items: ${allEquipment.length - deletedCount}`);
 

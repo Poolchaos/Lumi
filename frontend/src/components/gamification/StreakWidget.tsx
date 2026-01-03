@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { Snowflake, Calendar } from 'lucide-react';
 import { getGamificationIcon } from '../../utils/imageHelpers';
 import { motion } from 'framer-motion';
@@ -106,7 +120,7 @@ export function StreakWidget() {
                       : 'bg-neutral-100 text-neutral-400'
                   }`}
                 >
-                  {isComplete ? '✓' : '•'}
+                  {isComplete ? 'âœ“' : 'â€¢'}
                 </motion.div>
               );
             })}

@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -71,7 +85,7 @@ export default function SchedulePage() {
     onSuccess: (_, variables) => {
       const xpEarned = variables.workout.exercises?.length * 10 || 0;
       toast.success(`Workout completed! You earned ${xpEarned} XP!`, {
-        icon: '🎉',
+        icon: 'ðŸŽ‰',
         duration: 4000,
       });
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
@@ -292,7 +306,7 @@ export default function SchedulePage() {
                 <div className="flex items-center gap-2 text-sm text-neutral-600">
                   <CalendarIcon className="w-4 h-4 text-primary-500" />
                   <span className="font-medium">{selectedDay.dayName}</span>
-                  <span className="text-neutral-400">•</span>
+                  <span className="text-neutral-400">â€¢</span>
                   <span>{selectedDay.date}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-neutral-600">
@@ -343,7 +357,7 @@ export default function SchedulePage() {
                         <div className="flex flex-wrap gap-4 text-sm text-neutral-600 mb-2">
                           {exercise.sets && (
                             <span className="font-medium">
-                              {exercise.sets} sets × {exercise.reps} reps
+                              {exercise.sets} sets Ã— {exercise.reps} reps
                             </span>
                           )}
                           {exercise.duration_seconds && (

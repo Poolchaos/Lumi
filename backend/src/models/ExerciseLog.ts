@@ -1,3 +1,17 @@
+﻿/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ * 
+ * This file is part of PersonalFit.
+ * 
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ * 
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuan.vdb@gmail.com
+ * 
+ * See the LICENSE file for the full license text.
+ */
+
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IExerciseLog extends Document {
@@ -27,7 +41,7 @@ export interface IExerciseLog extends Document {
   };
   equipment_used?: string[];
   target_muscles: string[];
-  total_volume_kg?: number; // sets × reps × weight
+  total_volume_kg?: number; // sets Ã— reps Ã— weight
   total_duration_seconds?: number;
   personal_record?: boolean;
   difficulty_rating?: number; // 1-10 scale
