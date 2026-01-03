@@ -19,8 +19,8 @@ Self-hosted • Privacy-first • Full control over your data
 >
 > PersonalFit is licensed under the **PolyForm Noncommercial License 1.0.0**.
 >
-> ✅ **Allowed**: Personal use, learning, research, non-profit organizations  
-> ❌ **Not Allowed**: Commercial use, SaaS integration, reselling  
+> ✅ **Allowed**: Personal use, learning, research, non-profit organizations
+> ❌ **Not Allowed**: Commercial use, SaaS integration, reselling
 >
 > **For commercial licensing, contact:** phillipjuan.vdb@gmail.com
 
@@ -244,7 +244,6 @@ PersonalFit/
 │   ├── e2e/                 # Playwright tests
 │   └── Dockerfile
 ├── docs/                    # Documentation
-├── scripts/                 # Utility scripts
 ├── docker-compose.yml
 └── LICENSE
 ```
@@ -274,7 +273,7 @@ If you want to use PersonalFit commercially, you need a paid license.
 
 Available license tiers:
 - **Startup License** — For companies with < $1M annual revenue
-- **Enterprise License** — For larger organizations  
+- **Enterprise License** — For larger organizations
 - **OEM License** — For embedding in your products
 
 ---
@@ -287,7 +286,7 @@ Contributions are welcome! Please note that by contributing, you agree that your
 
 ## 📧 Contact
 
-**Phillip-Juan van der Berg**  
+**Phillip-Juan van der Berg**
 📧 phillipjuan.vdb@gmail.com
 
 ---
