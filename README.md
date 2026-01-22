@@ -30,111 +30,45 @@ See the [LICENSE](LICENSE) file for full terms.
 
 ## 🎯 What is PersonalFit?
 
-PersonalFit is a comprehensive, self-hosted fitness tracking application that combines **AI-powered workout generation** with **gamification** to keep you motivated. Built with a modern TypeScript stack, it offers a complete solution for tracking workouts, progress, and maintaining accountability—all while keeping your data private.
-
-### Why PersonalFit?
-
-| Feature | Benefit |
-|---------|---------|
-| 🔒 **Privacy-First** | Your fitness data stays on YOUR server |
-| 💰 **No Subscriptions** | Host it yourself, no monthly fees |
-| 🎮 **Gamification** | XP, levels, streaks, 42 achievements |
-| 🤖 **Multi-AI Support** | OpenAI, Anthropic Claude, or OpenRouter |
-| 📱 **Responsive** | Works beautifully on desktop, tablet, mobile |
-| 🛡️ **Production-Ready** | Rate limiting, security headers, error boundaries |
+Self-hosted fitness tracking with **AI-powered workout generation** and **gamification**. Keep your data private, earn XP while working out, and get personalized plans based on your goals and equipment.
 
 ---
 
-## ✨ Features
+## 📸 Screenshots
 
-### 🎮 Gamification System
-- **XP & Leveling** — Earn experience points for every workout completed
-- **42 Achievements** — Unlock badges for milestones (First Workout, Week Warrior, Century Club, etc.)
-- **Streak Tracking** — Build daily workout streaks with freeze protection
-- **Daily Challenges** — Fresh challenges every day for bonus XP
-- **Personal Records** — Track PRs with automatic detection
-- **Gems Currency** — Earn gems to purchase streak freezes
+**Onboarding Setup**
 
-### 🤖 AI Workout Generation
-- **Multi-Provider** — OpenAI GPT-4, Anthropic Claude, or OpenRouter
-- **Personalized Plans** — Based on goals, equipment, experience, injuries
-- **Multi-Agent Orchestration** — Planner → Worker → Reviewer pipeline
-- **Token Management** — Smart token counting and budget optimization
-- **Retry Logic** — Exponential backoff with jitter for reliability
-- **Response Validation** — Zod schemas ensure valid AI responses
+![OpenAI API Key Setup](docs/screenshots/1.openai.png)
 
-### 📅 Smart Scheduling
-- **Visual Calendar** — Week and month views
-- **Workout Details** — Click any day for full exercise breakdown
-- **Progress Tracking** — Completed vs planned at a glance
-- **Missed Workout Detection** — Automated accountability
+![User Profile Setup](docs/screenshots/2.get-to-know-you.png)
 
-### 💪 Workout Management
-- **Multiple Plans** — Generate and save multiple workout programs
-- **Active Plan System** — One active plan at a time
-- **Plan Preview** — Weekly schedule with XP forecasts
-- **Session Logging** — Track sets, reps, weight, RPE, notes
+**Workout Generation & Dashboard**
 
-### 📊 Progress Tracking
-- **Body Metrics** — Weight, body fat, measurements over time
-- **Progress Photos** — Front/side/back with S3-compatible storage
-- **Charts & Trends** — Visualize your journey with Recharts
-- **Equipment Inventory** — Track your home gym
+![Generated Workout Plan](docs/screenshots/3.generated-plan.png)
 
-### 🔔 Accountability
-- **Streak Penalties** — Gamified consequences for missed workouts
-- **Makeup Workouts** — Clear penalties by completing extra sessions
-- **Partner System** — Invite accountability partners (coming soon)
+![Dashboard with Stats](docs/screenshots/4.%20dashboard.png)
 
-### 🛡️ Security & Performance
-- **3-Tier Rate Limiting** — Auth (10/min), AI (10/hr), General (100/min)
-- **Helmet Security Headers** — XSS, HSTS, CSP protection
-- **API Key Encryption** — User keys encrypted at rest
-- **Error Boundaries** — Graceful crash recovery
-- **Optimistic Updates** — Instant UI feedback
+---
+
+## ✨ Key Features
+
+- **🎮 Gamification** — XP, levels, 42 achievements, daily challenges, streak tracking
+- **🤖 AI Workout Generation** — OpenAI, Claude, or OpenRouter with multi-agent orchestration
+- **📅 Smart Scheduling** — Visual calendar, weekly preview, progress tracking
+- **💪 Workout Management** — Multiple plans, session logging, active plan system
+- **📊 Progress Tracking** — Body metrics, charts, progress photos with S3 storage
+- **🔐 Privacy-First** — Self-hosted, your data on your server
+- **🛡️ Production-Ready** — Rate limiting, security headers, 170+ tests
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| Node.js 22 | Runtime |
-| Express 5.1 | Web framework |
-| TypeScript 5.9 | Type safety |
-| MongoDB 8.x | Database |
-| Mongoose 8.x | ODM |
-| OpenAI SDK | AI integration |
-| Anthropic SDK | Claude support |
-| tiktoken | Token counting |
-| Zod | Schema validation |
-| Jest | Testing (170+ tests) |
-| Helmet | Security headers |
-| express-rate-limit | Rate limiting |
+**Backend:** Node.js 22, Express 5.1, TypeScript 5.9, MongoDB 8.x, OpenAI/Anthropic SDKs, Jest
 
-### Frontend
-| Technology | Purpose |
-|------------|---------|
-| React 19 | UI framework |
-| Vite 7 | Build tool |
-| TypeScript 5.9 | Type safety |
-| TailwindCSS 3 | Styling |
-| TanStack Query | Server state |
-| Zustand | Client state |
-| React Hook Form | Form handling |
-| Zod | Validation |
-| Framer Motion | Animations |
-| Recharts | Data visualization |
-| Playwright | E2E testing |
+**Frontend:** React 19, Vite 7, TypeScript 5.9, TailwindCSS 3, Recharts, Playwright
 
-### Infrastructure
-| Technology | Purpose |
-|------------|---------|
-| Docker | Containerization |
-| Docker Compose | Orchestration |
-| Nginx | Reverse proxy |
-| MinIO | S3-compatible storage |
+**Infrastructure:** Docker, Docker Compose, Nginx, MinIO
 
 ---
 
@@ -250,31 +184,16 @@ PersonalFit/
 
 ---
 
-## 📜 Legal
+## 📜 License
 
-### Copyright
-Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+PersonalFit is licensed under **PolyForm Noncommercial License 1.0.0**.
 
-### License
-This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+✅ **Allowed:** Personal use, learning, research, non-profit organizations
+❌ **Not Allowed:** Commercial use, SaaS, reselling
 
-**What this means:**
-- ✅ You CAN use this for personal fitness tracking
-- ✅ You CAN study and learn from the code
-- ✅ You CAN use this at non-profit organizations
-- ❌ You CANNOT use this in a commercial product
-- ❌ You CANNOT sell this or offer it as a service
-- ❌ You CANNOT use this within a for-profit company
+**For commercial licensing:** phillipjuanvanderberg@gmail.com
 
-### Commercial Use
-If you want to use PersonalFit commercially, you need a paid license.
-
-**Contact:** phillipjuanvanderberg@gmail.com
-
-Available license tiers:
-- **Startup License** — For companies with < $1M annual revenue
-- **Enterprise License** — For larger organizations
-- **OEM License** — For embedding in your products
+See [LICENSE](LICENSE) for full terms.
 
 ---
 
