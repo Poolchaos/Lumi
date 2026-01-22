@@ -364,7 +364,7 @@ export default function SchedulePage() {
                         <div className="flex flex-wrap gap-4 text-sm text-neutral-600 mb-2">
                           {exercise.sets && (
                             <span className="font-medium">
-                              {exercise.sets} sets Ã— {exercise.reps} reps
+                              {exercise.sets} sets × {exercise.reps} reps
                             </span>
                           )}
                           {exercise.duration_seconds && (

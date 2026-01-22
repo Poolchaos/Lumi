@@ -45,6 +45,28 @@ export function validateStep(step: number, data: OnboardingData, hasExistingKey 
         return false;
       }
       break;
+
+    case 4:
+      if (!data.profile.experience_level) {
+        toast.error('Please select your experience level to continue');
+        return false;
+      }
+      break;
+
+    case 5:
+      // Medications step is optional - always pass
+      break;
+
+    case 6:
+      if (!data.preferences.workout_frequency) {
+        toast.error('Please select your workout frequency to continue');
+        return false;
+      }
+      if (!data.preferences.preferred_workout_duration) {
+        toast.error('Please enter your preferred workout duration to continue');
+        return false;
+      }
+      break;
   }
 
   return true;

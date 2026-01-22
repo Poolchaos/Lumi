@@ -18,7 +18,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { profileAPI, equipmentAPI, workoutAPI, aiConfigAPI, queryKeys } from '../../api';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '../../design-system';
-import { ChevronRight, ChevronLeft, Sparkles, Key, User, Target, Dumbbell, Calendar, Zap } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Sparkles, Key, User, Target, Dumbbell, Calendar, Zap, Pill } from 'lucide-react';
 import type { Equipment } from '../../types';
 import { GeneratingWorkoutLoader } from './GeneratingWorkoutLoader';
 import type { OnboardingData } from './types';
@@ -55,6 +55,10 @@ export function OnboardingWizard() {
     openai_token: '',
     workout_modality: 'strength',
     profile: {},
+    medications: {
+      has_medications: false,
+      list: '',
+    },
     equipment: [],
     preferences: {},
   });
@@ -180,6 +184,13 @@ export function OnboardingWizard() {
         await updateProfileMutation.mutateAsync(data.profile);
       }
 
+      // Save onboarding medications notes if provided
+      if (data.medications?.has_medications && data.medications?.list) {
+        await updateProfileMutation.mutateAsync({
+          onboarding_medications_notes: data.medications.list,
+        });
+      }
+
       // Update preferences
       if (Object.keys(data.preferences).length > 0) {
         await updatePreferencesMutation.mutateAsync(data.preferences);
@@ -223,7 +234,7 @@ export function OnboardingWizard() {
     }
   };
 
-  const totalSteps = 7; // Updated to include token step + modality step
+  const totalSteps = 8; // Updated to include token + modality + medications steps
   const progress = ((step + 1) / totalSteps) * 100;
 
   // Helper to get icon and image description for current step
@@ -266,12 +277,19 @@ export function OnboardingWizard() {
         };
       case 5:
         return {
+          icon: <Pill className="w-16 h-16 text-primary-500" />,
+          title: 'Medications & Supplements',
+          imageUrl: '/images/onboarding/step-6-medications.jpg', // Medications image
+          imageAlt: 'Person taking medications with fitness tracking',
+        };
+      case 6:
+        return {
           icon: <Calendar className="w-16 h-16 text-primary-500" />,
           title: 'Workout Schedule',
           imageUrl: '/images/onboarding/step-4-schedule.jpg',
           imageAlt: 'Person planning workout schedule on calendar',
         };
-      case 6:
+      case 7:
         return {
           icon: <Dumbbell className="w-16 h-16 text-primary-500" />,
           title: 'Available Equipment',
@@ -316,19 +334,21 @@ export function OnboardingWizard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Left side - Image/Illustration */}
             <div className="flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg overflow-hidden min-h-[400px]">
-              <img
-                src={stepContent.imageUrl}
-                alt={stepContent.imageAlt}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  // Fallback to icon if image fails to load
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.nextElementSibling;
-                  if (fallback) (fallback as HTMLElement).style.display = 'flex';
-                }}
-              />
-              {/* Fallback icon display */}
-              <div className="hidden flex-col items-center justify-center p-8 w-full h-full">
+              {stepContent.imageUrl ? (
+                <img
+                  src={stepContent.imageUrl}
+                  alt={stepContent.imageAlt}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to icon if image fails to load
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextElementSibling;
+                    if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              {/* Fallback icon display - shown when no image URL or image fails to load */}
+              <div className={`flex flex-col items-center justify-center p-8 w-full h-full ${stepContent.imageUrl ? 'hidden' : ''}`}>
                 <div className="mb-4">
                   {stepContent.icon}
                 </div>
@@ -650,6 +670,65 @@ export function OnboardingWizard() {
           {step === 5 && (
             <div className="space-y-6">
               <div>
+                <h3 className="text-xl font-semibold mb-2">Current Medications & Supplements</h3>
+                <p className="text-neutral-600 mb-6">Optional - helps us generate safer and more personalized workout plans</p>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Why we ask:</strong> Some medications and supplements affect your heart rate, energy levels, and exercise capacity. Knowing what you're taking helps us create workouts that are safe and tailored to your individual health profile.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setData({ ...data, medications: { has_medications: false, list: '' } })}
+                    className={`flex-1 p-4 rounded-lg border-2 transition-all text-center ${
+                      !data.medications?.has_medications
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-neutral-200 hover:border-primary-300'
+                    }`}
+                  >
+                    <div className="font-semibold">I'm Not Taking Any</div>
+                    <div className="text-xs text-neutral-600 mt-1">Skip this section</div>
+                  </button>
+                  <button
+                    onClick={() => setData({ ...data, medications: { has_medications: true, list: data.medications?.list || '' } })}
+                    className={`flex-1 p-4 rounded-lg border-2 transition-all text-center ${
+                      data.medications?.has_medications
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-neutral-200 hover:border-primary-300'
+                    }`}
+                  >
+                    <div className="font-semibold">I Take Medications</div>
+                    <div className="text-xs text-neutral-600 mt-1">Tell us what you take</div>
+                  </button>
+                </div>
+
+                {data.medications?.has_medications && (
+                  <div className="space-y-2 mt-4">
+                    <label className="block text-sm font-medium text-neutral-700">
+                      List your medications and supplements
+                    </label>
+                    <textarea
+                      className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[120px] resize-y"
+                      placeholder="Examples:&#10;- Metformin 500mg, twice daily&#10;- Vitamin D 2000IU, once daily&#10;- Lisinopril 10mg, once daily&#10;&#10;Include: medication name, dose, and frequency"
+                      value={data.medications?.list || ''}
+                      onChange={(e) => setData({ ...data, medications: { has_medications: true, list: e.target.value } })}
+                    />
+                    <p className="text-xs text-neutral-500">
+                      You don't need to be precise - just list what you're taking. We'll use this to inform your workout recommendations.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {step === 6 && (
+            <div className="space-y-6">
+              <div>
                 <h3 className="text-xl font-semibold mb-2">Workout Preferences</h3>
                 <p className="text-neutral-600 mb-6">Help us tailor your workout plans</p>
               </div>
@@ -689,7 +768,7 @@ export function OnboardingWizard() {
             </div>
           )}
 
-          {step === 6 && (
+          {step === 7 && (
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold mb-2">Available Equipment</h3>
