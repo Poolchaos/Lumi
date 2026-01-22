@@ -143,11 +143,6 @@ export function OnboardingWizard() {
   const generateWorkoutMutation = useMutation({
     mutationFn: workoutAPI.generate,
     onSuccess: async (response) => {
-      // Debug: Log the response from the backend
-      console.log('OnboardingWizard - Generate response:', response);
-      console.log('OnboardingWizard - Response type:', typeof response);
-      console.log('OnboardingWizard - Response keys:', response ? Object.keys(response) : 'no response');
-
       // Set the generated plan in cache so the review page can access it
       queryClient.setQueryData(queryKeys.workouts.all, response);
       toast.success('Your personalized workout plan is ready!');

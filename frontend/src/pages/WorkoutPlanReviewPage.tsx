@@ -82,7 +82,6 @@ export default function WorkoutPlanReviewPage() {
 
   // First, try to get the cached plan data from the onboarding wizard
   const cachedData = queryClient.getQueryData(['workouts']);
-  console.log('WorkoutPlanReviewPage - Cached data:', cachedData);
 
   // If no cached data, fetch from API
   const { data: fetchedData, isLoading } = useQuery({
@@ -93,19 +92,12 @@ export default function WorkoutPlanReviewPage() {
 
   const data = cachedData || fetchedData;
 
-  // Debug: Log what we received
-  console.log('WorkoutPlanReviewPage - Final data:', data);
-  console.log('WorkoutPlanReviewPage - Data type:', typeof data);
-  console.log('WorkoutPlanReviewPage - Data keys:', data ? Object.keys(data) : 'no data');
-
   // Get the most recent workout plan (the one just generated)
   // Backend generate endpoint returns { plan: {...} }
   // Backend getAll endpoint returns { workouts: [...] }
   const plan: GeneratedPlan | undefined =
     (data as unknown as { plan?: GeneratedPlan })?.plan ||
     (data as unknown as { workouts?: GeneratedPlan[] })?.workouts?.[0];
-
-  console.log('WorkoutPlanReviewPage - Extracted plan:', plan);
 
   if (isLoading) {
     return (

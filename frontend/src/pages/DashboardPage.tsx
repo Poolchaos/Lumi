@@ -54,9 +54,6 @@ export default function DashboardPage() {
     refetchOnMount: 'always', // Refetch when component mounts
   });
 
-  useEffect(() => {
-    console.log('ðŸ“Š Dashboard gamificationData state:', gamificationData);
-  }, [gamificationData]);
 
   const { data: sessionsData } = useQuery({
     queryKey: queryKeys.sessions.all,
