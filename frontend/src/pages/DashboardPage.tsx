@@ -29,6 +29,7 @@ import { QuickActions } from '../components/dashboard/QuickActions';
 import { XPProgressBar } from '../components/gamification/XPProgressBar';
 import { StreakCounter } from '../components/gamification/StreakCounter';
 import { MedicationsWidget } from '../components/dashboard/MedicationsWidget';
+import MedicationReminderBanner from '../components/medications/MedicationReminderBanner';
 import { PageTransition } from '../components/layout/PageTransition';
 import { Card } from '../design-system';
 import { profileAPI, workoutAPI, gamificationAPI, sessionAPI, queryKeys } from '../api';
@@ -243,6 +244,9 @@ export default function DashboardPage() {
         <div>
         {/* Hero Section with Gamification */}
         <HeroSection />
+
+        {/* Medication Reminder Banner */}
+        <MedicationReminderBanner />
 
         {/* Gamification Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

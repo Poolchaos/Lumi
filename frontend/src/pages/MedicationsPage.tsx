@@ -34,6 +34,7 @@ import { PageTransition } from '../components/layout/PageTransition';
 import MedicationForm, { type MedicationFormHandle } from '../components/medications/MedicationForm';
 import MedicationDoseCard from '../components/medications/MedicationDoseCard';
 import MedicationParsingModal from '../components/medications/MedicationParsingModal';
+import MedicationReminderBanner from '../components/medications/MedicationReminderBanner';
 
 export default function MedicationsPage() {
   const queryClient = useQueryClient();
@@ -236,6 +237,9 @@ export default function MedicationsPage() {
     <Layout>
       <PageTransition>
         <div className="max-w-4xl mx-auto space-y-6">
+          {/* Medication Reminder Banner */}
+          <MedicationReminderBanner />
+
           {/* Onboarding Medications Note Banner */}
           {onboardingMedicationsNotes && !dismissedOnboardingNote && (
             <Card className="bg-blue-50 border-blue-200">

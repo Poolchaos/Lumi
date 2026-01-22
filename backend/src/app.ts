@@ -32,6 +32,7 @@ import gamificationRoutes from './routes/gamificationRoutes';
 import prRoutes from './routes/prRoutes';
 import dailyChallengeRoutes from './routes/dailyChallengeRoutes';
 import medicationRoutes from './routes/medicationRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 const app: Application = express();
 
@@ -106,6 +107,7 @@ app.use('/api/gamification', gamificationRoutes);
 app.use('/api/prs', prRoutes);
 app.use('/api/challenges', dailyChallengeRoutes);
 app.use('/api/medications', medicationRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

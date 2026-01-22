@@ -41,6 +41,25 @@ export interface IUser extends Document {
     equipment_access?: string[];
     workout_frequency?: number; // Days per week user wants to workout
   };
+  notification_preferences?: {
+    medication_reminders: {
+      enabled: boolean;
+      advance_minutes: number; // Notify X minutes before dose
+      escalation_minutes: number; // Remind again if not logged
+      quiet_hours: {
+        enabled: boolean;
+        start: string; // "22:00"
+        end: string; // "07:00"
+      };
+    };
+    push_subscription?: {
+      endpoint: string;
+      keys: {
+        p256dh: string;
+        auth: string;
+      };
+    };
+  };
   gamification?: {
     xp: number; // Total experience points earned
     level: number; // Current level (calculated from XP)
@@ -116,6 +135,43 @@ const userSchema = new Schema<IUser>(
       preferred_workout_types: [String],
       equipment_access: [String],
       workout_frequency: Number, // Days per week user wants to workout
+    },
+    notification_preferences: {
+      medication_reminders: {
+        enabled: {
+          type: Boolean,
+          default: true,
+        },
+        advance_minutes: {
+          type: Number,
+          default: 15, // Notify 15 minutes before dose
+        },
+        escalation_minutes: {
+          type: Number,
+          default: 30, // Remind again after 30 minutes if not logged
+        },
+        quiet_hours: {
+          enabled: {
+            type: Boolean,
+            default: false,
+          },
+          start: {
+            type: String,
+            default: '22:00',
+          },
+          end: {
+            type: String,
+            default: '07:00',
+          },
+        },
+      },
+      push_subscription: {
+        endpoint: String,
+        keys: {
+          p256dh: String,
+          auth: String,
+        },
+      },
     },
     gamification: {
       xp: {
