@@ -18,6 +18,10 @@ export interface OnboardingData {
   openai_token?: string;
   workout_modality?: 'strength' | 'cardio' | 'hybrid';
   profile: Partial<UserProfile>;
+  medications?: {
+    has_medications: boolean;
+    list: string;
+  };
   equipment: string[];
   preferences: {
     preferred_workout_duration?: number;
