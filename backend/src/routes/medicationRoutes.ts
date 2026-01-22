@@ -32,6 +32,7 @@ import {
   updateBottleImage,
 } from '../controllers/medicationController';
 import { getCorrelations, triggerAnalysis } from '../controllers/correlationController';
+import { parseNotes } from '../controllers/medicationParsingController';
 import { authenticate } from '../middleware/auth';
 
 // Configure multer for image uploads
@@ -52,6 +53,13 @@ const router = Router();
 
 // All medication routes require authentication
 router.use(authenticate);
+
+// Parse medication notes using AI
+router.post(
+  '/parse-notes',
+  [body('notes').notEmpty().trim().withMessage('Notes are required')],
+  parseNotes
+);
 
 // Get today's doses for all medications (dashboard view)
 router.get('/today', getTodaysDoses);

@@ -1,0 +1,203 @@
+/**
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
+ *
+ * This file is part of PersonalFit.
+ *
+ * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * You may not use this file except in compliance with the License.
+ *
+ * Commercial use requires a separate paid license.
+ * Contact: phillipjuanvanderberg@gmail.com
+ *
+ * See the LICENSE file for the full license text.
+ */
+
+import Anthropic from '@anthropic-ai/sdk';
+
+interface ParsedMedication {
+  name: string;
+  type: 'prescription' | 'supplement' | 'otc';
+  dosage: {
+    amount: number;
+    unit: 'mg' | 'ml' | 'iu' | 'mcg' | 'g' | 'tablets' | 'capsules';
+    form: 'tablet' | 'capsule' | 'liquid' | 'injection' | 'topical' | 'powder' | 'other';
+  };
+  frequency: {
+    times_per_day: number;
+    schedule_times?: string[];
+  };
+  purpose?: string;
+  notes?: string;
+}
+
+interface ParsingResult {
+  success: boolean;
+  medications: ParsedMedication[];
+  suggestions?: string;
+  error?: string;
+}
+
+/**
+ * Parse free-form medication notes using Claude AI
+ * Extracts structured medication data from natural language input
+ */
+export async function parseMedicationNotes(notes: string): Promise<ParsingResult> {
+  if (!notes || notes.trim().length === 0) {
+    return {
+      success: false,
+      medications: [],
+      error: 'No medication notes provided',
+    };
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.warn('ANTHROPIC_API_KEY not set - medication parsing unavailable');
+    return {
+      success: false,
+      medications: [],
+      error: 'AI parsing service not configured',
+    };
+  }
+
+  try {
+    const client = new Anthropic({ apiKey });
+
+    const prompt = `You are a medical data extraction expert. Parse the following medication/supplement notes into a structured JSON array.
+
+Extract ALL medications/supplements mentioned. For each one, determine:
+- name: The medication/supplement name (e.g., "Vitamin D3", "Metformin", "Omega-3")
+- type: "prescription" (Rx meds), "supplement" (vitamins, minerals, herbs), or "otc" (over-the-counter)
+- dosage.amount: Numeric dose (e.g., 500, 1000, 10)
+- dosage.unit: "mg", "ml", "iu", "mcg", "g", "tablets", or "capsules"
+- dosage.form: "tablet", "capsule", "liquid", "injection", "topical", "powder", or "other"
+- frequency.times_per_day: How many times per day (1-4 typical, default 1 if unclear)
+- frequency.schedule_times: Array of times in HH:MM format if mentioned (e.g., ["09:00", "21:00"])
+- purpose: Why taking it (if mentioned)
+- notes: Any additional context (side effects, interactions, etc.)
+
+If information is missing or unclear, make reasonable medical assumptions:
+- Default to 1 time per day if not specified
+- Infer common dosages for well-known supplements (e.g., Vitamin D3: 1000-5000 IU, Omega-3: 1000mg)
+- Use "tablet" or "capsule" as default forms for pills
+- Classify common items correctly (Vitamin C = supplement, Ibuprofen = otc, Metformin = prescription)
+
+Return ONLY valid JSON with no markdown formatting. Format:
+{
+  "medications": [
+    {
+      "name": "Vitamin D3",
+      "type": "supplement",
+      "dosage": {
+        "amount": 2000,
+        "unit": "iu",
+        "form": "capsule"
+      },
+      "frequency": {
+        "times_per_day": 1,
+        "schedule_times": ["09:00"]
+      },
+      "purpose": "Bone health and immune support",
+      "notes": "Take with food"
+    }
+  ],
+  "suggestions": "Consider tracking adherence daily for best results."
+}
+
+Notes to parse:
+${notes}
+
+Return valid JSON only:`;
+
+    const message = await client.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 4096,
+      temperature: 0,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    });
+
+    const responseText =
+      message.content[0].type === 'text' ? message.content[0].text : '';
+
+    // Parse JSON response
+    let parsedData;
+    try {
+      // Remove markdown code blocks if present
+      const cleanJson = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim();
+      parsedData = JSON.parse(cleanJson);
+    } catch {
+      console.error('Failed to parse AI response as JSON:', responseText);
+      return {
+        success: false,
+        medications: [],
+        error: 'Failed to parse AI response',
+      };
+    }
+
+    // Validate and clean the parsed medications
+    const medications: ParsedMedication[] = (parsedData.medications || [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- API response type is validated at runtime
+      .map((med: any) => {
+        // Validate required fields
+        if (!med.name || !med.type || !med.dosage || !med.frequency) {
+          console.warn('Skipping invalid medication:', med);
+          return null;
+        }
+
+        // Validate type
+        if (!['prescription', 'supplement', 'otc'].includes(med.type)) {
+          med.type = 'supplement'; // Default fallback
+        }
+
+        // Validate dosage
+        if (!med.dosage.amount || !med.dosage.unit || !med.dosage.form) {
+          console.warn('Invalid dosage for medication:', med.name);
+          return null;
+        }
+
+        // Validate frequency
+        if (!med.frequency.times_per_day || med.frequency.times_per_day < 1) {
+          med.frequency.times_per_day = 1;
+        }
+
+        return {
+          name: String(med.name).trim(),
+          type: med.type,
+          dosage: {
+            amount: Number(med.dosage.amount),
+            unit: med.dosage.unit,
+            form: med.dosage.form,
+          },
+          frequency: {
+            times_per_day: Number(med.frequency.times_per_day),
+            schedule_times: med.frequency.schedule_times || undefined,
+          },
+          purpose: med.purpose ? String(med.purpose).trim() : undefined,
+          notes: med.notes ? String(med.notes).trim() : undefined,
+        } as ParsedMedication;
+      })
+      .filter((med: ParsedMedication | null) => med !== null) as ParsedMedication[];
+
+    return {
+      success: true,
+      medications,
+      suggestions: parsedData.suggestions || undefined,
+    };
+  } catch (error: unknown) {
+    console.error('Error parsing medication notes:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to parse medications';
+    return {
+      success: false,
+      medications: [],
+      error: errorMessage,
+    };
+  }
+}

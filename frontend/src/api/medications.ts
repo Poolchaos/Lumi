@@ -129,6 +129,16 @@ export const medicationAPI = {
     const { data } = await apiClient.post('/api/medications/correlations/analyze');
     return data;
   },
+
+  // Parse medication notes using AI
+  parseNotes: async (notes: string): Promise<{
+    success: boolean;
+    medications: any[];
+    suggestions?: string;
+  }> => {
+    const { data } = await apiClient.post('/api/medications/parse-notes', { notes });
+    return data;
+  },
 };
 
 // Query keys for React Query

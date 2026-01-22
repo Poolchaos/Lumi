@@ -33,6 +33,7 @@ import {
 import { PageTransition } from '../components/layout/PageTransition';
 import MedicationForm, { type MedicationFormHandle } from '../components/medications/MedicationForm';
 import MedicationDoseCard from '../components/medications/MedicationDoseCard';
+import MedicationParsingModal from '../components/medications/MedicationParsingModal';
 
 export default function MedicationsPage() {
   const queryClient = useQueryClient();
@@ -40,6 +41,7 @@ export default function MedicationsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingMedication, setEditingMedication] = useState<Medication | null>(null);
   const [deletingMedication, setDeletingMedication] = useState<Medication | null>(null);
+  const [showParsingModal, setShowParsingModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'today' | 'all' | 'refills'>('today');
   const [dismissedOnboardingNote, setDismissedOnboardingNote] = useState(false);
   const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false);
@@ -163,6 +165,30 @@ export default function MedicationsPage() {
     },
   });
 
+  // Parse medications mutation
+  const parseMedicationsMutation = useMutation({
+    mutationFn: (notes: string) => medicationAPI.parseNotes(notes),
+  });
+
+  // Batch create medications mutation
+  const batchCreateMutation = useMutation({
+    mutationFn: async (medications: CreateMedicationInput[]) => {
+      // Create all medications in sequence
+      for (const med of medications) {
+        await medicationAPI.create(med);
+      }
+      return medications.length;
+    },
+    onSuccess: (count) => {
+      toast.success(`Successfully added ${count} medication${count !== 1 ? 's' : ''}!`);
+      queryClient.invalidateQueries({ queryKey: medicationQueryKeys.all });
+      setActiveTab('all'); // Switch to "All" tab to show the new medications
+    },
+    onError: () => {
+      toast.error('Failed to add some medications. Please try again.');
+    },
+  });
+
   const handleCreateMedication = (data: CreateMedicationInput) => {
     createMutation.mutate(data);
   };
@@ -171,6 +197,15 @@ export default function MedicationsPage() {
     if (editingMedication) {
       updateMutation.mutate({ id: editingMedication._id, data });
     }
+  };
+
+  const handleParseMedications = async (notes: string) => {
+    const result = await parseMedicationsMutation.mutateAsync(notes);
+    return result;
+  };
+
+  const handleAddParsedMedications = (medications: CreateMedicationInput[]) => {
+    batchCreateMutation.mutate(medications);
   };
 
   const handleLogDose = (
@@ -222,10 +257,7 @@ export default function MedicationsPage() {
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        onClick={() => {
-                          setShowForm(true);
-                          setDismissedOnboardingNote(true);
-                        }}
+                        onClick={() => setShowParsingModal(true)}
                       >
                         Add Details to Medications
                       </Button>
@@ -578,6 +610,18 @@ export default function MedicationsPage() {
             variant="danger"
             loading={deleteMutation.isPending}
           />
+
+          {/* AI Medication Parsing Modal */}
+          {onboardingMedicationsNotes && (
+            <MedicationParsingModal
+              isOpen={showParsingModal}
+              onClose={() => setShowParsingModal(false)}
+              notes={onboardingMedicationsNotes}
+              onParse={handleParseMedications}
+              onAddMedications={handleAddParsedMedications}
+              isParsing={parseMedicationsMutation.isPending || batchCreateMutation.isPending}
+            />
+          )}
         </div>
       </PageTransition>
     </Layout>
