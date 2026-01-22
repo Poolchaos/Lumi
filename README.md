@@ -48,6 +48,18 @@ Self-hosted fitness tracking with **AI-powered workout generation** and **gamifi
 
 ![Dashboard with Stats](docs/screenshots/4.%20dashboard.png)
 
+**Workout Management & Scheduling**
+
+![Workouts Overview](docs/screenshots/5.workouts.png)
+
+![Weekly Schedule](docs/screenshots/6.schedule.png)
+
+![Daily Workout Plan](docs/screenshots/7.daily-plan.png)
+
+**Medication & Supplement Tracking**
+
+![Medications Manager](docs/screenshots/8.medications.png)
+
 ---
 
 ## ✨ Key Features
