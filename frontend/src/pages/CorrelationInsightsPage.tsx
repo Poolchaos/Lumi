@@ -28,12 +28,29 @@ interface CorrelationData {
   metric: string;
   correlation_coefficient: number;
   impact_direction: 'positive' | 'negative' | 'neutral';
-  confidence_level: 'high' | 'medium' | 'low';
+  confidence_level: number; // Backend returns 0-1 numeric value
   data_points: number;
   observations: string[];
   sample_period_days: number;
   analyzed_at: string;
 }
+
+/**
+ * Convert numeric confidence level (0-1) to categorical label
+ * Backend stores: { high: 0.9, medium: 0.6, low: 0.3 }
+ */
+const getConfidenceLabel = (numericLevel: number): 'high' | 'medium' | 'low' => {
+  if (numericLevel >= 0.8) return 'high';
+  if (numericLevel >= 0.5) return 'medium';
+  return 'low';
+};
+
+/**
+ * Convert numeric confidence (0-1) to percentage string
+ */
+const getConfidencePercentage = (numericLevel: number): string => {
+  return `${Math.round(numericLevel * 100)}%`;
+};
 
 const METRIC_LABELS: Record<string, string> = {
   heart_rate: '❤️ Heart Rate',
@@ -188,7 +205,7 @@ export default function CorrelationInsightsPage() {
                           <div className="font-medium text-gray-900">
                             {METRIC_LABELS[item.metric] || item.metric}
                           </div>
-                          <div className={`${getImpactColor(item.impact_direction, item.confidence_level)}`}>
+                          <div className={`${getImpactColor(item.impact_direction, getConfidenceLabel(item.confidence_level))}`}>
                             {getImpactIcon(item.impact_direction)}
                           </div>
                         </div>
@@ -219,10 +236,10 @@ export default function CorrelationInsightsPage() {
                         <div className="flex items-center justify-between gap-2">
                           <span
                             className={`text-xs px-2 py-0.5 rounded-full ${getConfidenceBadge(
-                              item.confidence_level
+                              getConfidenceLabel(item.confidence_level)
                             )}`}
                           >
-                            {item.confidence_level} confidence
+                            {getConfidenceLabel(item.confidence_level)} ({getConfidencePercentage(item.confidence_level)})
                           </span>
                           <span className="text-xs text-gray-600">{item.data_points} days</span>
                         </div>
@@ -254,7 +271,7 @@ export default function CorrelationInsightsPage() {
                           <p
                             className={`text-sm font-semibold ${getImpactColor(
                               item.impact_direction,
-                              item.confidence_level
+                              getConfidenceLabel(item.confidence_level)
                             )}`}
                           >
                             {item.impact_direction === 'positive'
@@ -266,13 +283,16 @@ export default function CorrelationInsightsPage() {
                         </div>
                         <div>
                           <p className="text-xs text-gray-600 mb-1">Confidence</p>
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded-full ${getConfidenceBadge(
-                              item.confidence_level
-                            )}`}
-                          >
-                            {item.confidence_level}
-                          </span>
+                          <div className="flex flex-col gap-1">
+                            <span
+                              className={`text-xs px-2 py-0.5 rounded-full ${getConfidenceBadge(
+                                getConfidenceLabel(item.confidence_level)
+                              )}`}
+                            >
+                              {getConfidenceLabel(item.confidence_level)}
+                            </span>
+                            <span className="text-xs text-gray-600">{getConfidencePercentage(item.confidence_level)}</span>
+                          </div>
                         </div>
                         <div>
                           <p className="text-xs text-gray-600 mb-1">Data Points</p>
