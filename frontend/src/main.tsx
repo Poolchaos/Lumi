@@ -12,13 +12,21 @@
  * See the LICENSE file for the full license text.
  */
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import { initializePushNotifications } from './utils/pushNotifications';
+
+// Initialize push notifications when app loads
+if (import.meta.env.PROD) {
+  initializePushNotifications().catch((error) => {
+    console.error('Failed to initialize push notifications:', error);
+  });
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-  </StrictMode>,
-)
+  </StrictMode>
+);
