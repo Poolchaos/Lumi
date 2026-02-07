@@ -14,6 +14,11 @@
 
 import cron from 'node-cron';
 import { findMissedWorkouts } from './missedWorkoutService';
+import {
+  checkMedicationReminders,
+  checkEscalationReminders,
+  cleanupNotificationLogs,
+} from './medicationReminderService';
 
 /**
  * Initialize all scheduled tasks
@@ -48,8 +53,45 @@ export const initializeScheduler = (): void => {
   //   timezone: 'UTC'
   // });
 
-  console.log('âœ… Scheduler initialized successfully');
+  // Check for medication reminders every 5 minutes
+  cron.schedule('*/5 * * * *', async () => {
+    try {
+      await checkMedicationReminders();
+    } catch (error) {
+      console.error('❌ Scheduled medication reminder check failed:', error);
+    }
+  }, {
+    timezone: 'UTC'
+  });
+
+  // Check for escalation reminders every 10 minutes
+  cron.schedule('*/10 * * * *', async () => {
+    try {
+      await checkEscalationReminders();
+    } catch (error) {
+      console.error('❌ Scheduled escalation reminder check failed:', error);
+    }
+  }, {
+    timezone: 'UTC'
+  });
+
+  // Clean up old notification logs daily at 02:00 UTC
+  cron.schedule('0 2 * * *', async () => {
+    console.log('🧹 Running notification log cleanup...');
+    try {
+      await cleanupNotificationLogs();
+    } catch (error) {
+      console.error('❌ Notification log cleanup failed:', error);
+    }
+  }, {
+    timezone: 'UTC'
+  });
+
+  console.log('✅ Scheduler initialized successfully');
   console.log('   - Missed workout detection: Daily at 00:00 UTC');
+  console.log('   - Medication reminders: Every 5 minutes');
+  console.log('   - Escalation reminders: Every 10 minutes');
+  console.log('   - Notification log cleanup: Daily at 02:00 UTC');
 };
 
 /**
