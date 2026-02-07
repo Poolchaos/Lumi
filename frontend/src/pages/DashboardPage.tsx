@@ -35,6 +35,7 @@ import { VisionScansList } from '../components/vision/VisionScansList';
 import { HealthScoreCard } from '../components/health/HealthScoreCard';
 import { AICoachingCard } from '../components/health/AICoachingCard';
 import { TodayHealthLoop } from '../components/health/TodayHealthLoop';
+import { DailyLoopWidget } from '../components/health/DailyLoopWidget';
 import MedicationReminderBanner from '../components/medications/MedicationReminderBanner';
 import { PageTransition } from '../components/layout/PageTransition';
 import { Card } from '../design-system';
@@ -357,6 +358,9 @@ export default function DashboardPage() {
 
         {profileData?.user?.preferences?.unified_health_score_enabled && (
           <>
+            <div className="mb-8">
+              <DailyLoopWidget />
+            </div>
             <div className="mb-8">
               <HealthScoreCard />
             </div>

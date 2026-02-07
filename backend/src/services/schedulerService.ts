@@ -19,6 +19,7 @@ import {
   checkEscalationReminders,
   cleanupNotificationLogs,
 } from './medicationReminderService';
+import { calculateAllUserHealthScores } from './dailyHealthLoopService';
 
 /**
  * Initialize all scheduled tasks
@@ -87,8 +88,21 @@ export const initializeScheduler = (): void => {
     timezone: 'UTC'
   });
 
+  // Calculate daily health scores at 01:00 UTC (for previous day)
+  cron.schedule('0 1 * * *', async () => {
+    console.log('📊 Running daily health score calculation...');
+    try {
+      await calculateAllUserHealthScores();
+    } catch (error) {
+      console.error('❌ Daily health score calculation failed:', error);
+    }
+  }, {
+    timezone: 'UTC'
+  });
+
   console.log('✅ Scheduler initialized successfully');
   console.log('   - Missed workout detection: Daily at 00:00 UTC');
+  console.log('   - Daily health scores: Daily at 01:00 UTC');
   console.log('   - Medication reminders: Every 5 minutes');
   console.log('   - Escalation reminders: Every 10 minutes');
   console.log('   - Notification log cleanup: Daily at 02:00 UTC');

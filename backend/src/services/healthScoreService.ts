@@ -131,7 +131,7 @@ async function calculateFitnessScore(
 
   if (todaySession.completion_status === 'completed') {
     reasons.push('Workout completed today! 💪');
-    
+
     // Score based on completion percentage
     const completionRate = (todaySession.completion_percentage || 100) / 100;
 
