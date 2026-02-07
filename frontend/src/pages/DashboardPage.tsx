@@ -149,6 +149,26 @@ export default function DashboardPage() {
     );
   }, [sessionsData]);
 
+  // Calculate sessions completed last week
+  const sessionsLastWeek = useMemo(() => {
+    if (!sessionsData?.sessions) return 0;
+    const lastWeekStart = new Date();
+    lastWeekStart.setDate(lastWeekStart.getDate() - 14);
+    lastWeekStart.setHours(0, 0, 0, 0);
+    const lastWeekEnd = new Date();
+    lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
+    lastWeekEnd.setHours(23, 59, 59, 999);
+
+    return sessionsData.sessions.filter((session: WorkoutSession) => {
+      const sessionDate = new Date(session.session_date);
+      return (
+        session.completion_status === 'completed' &&
+        sessionDate >= lastWeekStart &&
+        sessionDate <= lastWeekEnd
+      );
+    }).length;
+  }, [sessionsData]);
+
   // ALWAYS show yesterday's card if workout exists (for testing/retry)
   const showYesterdayCard = yesterdayWorkout !== null;
 
@@ -374,7 +394,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <WeeklyProgress
             sessionsThisWeek={gamificationData?.totalWorkoutsCompleted || 0}
-            sessionsLastWeek={0} // TODO: Calculate from sessions data
+            sessionsLastWeek={sessionsLastWeek}
             plannedThisWeek={workoutsPlannedThisWeek}
             totalXP={gamificationData?.xp || 0}
           />

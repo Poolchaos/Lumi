@@ -16,6 +16,7 @@ import mongoose from 'mongoose';
 import { generateDailyHealthScore } from './healthScoreService';
 import { generateCoachingRecommendations } from './coachingService';
 import User from '../models/User';
+import DailyCheckIn from '../models/DailyCheckIn';
 
 interface DailyCheckIn {
   userId: string;
@@ -51,6 +52,30 @@ export async function processMorningCheckIn(
   let coachingGenerated = false;
 
   try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Save morning check-in to database
+    await DailyCheckIn.findOneAndUpdate(
+      {
+        user_id: new mongoose.Types.ObjectId(userId),
+        date: today,
+      },
+      {
+        $set: {
+          morning_completed: true,
+          morning_data: {
+            mood: checkInData.mood,
+            energy_level: checkInData.energy_level,
+            sleep_quality: checkInData.sleep_quality,
+            sleep_hours: checkInData.sleep_hours,
+            notes: checkInData.notes,
+          },
+        },
+      },
+      { upsert: true, new: true }
+    );
+
     // Calculate yesterday's health score if missing
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -122,9 +147,29 @@ export async function processEveningCheckIn(
   let healthScoreCalculated = false;
 
   try {
-    // Calculate today's health score
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    // Save evening check-in to database
+    await DailyCheckIn.findOneAndUpdate(
+      {
+        user_id: new mongoose.Types.ObjectId(userId),
+        date: today,
+      },
+      {
+        $set: {
+          evening_completed: true,
+          evening_data: {
+            mood: checkInData.mood,
+            water_intake: checkInData.water_intake,
+            notes: checkInData.notes,
+          },
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    // Calculate today's health score
 
     try {
       const todayScore = await generateDailyHealthScore(userId, today);
@@ -231,6 +276,12 @@ export async function getDailyLoopStatus(userId: string): Promise<{
     today.setHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split('T')[0];
 
+    // Get today's check-in status from database
+    const checkIn = await DailyCheckIn.findOne({
+      user_id: new mongoose.Types.ObjectId(userId),
+      date: today,
+    });
+
     // Check if today's health score exists
     const todayScore = await HealthScore.findOne({
       user_id: new mongoose.Types.ObjectId(userId),
@@ -238,8 +289,8 @@ export async function getDailyLoopStatus(userId: string): Promise<{
     });
 
     return {
-      morning_check_in_completed: false, // TODO: Track in database
-      evening_check_in_completed: false, // TODO: Track in database
+      morning_check_in_completed: checkIn?.morning_completed || false,
+      evening_check_in_completed: checkIn?.evening_completed || false,
       health_score_calculated: !!todayScore,
       coaching_available: true, // Always available
     };
