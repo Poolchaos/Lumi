@@ -1,8 +1,8 @@
 # PersonalFit 🏋️
 
-**AI-Powered Personal Fitness Platform with Gamification**
+**Comprehensive Self-Hosted Fitness & Health Platform**
 
-Self-hosted • Privacy-first • Full control over your data
+AI-powered workouts • Medication tracking • Vision analysis • Gamification • Privacy-first
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
@@ -30,7 +30,7 @@ See the [LICENSE](LICENSE) file for full terms.
 
 ## 🎯 What is PersonalFit?
 
-Self-hosted fitness tracking with **AI-powered workout generation** and **gamification**. Keep your data private, earn XP while working out, and get personalized plans based on your goals and equipment.
+Complete self-hosted fitness and health ecosystem. AI-generated workout plans, medication management with OCR bottle scanning, food photo analysis, correlation insights, gamification with XP/achievements/leaderboards, and comprehensive progress tracking. Your data stays on your server.
 
 ---
 
