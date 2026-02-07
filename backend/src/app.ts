@@ -38,6 +38,7 @@ import visionRoutes from './routes/visionRoutes';
 import nutritionRoutes from './routes/nutritionRoutes';
 import healthScoreRoutes from './routes/healthScoreRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import dailyHealthLoopRoutes from './routes/dailyHealthLoopRoutes';
 
 const app: Application = express();
 
@@ -118,6 +119,7 @@ app.use('/api/vision', visionRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/health-scores', healthScoreRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/daily-loop', dailyHealthLoopRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
