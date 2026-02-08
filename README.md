@@ -9,6 +9,9 @@ Illuminate your health through intelligent insights • Vision AI • Medication
 [![Express](https://img.shields.io/badge/Express-5.1-000000?logo=express)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8.x-47A248?logo=mongodb)](https://www.mongodb.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)](docker-compose.yml)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?logo=openai)](https://openai.com/)
+[![Anthropic](https://img.shields.io/badge/Anthropic-Claude-D97757?logo=anthropic)](https://www.anthropic.com/)
+[![Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?logo=google)](https://ai.google.dev/)
 [![License](https://img.shields.io/badge/License-PolyForm%20NC-red)](LICENSE)
 
 ---
@@ -37,8 +40,6 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 ## 📸 Screenshots
 
 **Onboarding Setup**
-
-![OpenAI API Key Setup](docs/screenshots/1.openai.png)
 
 ![User Profile Setup](docs/screenshots/2.get-to-know-you.png)
 
@@ -71,7 +72,7 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 ## ✨ Key Features
 
 - **🎮 Gamification System** — XP, levels, 42 achievements, daily challenges, streak tracking, leaderboards, rewards shop
-- **🤖 AI Workout Generation** — OpenAI, Claude, or OpenRouter with multi-agent orchestration
+- **🤖 Multi-LLM AI Engine** — OpenAI GPT-4o, Anthropic Claude, Google Gemini, Moonshot Kimi — swap providers via config
 - **📅 Smart Scheduling** — Visual calendar, weekly preview, progress tracking
 - **💪 Workout Management** — Multiple plans, session logging, active plan system
 - **📊 Progress Tracking** — Body metrics, charts, progress photos with S3 storage
@@ -112,11 +113,13 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 
 ## 🛠️ Tech Stack
 
-**Backend:** Node.js 22, Express 5.1, TypeScript 5.9, MongoDB 8.x, OpenAI/Anthropic SDKs, Jest
+**Backend:** Node.js 22, Express 5.1, TypeScript 5.9, MongoDB 8.x, Jest
 
-**Frontend:** React 19, Vite 7, TypeScript 5.9, TailwindCSS 3, Recharts, Playwright
+**AI Providers:** OpenAI (GPT-4o), Anthropic (Claude 3.5 Sonnet), Google Gemini (1.5 Pro/Flash), Moonshot (Kimi) — pluggable provider architecture with automatic fallback
 
-**Infrastructure:** Docker, Docker Compose, Nginx, MinIO
+**Frontend:** React 19, Vite 7, TypeScript 5.9, TailwindCSS 3, Framer Motion, Recharts, Playwright
+
+**Infrastructure:** Docker, Docker Compose, Nginx, MinIO (S3-compatible storage)
 
 ---
 
@@ -148,9 +151,14 @@ MONGODB_URI=mongodb://mongodb:27017/lumi
 JWT_SECRET=your-super-secret-jwt-key
 JWT_REFRESH_SECRET=your-refresh-secret
 ENCRYPTION_SECRET=your-32-char-encryption-key
-CORS_ORIGIN=http://localhost:5173
-OPENAI_API_KEY=sk-... # Required for AI workout generation
-ANTHROPIC_API_KEY=sk-ant-... # Required for Phase 2 bottle label OCR
+CORS_ORIGIN=http://localhost:3000
+
+# Multi-LLM — configure at least one provider
+OPENAI_API_KEY=sk-...           # GPT-4o, GPT-4o-mini
+ANTHROPIC_API_KEY=sk-ant-...     # Claude 3.5 Sonnet
+GEMINI_API_KEY=AI...             # Gemini 1.5 Pro/Flash
+MOONSHOT_API_KEY=               # Kimi (optional)
+DEFAULT_LLM_PROVIDER=openai     # openai | anthropic | gemini | moonshot
 ```
 
 **frontend/.env:**
@@ -211,7 +219,9 @@ Lumi/
 │   │   ├── models/          # Mongoose schemas
 │   │   ├── routes/          # Express routes
 │   │   ├── services/        # Business logic
-│   │   │   └── ai/          # AI orchestration layer
+│   │   │   ├── ai/          # AI orchestration layer
+│   │   │   └── llm/         # Multi-LLM provider engine
+│   │   │       └── providers/ # OpenAI, Anthropic, Gemini, Moonshot
 │   │   ├── middleware/      # Auth, rate limiting
 │   │   ├── validators/      # Request validation
 │   │   └── __tests__/       # Jest tests
