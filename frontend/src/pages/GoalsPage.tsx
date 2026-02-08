@@ -88,6 +88,7 @@ export default function GoalsPage() {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<Partial<CreateGoalInput>>({});
+  const [trackingGoalId, setTrackingGoalId] = useState<string | null>(null);
 
   // Fetch goals
   const { data, isLoading } = useQuery({
@@ -546,45 +547,70 @@ export default function GoalsPage() {
                         </div>
 
                         {goal.status === 'active' && goal.progress_percentage < 100 && (
-                          <div className="mt-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Update Progress
-                            </label>
-                            <div className="flex gap-2">
-                              <Input
-                                label=""
-                                type="number"
-                                step="0.01"
-                                defaultValue={goal.current_value}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    const newValue = parseFloat(
-                                      (e.target as HTMLInputElement).value
-                                    );
-                                    updateProgressMutation.mutate({
-                                      id: goal._id,
-                                      current_value: newValue,
-                                    });
-                                  }
-                                }}
-                                className="flex-1"
-                              />
+                          <div className="mt-4 pt-4 border-t border-gray-200">
+                            {trackingGoalId === goal._id ? (
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <label className="text-sm font-medium text-gray-700">
+                                    Update Progress
+                                  </label>
+                                  <button
+                                    onClick={() => setTrackingGoalId(null)}
+                                    className="text-xs text-gray-500 hover:text-gray-700"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                  <Input
+                                    label=""
+                                    type="number"
+                                    step="0.01"
+                                    placeholder={`Current: ${goal.current_value}`}
+                                    defaultValue={goal.current_value}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        const newValue = parseFloat(
+                                          (e.target as HTMLInputElement).value
+                                        );
+                                        updateProgressMutation.mutate({
+                                          id: goal._id,
+                                          current_value: newValue,
+                                        });
+                                        setTrackingGoalId(null);
+                                      }
+                                    }}
+                                    className="flex-1 !py-2 !h-[42px]"
+                                  />
+                                  <Button
+                                    onClick={(e) => {
+                                      const input = e.currentTarget.parentElement?.querySelector(
+                                        'input'
+                                      ) as HTMLInputElement;
+                                      const newValue = parseFloat(input.value);
+                                      updateProgressMutation.mutate({
+                                        id: goal._id,
+                                        current_value: newValue,
+                                      });
+                                      setTrackingGoalId(null);
+                                    }}
+                                    className="whitespace-nowrap !h-[42px]"
+                                  >
+                                    Save
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
                               <Button
+                                variant="outline"
                                 size="sm"
-                                onClick={(e) => {
-                                  const input = e.currentTarget.parentElement?.querySelector(
-                                    'input'
-                                  ) as HTMLInputElement;
-                                  const newValue = parseFloat(input.value);
-                                  updateProgressMutation.mutate({
-                                    id: goal._id,
-                                    current_value: newValue,
-                                  });
-                                }}
+                                onClick={() => setTrackingGoalId(goal._id)}
+                                className="w-full"
                               >
-                                Update
+                                <Target className="w-4 h-4 mr-2" />
+                                Track Progress
                               </Button>
-                            </div>
+                            )}
                           </div>
                         )}
                       </div>
