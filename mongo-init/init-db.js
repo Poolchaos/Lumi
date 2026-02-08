@@ -1,14 +1,14 @@
 ﻿/**
  * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
- * 
- * This file is part of PersonalFit.
- * 
- * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ *
+ * This file is part of Lumi.
+ *
+ * Lumi is licensed under the PolyForm Noncommercial License 1.0.0.
  * You may not use this file except in compliance with the License.
- * 
+ *
  * Commercial use requires a separate paid license.
  * Contact: phillipjuanvanderberg@gmail.com
- * 
+ *
  * See the LICENSE file for the full license text.
  */
 
@@ -30,5 +30,5 @@ db.equipment.createIndex({ created_at: -1 });
 db.workoutplans.createIndex({ user_id: 1, is_active: 1, created_at: -1 });
 db.workoutplans.createIndex({ user_id: 1, created_at: -1 });
 
-print('PersonalFit database initialized successfully');
+print('Lumi database initialized successfully');
 print('Indexes created for users, equipment, and workoutplans collections');

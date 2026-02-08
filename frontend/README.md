@@ -1,12 +1,12 @@
-# PersonalFit Frontend# PersonalFit Frontend# React + TypeScript + Vite
+# Lumi Frontend# Lumi Frontend# React + TypeScript + Vite
 
 
 
-React + TypeScript frontend for PersonalFit.
+React + TypeScript frontend for Lumi.
 
 
 
-## Quick StartModern React + TypeScript frontend for PersonalFit fitness tracking.This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Quick StartModern React + TypeScript frontend for Lumi fitness tracking.This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 
 

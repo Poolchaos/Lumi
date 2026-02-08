@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-This directory contains end-to-end tests for the PersonalFit frontend application.
+This directory contains end-to-end tests for the Lumi frontend application.
 
 ## Test Structure
 

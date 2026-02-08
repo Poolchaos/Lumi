@@ -1,9 +1,9 @@
 ﻿/**
  * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
  *
- * This file is part of PersonalFit.
+ * This file is part of Lumi.
  *
- * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * Lumi is licensed under the PolyForm Noncommercial License 1.0.0.
  * You may not use this file except in compliance with the License.
  *
  * Commercial use requires a separate paid license.
@@ -39,7 +39,7 @@ interface Config {
 const config: Config = {
   node_env: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '5000', 10),
-  mongodb_uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/personalfit',
+  mongodb_uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/lumi',
   jwt_secret: process.env.JWT_SECRET || '',
   jwt_expires_in: process.env.JWT_EXPIRES_IN || '24h',
   jwt_refresh_secret: process.env.JWT_REFRESH_SECRET || '',

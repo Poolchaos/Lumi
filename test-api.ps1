@@ -1,7 +1,7 @@
-# PersonalFit API Test Script
+# Lumi API Test Script
 # Run this script to test all major endpoints
 
-Write-Host "=== PersonalFit API Test Suite ===" -ForegroundColor Cyan
+Write-Host "=== Lumi API Test Suite ===" -ForegroundColor Cyan
 Write-Host ""
 
 $baseUrl = "http://localhost:5000"

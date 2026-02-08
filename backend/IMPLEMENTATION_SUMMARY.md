@@ -229,7 +229,7 @@ POST /api/auth/refresh       → Refresh access token
 ```
 
 ## Notes
-- MongoDB required for tests (connection string: mongodb://localhost:27017/personalfit-test)
+- MongoDB required for tests (connection string: mongodb://localhost:27017/lumi-test)
 - Environment variables must be configured before running (see .env.example)
 - All passwords hashed with bcrypt (salt rounds: 10)
 - JWT secrets must be strong in production

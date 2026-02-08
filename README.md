@@ -130,8 +130,8 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 ### 1. Clone & Configure
 
 ```bash
-git clone https://github.com/Poolchaos/PersonalFit.git
-cd PersonalFit
+git clone https://github.com/Poolchaos/Lumi.git
+cd Lumi
 
 # Copy environment templates
 cp backend/.env.example backend/.env
@@ -144,7 +144,7 @@ cp frontend/.env.example frontend/.env
 ```bash
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb://mongodb:27017/personalfit
+MONGODB_URI=mongodb://mongodb:27017/lumi
 JWT_SECRET=your-super-secret-jwt-key
 JWT_REFRESH_SECRET=your-refresh-secret
 ENCRYPTION_SECRET=your-32-char-encryption-key
@@ -204,7 +204,7 @@ cd frontend && npm run test:e2e
 ## 📁 Project Structure
 
 ```
-PersonalFit/
+Lumi/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/     # Route handlers
@@ -236,7 +236,7 @@ PersonalFit/
 
 ## 📜 License
 
-PersonalFit is licensed under **PolyForm Noncommercial License 1.0.0**.
+Lumi is licensed under **PolyForm Noncommercial License 1.0.0**.
 
 ✅ **Allowed:** Personal use, learning, research, non-profit organizations
 ❌ **Not Allowed:** Commercial use, SaaS, reselling
@@ -257,18 +257,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## 🐛 Found a Bug?
 
-If you're using PersonalFit and encounter any issues, please help us improve by reporting them!
+If you're using Lumi and encounter any issues, please help us improve by reporting them!
 
 **How to report:**
-1. Check if the issue already exists in [GitHub Issues](https://github.com/Poolchaos/PersonalFit/issues)
-2. If not, [create a new issue](https://github.com/Poolchaos/PersonalFit/issues/new)
+1. Check if the issue already exists in [GitHub Issues](https://github.com/Poolchaos/Lumi/issues)
+2. If not, [create a new issue](https://github.com/Poolchaos/Lumi/issues/new)
 3. Include:
    - Steps to reproduce
    - Expected vs actual behavior
    - Your environment (OS, Docker version, browser)
    - Any error messages or screenshots
 
-**Your feedback helps make PersonalFit better for everyone!**
+**Your feedback helps make Lumi better for everyone!**
 
 ---
 

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
  *
- * This file is part of PersonalFit.
+ * This file is part of Lumi.
  *
- * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * Lumi is licensed under the PolyForm Noncommercial License 1.0.0.
  * You may not use this file except in compliance with the License.
  *
  * Commercial use requires a separate paid license.
@@ -22,7 +22,7 @@ jest.setTimeout(20000);
 let authToken: string;
 
 beforeAll(async () => {
-  const testDbUri = process.env.MONGODB_URI || 'mongodb://admin:changeme@mongodb:27017/personalfit-test?authSource=admin';
+  const testDbUri = process.env.MONGODB_URI || 'mongodb://admin:changeme@mongodb:27017/lumi-test?authSource=admin';
   await mongoose.connect(testDbUri);
 });
 

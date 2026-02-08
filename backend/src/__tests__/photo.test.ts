@@ -1,9 +1,9 @@
 ﻿/**
  * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
  *
- * This file is part of PersonalFit.
+ * This file is part of Lumi.
  *
- * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * Lumi is licensed under the PolyForm Noncommercial License 1.0.0.
  * You may not use this file except in compliance with the License.
  *
  * Commercial use requires a separate paid license.
@@ -27,7 +27,7 @@ describe('Photo Upload API', () => {
   let userId: string;
 
   beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/personalfit-test');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/lumi-test');
   });
 
   afterAll(async () => {

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
  *
- * This file is part of PersonalFit.
+ * This file is part of Lumi.
  *
- * PersonalFit is licensed under the PolyForm Noncommercial License 1.0.0.
+ * Lumi is licensed under the PolyForm Noncommercial License 1.0.0.
  * You may not use this file except in compliance with the License.
  *
  * Commercial use requires a separate paid license.
@@ -25,7 +25,7 @@ import { IMedication } from '../models/Medication';
 // VAPID keys for web push (should be in environment variables)
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || '';
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || '';
-const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:admin@personalfit.io';
+const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:admin@lumi.io';
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
   webpush.setVapidDetails(

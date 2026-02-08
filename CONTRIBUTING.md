@@ -1,6 +1,6 @@
-# Contributing to PersonalFit
+# Contributing to Lumi
 
-Thank you for your interest in contributing to PersonalFit! This document provides guidelines for contributing to the project.
+Thank you for your interest in contributing to Lumi! This document provides guidelines for contributing to the project.
 
 ---
 
@@ -37,8 +37,8 @@ Be respectful, professional, and constructive in all interactions. Harassment, d
 
 ```bash
 # Clone the repository
-git clone https://github.com/Poolchaos/PersonalFit.git
-cd PersonalFit
+git clone https://github.com/Poolchaos/Lumi.git
+cd Lumi
 
 # Copy environment templates
 cp .env.example .env
@@ -380,7 +380,7 @@ frontend/
 
 ## License Agreement
 
-By contributing to PersonalFit, you agree that:
+By contributing to Lumi, you agree that:
 
 1. Your contributions will be licensed under the **PolyForm Noncommercial License 1.0.0**
 2. You have the right to submit the contribution
@@ -394,8 +394,8 @@ See the [LICENSE](LICENSE) file for full terms.
 ## Questions?
 
 - **Email:** phillipjuanvanderberg@gmail.com
-- **Issues:** [GitHub Issues](https://github.com/Poolchaos/PersonalFit/issues)
+- **Issues:** [GitHub Issues](https://github.com/Poolchaos/Lumi/issues)
 
 ---
 
-**Thank you for contributing to PersonalFit!**
+**Thank you for contributing to Lumi!**
