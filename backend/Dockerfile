@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for PersonalFit Backend
+# Multi-stage Dockerfile for Lumi Backend
 
 # Stage 1: Development dependencies
 FROM node:20-alpine AS development

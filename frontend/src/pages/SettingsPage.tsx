@@ -183,7 +183,7 @@ export default function SettingsPage() {
                 <ul className="space-y-2 text-sm text-neutral-600">
                   <li>
                     <a
-                      href="https://github.com/Poolchaos/PersonalFit/blob/main/README.md"
+                      href="https://github.com/Poolchaos/Lumi/blob/main/README.md"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary-600 hover:underline"
@@ -193,7 +193,7 @@ export default function SettingsPage() {
                   </li>
                   <li>
                     <a
-                      href="https://github.com/Poolchaos/PersonalFit/blob/main/CONTRIBUTING.md"
+                      href="https://github.com/Poolchaos/Lumi/blob/main/CONTRIBUTING.md"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary-600 hover:underline"
@@ -210,7 +210,7 @@ export default function SettingsPage() {
                   Found a bug? Open an issue on GitHub.
                 </p>
                 <a
-                  href="https://github.com/Poolchaos/PersonalFit/issues"
+                  href="https://github.com/Poolchaos/Lumi/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
@@ -221,7 +221,7 @@ export default function SettingsPage() {
 
               <div className="border-t border-neutral-200 pt-4">
                 <h4 className="font-medium text-neutral-900 mb-2">Version</h4>
-                <p className="text-sm text-neutral-600">PersonalFit v1.0.0</p>
+                <p className="text-sm text-neutral-600">Lumi v1.0.0</p>
               </div>
             </div>
           </Card>

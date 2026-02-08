@@ -20,7 +20,7 @@
 
 import { apiClient } from '../api/client';
 
-const VAPID_PUBLIC_KEY_CACHE_KEY = 'personalfit_vapid_public_key';
+const VAPID_PUBLIC_KEY_CACHE_KEY = 'lumi_vapid_public_key';
 
 /**
  * Check if push notifications are supported

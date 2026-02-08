@@ -100,7 +100,7 @@ export default function Layout({ children }: LayoutProps) {
                 to="/dashboard"
                 className="flex items-center text-xl font-bold text-primary-500 hover:text-primary-600 transition-colors flex-shrink-0"
               >
-                PersonalFit
+                Lumi
               </Link>
 
               {/* Desktop Navigation - scrollable on smaller screens */}

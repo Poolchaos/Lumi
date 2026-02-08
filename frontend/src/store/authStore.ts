@@ -50,7 +50,7 @@ export const useAuthStore = create<AuthState>()(
       updateUser: (user) => set({ user }),
     }),
     {
-      name: 'personalfit-auth',
+      name: 'lumi-auth',
     }
   )
 );

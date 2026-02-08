@@ -28,7 +28,7 @@ export function Step0APIKey({
       <div>
         <h3 className="text-xl font-semibold mb-2">OpenAI API Setup</h3>
         <p className="text-neutral-600 mb-6">
-          PersonalFit uses AI to generate personalized workout plans. You'll need an OpenAI API key to get started.
+          Lumi uses AI to generate personalized workout plans. You'll need an OpenAI API key to get started.
         </p>
       </div>
 

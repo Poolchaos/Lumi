@@ -15,7 +15,7 @@
 /// <reference lib="webworker" />
 
 // Service Worker for Push Notifications
-console.log('📱 PersonalFit Service Worker loaded');
+console.log('📱 Lumi Service Worker loaded');
 
 // Install event
 self.addEventListener('install', (event) => {
@@ -42,7 +42,7 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     console.log('Push data:', data);
 
-    const title = data.title || 'PersonalFit Reminder';
+    const title = data.title || 'Lumi Reminder';
     const options = {
       body: data.body || 'You have a medication reminder',
       icon: '/images/logo-192.png',

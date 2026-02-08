@@ -12,10 +12,10 @@
  * See the LICENSE file for the full license text.
  */
 
-// MongoDB Initialization Script for PersonalFit
+// MongoDB Initialization Script for Lumi
 // This script runs automatically when the container first starts
 
-db = db.getSiblingDB('personalfit');
+db = db.getSiblingDB('lumi');
 
 // Create indexes for User collection
 db.users.createIndex({ email: 1 }, { unique: true });

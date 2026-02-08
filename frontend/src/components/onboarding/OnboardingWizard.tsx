@@ -301,7 +301,7 @@ export function OnboardingWizard() {
           icon: <Sparkles className="w-16 h-16 text-primary-500" />,
           title: 'Welcome',
           imageUrl: '/images/onboarding/welcome.jpg',
-          imageAlt: 'Welcome to PersonalFit',
+          imageAlt: 'Welcome to Lumi',
         };
     }
   };
@@ -319,7 +319,7 @@ export function OnboardingWizard() {
         <CardHeader>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-6 h-6 text-primary-500" />
-            <CardTitle>Welcome to PersonalFit!</CardTitle>
+            <CardTitle>Welcome to Lumi!</CardTitle>
           </div>
           <div className="w-full bg-neutral-200 rounded-full h-2">
             <div
@@ -365,7 +365,7 @@ export function OnboardingWizard() {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">OpenAI API Setup</h3>
                     <p className="text-neutral-600 mb-6">
-                      PersonalFit uses AI to generate personalized workout plans. You'll need an OpenAI API key to get started.
+                      Lumi uses AI to generate personalized workout plans. You'll need an OpenAI API key to get started.
                     </p>
                   </div>
 

@@ -22,7 +22,7 @@ import MetricsMedicationAnalysis from '../../models/MetricsMedicationAnalysis';
 // Connect to test database
 beforeAll(async () => {
   // Use MONGODB_URI from environment (loaded by dotenv in jest.config.js)
-  const mongoUri = process.env.MONGODB_URI?.replace('/personalfit', '/lumi-test') || 'mongodb://localhost:27017/lumi-test';
+  const mongoUri = process.env.MONGODB_URI?.replace('/lumi', '/lumi-test') || 'mongodb://localhost:27017/lumi-test';
   await mongoose.connect(mongoUri);
 });
 

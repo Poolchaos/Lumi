@@ -54,7 +54,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         <Card className="p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-neutral-900 mb-2">PersonalFit</h1>
+            <h1 className="text-3xl font-bold text-neutral-900 mb-2">Lumi</h1>
             <p className="text-neutral-600">Welcome back! Please login to your account.</p>
           </div>
 
