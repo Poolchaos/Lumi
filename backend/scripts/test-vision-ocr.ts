@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.  
+ * Copyright (c) 2025-2026 Phillip-Juan van der Berg. All Rights Reserved.
  *
  * This file is part of Lumi.
  *

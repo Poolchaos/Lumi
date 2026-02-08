@@ -16,11 +16,12 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { authAPI } from '../api';
 import { useAuthStore } from '../store/authStore';
 import type { SignupData } from '../types';
-import { Button, Input, Card } from '../design-system';
-import { AlertCircle } from 'lucide-react';
+import { AuroraBackground, GlassCard, GlassInput, GlassButton, LumiLogo } from '../components/auth';
+import { AlertCircle, Check, X } from 'lucide-react';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -31,7 +32,6 @@ export default function SignupPage() {
     password: '',
     confirmPassword: '',
   });
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const signupMutation = useMutation({
     mutationFn: authAPI.signup,
@@ -43,121 +43,218 @@ export default function SignupPage() {
     },
   });
 
-  const validatePassword = (password: string): string[] => {
-    const errors: string[] = [];
-    if (password.length < 8) {
-      errors.push('At least 8 characters');
-    }
-    if (!/[a-z]/.test(password)) {
-      errors.push('One lowercase letter');
-    }
-    if (!/[A-Z]/.test(password)) {
-      errors.push('One uppercase letter');
-    }
-    if (!/\d/.test(password)) {
-      errors.push('One number');
-    }
-    return errors;
+  const validatePassword = (password: string): { label: string; valid: boolean }[] => {
+    return [
+      { label: 'At least 8 characters', valid: password.length >= 8 },
+      { label: 'One lowercase letter', valid: /[a-z]/.test(password) },
+      { label: 'One uppercase letter', valid: /[A-Z]/.test(password) },
+      { label: 'One number', valid: /\d/.test(password) },
+    ];
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setValidationErrors([]);
 
-    const passwordErrors = validatePassword(formData.password);
-    if (passwordErrors.length > 0) {
-      setValidationErrors(passwordErrors);
+    const requirements = validatePassword(formData.password);
+    const invalidReqs = requirements.filter((req) => !req.valid);
+
+    if (invalidReqs.length > 0) {
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setValidationErrors(['Passwords do not match']);
       return;
     }
 
     signupMutation.mutate(formData);
   };
 
-  const passwordErrors = validatePassword(formData.password);
-  const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
+  const passwordRequirements = validatePassword(formData.password);
+  const allRequirementsMet = passwordRequirements.every((req) => req.valid);
+  const passwordsMatch = formData.password === formData.confirmPassword && (formData.confirmPassword?.length ?? 0) > 0;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 px-4">
-      <div className="max-w-md w-full">
-        <Card className="p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-neutral-900 mb-2">Create Account</h1>
-            <p className="text-neutral-600">Start your fitness journey today!</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated aurora background */}
+      <AuroraBackground />
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+        <motion.div
+          className="max-w-md w-full"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Logo */}
+          <div className="mb-8">
+            <LumiLogo />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              label="Email Address"
-              id="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-
-            <Input
-              label="Password"
-              id="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              error={validationErrors.length > 0 && formData.password.length > 0 ? validationErrors.join(', ') : undefined}
-              helperText="Must include: uppercase, lowercase, number (8+ chars)"
-            />
-
-            <Input
-              label="Confirm Password"
-              id="confirmPassword"
-              type="password"
-              required
-              placeholder="••••••••"
-              value={formData.confirmPassword || ''}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              success={passwordsMatch ? 'Passwords match' : undefined}
-              error={!passwordsMatch && (formData.confirmPassword?.length || 0) > 0 ? 'Passwords do not match' : undefined}
-            />
-
-            {signupMutation.isError && (
-              <div className="p-3 bg-error-light/10 border border-error-light text-error-DEFAULT rounded-lg text-sm flex items-center gap-2">
-                <AlertCircle size={16} />
-                <span>
-                  {signupMutation.error instanceof Error
-                    ? signupMutation.error.message
-                    : 'Registration failed. Please try again.'}
-                </span>
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              loading={signupMutation.isPending}
-              disabled={passwordErrors.length > 0 || !passwordsMatch}
-              className="w-full"
+          {/* Glassmorphic card */}
+          <GlassCard>
+            {/* Headline */}
+            <motion.div
+              className="text-center mb-8"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
-              Create Account
-            </Button>
-          </form>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Your health, illuminated
+              </h2>
+              <p className="text-white/60">
+                Join 50,000+ users taking control with AI
+              </p>
+            </motion.div>
 
-          <div className="mt-6 text-center text-sm text-neutral-600">
-            Already have an account?{' '}
-            <Link to="/login" className="text-primary-500 hover:text-primary-600 font-semibold transition-colors">
-              Sign in
-            </Link>
-          </div>
-        </Card>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <GlassInput
+                id="email"
+                label="Email Address"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                autoComplete="email"
+              />
 
-        <div className="mt-8 text-center text-white text-sm">
-          <p>Join thousands of fitness enthusiasts</p>
-          <p className="mt-1">Start your journey today</p>
-        </div>
+              <div className="space-y-2">
+                <GlassInput
+                  id="password"
+                  label="Password"
+                  type="password"
+                  placeholder="Create a secure password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  required
+                  autoComplete="new-password"
+                />
+
+                {/* Password requirements */}
+                {formData.password.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-1.5 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
+                  >
+                    {passwordRequirements.map((req, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-center gap-2 text-xs"
+                      >
+                        {req.valid ? (
+                          <Check className="w-3.5 h-3.5 text-success-DEFAULT" />
+                        ) : (
+                          <X className="w-3.5 h-3.5 text-white/30" />
+                        )}
+                        <span className={req.valid ? 'text-success-DEFAULT' : 'text-white/50'}>
+                          {req.label}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <GlassInput
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  placeholder="Re-enter your password"
+                  value={formData.confirmPassword || ''}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  required
+                  autoComplete="new-password"
+                />
+
+                {/* Password match indicator */}
+                {(formData.confirmPassword?.length ?? 0) > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className={`flex items-center gap-2 text-xs p-2 rounded-lg ${
+                      passwordsMatch
+                        ? 'text-success-DEFAULT bg-success-DEFAULT/10'
+                        : 'text-error-light bg-error-light/10'
+                    }`}
+                  >
+                    {passwordsMatch ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Passwords match</span>
+                      </>
+                    ) : (
+                      <>
+                        <X className="w-3.5 h-3.5" />
+                        <span>Passwords do not match</span>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+
+              {signupMutation.isError && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-3 bg-error-light/20 backdrop-blur-sm border border-error-light/30 text-white rounded-lg text-sm flex items-center gap-2"
+                >
+                  <AlertCircle size={16} />
+                  <span>
+                    {signupMutation.error instanceof Error
+                      ? signupMutation.error.message
+                      : 'Registration failed. Please try again.'}
+                  </span>
+                </motion.div>
+              )}
+
+              <GlassButton
+                type="submit"
+                loading={signupMutation.isPending}
+                disabled={!allRequirementsMet || !passwordsMatch}
+                className="w-full"
+              >
+                Start my journey →
+              </GlassButton>
+            </form>
+
+            {/* Sign in link */}
+            <motion.div
+              className="mt-6 text-center text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <span className="text-white/60">Already exploring? </span>
+              <Link
+                to="/login"
+                className="text-primary-400 hover:text-primary-300 font-semibold transition-colors relative group"
+              >
+                <span className="relative">
+                  Sign in →
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-400 transition-all duration-300 group-hover:w-full" />
+                </span>
+              </Link>
+            </motion.div>
+          </GlassCard>
+
+          {/* Footer tagline */}
+          <motion.div
+            className="mt-8 text-center text-white/50 text-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+          >
+            <p>Begin your transformation with AI</p>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

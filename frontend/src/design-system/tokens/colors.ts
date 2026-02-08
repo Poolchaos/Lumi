@@ -13,18 +13,32 @@
  */
 
 export const colors = {
-  // Primary (Energizing Blue-Cyan)
+  // Lumi Brand Colors - Luminous Blue
   primary: {
-    50: '#e6f9ff',
-    100: '#b3ecff',
-    200: '#80dfff',
-    300: '#4dd2ff',
-    400: '#1ac5ff',
-    500: '#00b8e6',  // Base
-    600: '#0099cc',
-    700: '#007ab3',
-    800: '#005c99',
-    900: '#003d80',
+    50: '#eff6ff',
+    100: '#dbeafe',
+    200: '#bfdbfe',
+    300: '#93c5fd',
+    400: '#60a5fa',
+    500: '#3b82f6',  // Base - Luminous Blue
+    600: '#2563eb',
+    700: '#1d4ed8',
+    800: '#1e40af',
+    900: '#1e3a8a',
+  },
+
+  // Aurora Gradient Colors
+  aurora: {
+    'indigo-deep': '#0F1729',
+    'violet-soft': '#2D1B69',
+    'amber-warm': '#FFA726',
+    'cyan-cool': '#00E5FF',
+  },
+
+  // Background Colors
+  background: {
+    'dark': '#0A0E27',
+    'light': '#FAF8F5',
   },
 
   // Accent Colors
@@ -34,7 +48,7 @@ export const colors = {
     200: '#bbf7d0',
     300: '#86efac',
     400: '#4ade80',
-    500: '#22c55e',
+    500: '#10B981',  // Mint Green - Growth, wellness
     600: '#16a34a',
     700: '#15803d',
     800: '#166534',
@@ -42,6 +56,18 @@ export const colors = {
     light: '#10b981',
     DEFAULT: '#059669',
     dark: '#047857',
+  },
+  secondary: {
+    50: '#fff1f2',
+    100: '#ffe4e6',
+    200: '#fecdd3',
+    300: '#fda4af',
+    400: '#fb7185',
+    500: '#FF6B9D',  // Soft Coral - Energy, vitality
+    600: '#e11d48',
+    700: '#be123c',
+    800: '#9f1239',
+    900: '#881337',
   },
   warning: {
     light: '#f59e0b',
@@ -54,9 +80,9 @@ export const colors = {
     dark: '#b91c1c',
   },
   achievement: {
-    light: '#a78bfa',
-    DEFAULT: '#8b5cf6',
-    dark: '#7c3aed',
+    light: '#fbbf24',
+    DEFAULT: '#FBBF24',  // Golden - Achievement
+    dark: '#f59e0b',
   },
   xp: {
     light: '#fbbf24',
