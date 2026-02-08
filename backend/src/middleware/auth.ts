@@ -14,6 +14,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../utils/jwt';
+import User from '../models/User';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -22,11 +23,11 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticate = (
+export const authenticate = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -37,6 +38,13 @@ export const authenticate = (
 
     const token = authHeader.substring(7);
     const payload = verifyAccessToken(token);
+
+    // Verify user still exists in database
+    const user = await User.findById(payload.userId);
+    if (!user) {
+      res.status(401).json({ error: 'User account no longer exists' });
+      return;
+    }
 
     (req as AuthRequest).user = {
       userId: payload.userId,

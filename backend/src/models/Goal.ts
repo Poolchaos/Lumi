@@ -218,7 +218,7 @@ GoalSchema.methods.updateProgress = function (): void {
 GoalSchema.pre('save', function (next) {
   if (this.isModified('current_value') || this.isModified('target_value')) {
     const { type, initial_value, current_value, target_value } = this;
-    
+
     // Calculate progress inline
     let progressPercentage = 0;
     if (type === 'decrease') {
@@ -238,7 +238,7 @@ GoalSchema.pre('save', function (next) {
     } else if (type === 'accumulate') {
       progressPercentage = Math.min(100, (current_value / target_value) * 100);
     }
-    
+
     this.progress_percentage = progressPercentage;
     this.last_updated = new Date();
 

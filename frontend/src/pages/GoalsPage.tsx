@@ -160,13 +160,17 @@ export default function GoalsPage() {
   });
 
   const handleTemplateSelect = (template: typeof GOAL_TEMPLATES[0]) => {
+    // Set default target date to 2 months from now
+    const twoMonthsFromNow = new Date();
+    twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+    const defaultTargetDate = twoMonthsFromNow.toISOString().split('T')[0];
+
     setFormData({
       name: template.name,
       type: template.type,
       category: template.category,
       unit: template.unit,
-      initial_value: 0,
-      target_value: 0,
+      target_date: defaultTargetDate,
     });
     setShowForm(true);
   };
@@ -246,10 +250,12 @@ export default function GoalsPage() {
               <Target className="h-8 w-8 text-blue-600" />
               <h1 className="text-3xl font-bold text-gray-900">Goals</h1>
             </div>
-            <Button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              New Goal
-            </Button>
+            {!showForm && (
+              <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                New Goal
+              </Button>
+            )}
           </div>
 
           {/* Stats Overview */}
@@ -290,7 +296,21 @@ export default function GoalsPage() {
           {showForm && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Create New Goal</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>
+                    {!formData.type ? 'Create New Goal - Step 1: Choose Template' : 'Create New Goal - Step 2: Set Values'}
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setShowForm(false);
+                      setFormData({});
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {!formData.type ? (
@@ -346,6 +366,7 @@ export default function GoalsPage() {
                           label=""
                           type="number"
                           step="0.01"
+                          placeholder="Enter starting value"
                           value={formData.initial_value ?? ''}
                           onChange={(e) =>
                             setFormData({
@@ -364,6 +385,7 @@ export default function GoalsPage() {
                           label=""
                           type="number"
                           step="0.01"
+                          placeholder="Enter target value"
                           value={formData.target_value ?? ''}
                           onChange={(e) =>
                             setFormData({
@@ -391,18 +413,15 @@ export default function GoalsPage() {
                     </div>
 
                     <div className="flex gap-3">
-                      <Button type="submit" disabled={createMutation.isPending}>
-                        {createMutation.isPending ? 'Creating...' : 'Create Goal'}
-                      </Button>
                       <Button
                         type="button"
                         variant="secondary"
-                        onClick={() => {
-                          setShowForm(false);
-                          setFormData({});
-                        }}
+                        onClick={() => setFormData({})}
                       >
-                        Cancel
+                        Back
+                      </Button>
+                      <Button type="submit" disabled={createMutation.isPending}>
+                        {createMutation.isPending ? 'Creating...' : 'Create Goal'}
                       </Button>
                     </div>
                   </form>
@@ -412,24 +431,26 @@ export default function GoalsPage() {
           )}
 
           {/* Goals List */}
-          {goals.length === 0 ? (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Goals</h3>
-                <p className="text-gray-600 mb-4">
-                  Create your first goal to start tracking your progress
-                </p>
-                <Button
-                  onClick={() => setShowForm(true)}
-                  className="flex items-center gap-2 mx-auto"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create Goal
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
+          {!showForm && (
+            <>
+              {goals.length === 0 ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Goals</h3>
+                    <p className="text-gray-600 mb-4">
+                      Create your first goal to start tracking your progress
+                    </p>
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="flex items-center gap-2 mx-auto"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Create Goal
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
             <div className="space-y-4">
               {goals.map((goal) => {
                 const daysRemaining = getDaysRemaining(goal.target_date);
@@ -572,6 +593,8 @@ export default function GoalsPage() {
                 );
               })}
             </div>
+          )}
+            </>
           )}
         </div>
       </PageTransition>
