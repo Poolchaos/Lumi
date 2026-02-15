@@ -65,6 +65,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
+/**
+ * Wraps protected routes with ErrorBoundary for per-route error isolation.
+ * Errors in one page won't crash other pages.
+ */
+function ProtectedRouteWithBoundary({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return <ErrorBoundary>{children}</ErrorBoundary>;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -101,115 +117,115 @@ function App() {
             <Route
               path="/onboarding"
               element={
-                <ProtectedRoute>
+                <ProtectedRouteWithBoundary>
                   <OnboardingPage />
-                </ProtectedRoute>
+                </ProtectedRouteWithBoundary>
               }
             />
             <Route
               path="/workout-plan-review"
               element={
-              <ProtectedRoute>
-                <WorkoutPlanReviewPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/equipment"
-            element={
-              <ProtectedRoute>
-                <EquipmentPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/metrics"
-            element={
-              <ProtectedRoute>
-                <MetricsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/workouts"
-            element={
-              <ProtectedRoute>
-                <WorkoutsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/goals"
-            element={
-              <ProtectedRoute>
-                <GoalsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/accountability"
-            element={
-              <ProtectedRoute>
-                <AccountabilityPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schedule"
-            element={
-              <ProtectedRoute>
-                <SchedulePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/medications"
-            element={
-              <ProtectedRoute>
-                <MedicationsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/insights"
-            element={
-              <ProtectedRoute>
-                <CorrelationInsightsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <SettingsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/workout-session/:workoutId?"
-            element={
-              <ProtectedRoute>
-                <WorkoutSessionPage />
-              </ProtectedRoute>
-            }
-          />
+                <ProtectedRouteWithBoundary>
+                  <WorkoutPlanReviewPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <DashboardPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <ProfilePage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/equipment"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <EquipmentPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/metrics"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <MetricsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/workouts"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <WorkoutsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/goals"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <GoalsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/accountability"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <AccountabilityPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/schedule"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <SchedulePage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/medications"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <MedicationsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/insights"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <CorrelationInsightsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <SettingsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/workout-session/:workoutId?"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <WorkoutSessionPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Suspense>
