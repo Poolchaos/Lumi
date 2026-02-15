@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { medicationAPI, medicationQueryKeys, profileAPI, queryKeys, workoutAPI } from '../api';
 import type { Medication, TodaysMedication, CreateMedicationInput } from '../types';
-import { Card, CardContent, Button, Modal, ConfirmModal } from '../design-system';
+import { Card, CardContent, Button, Modal, ConfirmModal, NumberPromptModal } from '../design-system';
 import {
   Pill,
   Plus,
@@ -48,6 +48,7 @@ export default function MedicationsPage() {
   const [activeTab, setActiveTab] = useState<'today' | 'all' | 'refills' | 'adherence'>('today');
   const [dismissedOnboardingNote, setDismissedOnboardingNote] = useState(false);
   const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false);
+  const [refillMedicationId, setRefillMedicationId] = useState<string | null>(null);
   const formRef = useRef<MedicationFormHandle>(null);
 
   // Fetch user profile to check for onboarding medications notes
@@ -220,9 +221,13 @@ export default function MedicationsPage() {
   };
 
   const handleRefill = (id: string) => {
-    const count = window.prompt('How many did you refill?');
-    if (count && !isNaN(Number(count)) && Number(count) > 0) {
-      refillMutation.mutate({ id, count: Number(count) });
+    setRefillMedicationId(id);
+  };
+
+  const handleRefillSubmit = (count: number) => {
+    if (refillMedicationId) {
+      refillMutation.mutate({ id: refillMedicationId, count });
+      setRefillMedicationId(null);
     }
   };
 
@@ -627,6 +632,20 @@ export default function MedicationsPage() {
             confirmText="Remove"
             variant="danger"
             loading={deleteMutation.isPending}
+          />
+
+          {/* Refill Count Modal */}
+          <NumberPromptModal
+            isOpen={!!refillMedicationId}
+            onClose={() => setRefillMedicationId(null)}
+            onSubmit={handleRefillSubmit}
+            title="Refill Medication"
+            message="How many pills/doses did you refill?"
+            placeholder="Enter quantity"
+            min={1}
+            max={9999}
+            submitText="Add Refill"
+            loading={refillMutation.isPending}
           />
 
           {/* AI Medication Parsing Modal */}
