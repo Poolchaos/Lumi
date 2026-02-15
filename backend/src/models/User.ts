@@ -18,6 +18,7 @@ import bcrypt from 'bcrypt';
 export interface IUser extends Document {
   email: string;
   password_hash: string;
+  role: 'user' | 'admin';
   profile: {
     first_name?: string;
     last_name?: string;
@@ -114,6 +115,11 @@ const userSchema = new Schema<IUser>(
     password_hash: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
     },
     profile: {
       first_name: String,
