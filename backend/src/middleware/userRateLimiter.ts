@@ -27,7 +27,7 @@ interface AuthenticatedRequest extends Request {
  * Creates a rate limiter that uses user ID from JWT token as the key.
  * This ensures each authenticated user gets their own rate limit quota,
  * avoiding issues with multiple users behind the same NAT/IP.
- * 
+ *
  * Falls back to IP-based limiting for unauthenticated requests.
  */
 export const createUserRateLimiter = (options: {

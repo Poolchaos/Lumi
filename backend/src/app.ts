@@ -127,7 +127,7 @@ const getUserOrIpKey = (req: Request): string => {
   if (authReq.user?.userId) {
     return `user:${authReq.user.userId}`;
   }
-  
+
   // Try to extract user ID from Authorization header
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -137,7 +137,7 @@ const getUserOrIpKey = (req: Request): string => {
       return `user:${payload.userId}`;
     }
   }
-  
+
   // Fallback to IP for unauthenticated requests
   const forwarded = req.headers['x-forwarded-for'];
   if (typeof forwarded === 'string') {
