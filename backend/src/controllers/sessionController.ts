@@ -38,9 +38,16 @@ export const createSession = async (
       return;
     }
 
+    // Whitelist allowed fields to prevent mass assignment
+    const { plan_id, session_date, planned_duration_minutes, actual_duration_minutes,
+      completion_status, completion_percentage, exercises_planned, exercises_completed,
+      notes, mood_before, mood_after, perceived_difficulty } = req.body;
+
     const session = new WorkoutSession({
+      plan_id, session_date, planned_duration_minutes, actual_duration_minutes,
+      completion_status, completion_percentage, exercises_planned, exercises_completed,
+      notes, mood_before, mood_after, perceived_difficulty,
       user_id: new mongoose.Types.ObjectId(req.user?.userId),
-      ...req.body,
     });
 
     await session.save();
@@ -240,8 +247,17 @@ export const updateSession = async (
     const wasCompleted = session.completion_status === 'completed';
     const isNowCompleted = req.body.completion_status === 'completed';
 
-    // Update allowed fields
-    Object.assign(session, req.body);
+    // Whitelist allowed fields to prevent mass assignment
+    const allowedSessionUpdateFields: (keyof typeof session)[] = [
+      'plan_id', 'session_date', 'planned_duration_minutes', 'actual_duration_minutes',
+      'completion_status', 'completion_percentage', 'exercises_planned', 'exercises_completed',
+      'notes', 'mood_before', 'mood_after', 'perceived_difficulty',
+    ] as (keyof typeof session)[];
+    for (const field of allowedSessionUpdateFields) {
+      if (req.body[field] !== undefined) {
+        (session as unknown as Record<string, unknown>)[field as string] = req.body[field];
+      }
+    }
     await session.save();
 
     // Update accountability streak if session just completed
@@ -303,10 +319,17 @@ export const logExercise = async (
       return;
     }
 
+    // Whitelist allowed fields to prevent mass assignment
+    const { exercise_name, exercise_type, sets_completed, target_sets, set_details,
+      interval_structure, equipment_used, target_muscles, total_volume_kg,
+      total_duration_seconds, personal_record, difficulty_rating, notes: exerciseNotes } = req.body;
+
     const exerciseLog = new ExerciseLog({
+      exercise_name, exercise_type, sets_completed, target_sets, set_details,
+      interval_structure, equipment_used, target_muscles, total_volume_kg,
+      total_duration_seconds, personal_record, difficulty_rating, notes: exerciseNotes,
       session_id: req.params.id,
       user_id: new mongoose.Types.ObjectId(req.user?.userId),
-      ...req.body,
     });
 
     await exerciseLog.save();
@@ -354,7 +377,17 @@ export const updateExercise = async (
       return;
     }
 
-    Object.assign(exercise, req.body);
+    // Whitelist allowed fields to prevent mass assignment
+    const allowedExerciseUpdateFields = [
+      'exercise_name', 'exercise_type', 'sets_completed', 'target_sets', 'set_details',
+      'interval_structure', 'equipment_used', 'target_muscles', 'total_volume_kg',
+      'total_duration_seconds', 'personal_record', 'difficulty_rating', 'notes',
+    ];
+    for (const field of allowedExerciseUpdateFields) {
+      if (req.body[field] !== undefined) {
+        (exercise as unknown as Record<string, unknown>)[field] = req.body[field];
+      }
+    }
     await exercise.save();
 
     res.json({ exercise });

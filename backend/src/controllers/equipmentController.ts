@@ -53,9 +53,14 @@ export const createEquipment = async (
       return;
     }
 
+    // Whitelist allowed fields to prevent mass assignment
+    const { equipment_name, equipment_type, quantity, specifications,
+      condition, purchase_date, is_available } = req.body;
+
     const equipment = new Equipment({
+      equipment_name, equipment_type, quantity, specifications,
+      condition, purchase_date, is_available,
       user_id: req.user?.userId,
-      ...req.body,
     });
 
     await equipment.save();
@@ -101,7 +106,16 @@ export const updateEquipment = async (
       return;
     }
 
-    Object.assign(equipment, req.body);
+    // Whitelist allowed fields to prevent mass assignment
+    const allowedEquipmentUpdateFields = [
+      'equipment_name', 'equipment_type', 'quantity', 'specifications',
+      'condition', 'purchase_date', 'is_available',
+    ];
+    for (const field of allowedEquipmentUpdateFields) {
+      if (req.body[field] !== undefined) {
+        (equipment as unknown as Record<string, unknown>)[field] = req.body[field];
+      }
+    }
     await equipment.save();
 
     res.json({ equipment });

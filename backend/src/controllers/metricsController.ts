@@ -29,9 +29,14 @@ export const createMetrics = async (
       return;
     }
 
+    // Whitelist allowed fields to prevent mass assignment
+    const { measurement_date, weight_kg, body_fat_percentage, measurements,
+      progress_photos, notes } = req.body;
+
     const metrics = new BodyMetrics({
+      measurement_date, weight_kg, body_fat_percentage, measurements,
+      progress_photos, notes,
       user_id: new mongoose.Types.ObjectId(req.user?.userId),
-      ...req.body,
     });
 
     await metrics.save();
@@ -133,12 +138,24 @@ export const updateMetrics = async (
 
     const { id } = req.params;
 
+    // Whitelist allowed fields to prevent mass assignment
+    const allowedMetricsUpdateFields = [
+      'measurement_date', 'weight_kg', 'body_fat_percentage',
+      'measurements', 'progress_photos', 'notes',
+    ];
+    const sanitizedUpdate: Record<string, unknown> = {};
+    for (const field of allowedMetricsUpdateFields) {
+      if (req.body[field] !== undefined) {
+        sanitizedUpdate[field] = req.body[field];
+      }
+    }
+
     const metrics = await BodyMetrics.findOneAndUpdate(
       {
         _id: id,
         user_id: new mongoose.Types.ObjectId(req.user?.userId),
       },
-      { $set: req.body },
+      { $set: sanitizedUpdate },
       { new: true, runValidators: true }
     );
 
