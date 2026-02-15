@@ -49,9 +49,47 @@ app.use(cors({
   credentials: true,
 }));
 
-// Security headers
+// Security headers with CSP, HSTS, and Referrer-Policy
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  // Content Security Policy - restrict where resources can be loaded from
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles for Tailwind
+      imgSrc: ["'self'", "data:", "blob:", "https:"], // Allow images from CDNs and data URIs
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      connectSrc: ["'self'", "https://api.openai.com", "https://api.anthropic.com"], // AI APIs
+      frameAncestors: ["'none'"], // Prevent embedding in iframes
+      formAction: ["'self'"],
+      upgradeInsecureRequests: [], // Auto-upgrade HTTP to HTTPS
+    },
+  },
+  // HTTP Strict Transport Security - force HTTPS
+  hsts: {
+    maxAge: 31536000, // 1 year
+    includeSubDomains: true,
+    preload: true,
+  },
+  // Referrer Policy - limit information sent with referrer header
+  referrerPolicy: {
+    policy: 'strict-origin-when-cross-origin',
+  },
+  // Prevent MIME type sniffing
+  noSniff: true,
+  // Prevent clickjacking with frame options
+  frameguard: {
+    action: 'deny',
+  },
+  // Hide X-Powered-By header
+  hidePoweredBy: true,
+  // Cross-Origin Opener Policy
+  crossOriginOpenerPolicy: {
+    policy: 'same-origin',
+  },
+  // Cross-Origin Embedder Policy
+  crossOriginEmbedderPolicy: false, // Disabled to allow cross-origin images
 }));
 
 // Skip rate limiting in test environment
