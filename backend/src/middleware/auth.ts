@@ -20,6 +20,7 @@ export interface AuthRequest extends Request {
   user?: {
     userId: string;
     email: string;
+    role: 'user' | 'admin';
   };
 }
 
@@ -49,10 +50,34 @@ export const authenticate = async (
     (req as AuthRequest).user = {
       userId: payload.userId,
       email: payload.email,
+      role: (user.role as 'user' | 'admin') || 'user',
     };
 
     next();
   } catch {
     res.status(401).json({ error: 'Invalid or expired token' });
   }
+};
+
+/**
+ * Role-based authorization middleware
+ * Must be used AFTER authenticate middleware
+ * @param allowedRoles - Array of roles that can access the route
+ */
+export const authorizeRole = (...allowedRoles: Array<'user' | 'admin'>) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const authReq = req as AuthRequest;
+
+    if (!authReq.user) {
+      res.status(401).json({ error: 'Authentication required' });
+      return;
+    }
+
+    if (!allowedRoles.includes(authReq.user.role)) {
+      res.status(403).json({ error: 'Access denied. Insufficient permissions.' });
+      return;
+    }
+
+    next();
+  };
 };

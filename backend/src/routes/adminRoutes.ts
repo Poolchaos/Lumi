@@ -13,13 +13,14 @@
  */
 
 import { Router } from 'express';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorizeRole } from '../middleware/auth';
 import { triggerDetection } from '../controllers/adminController';
 
 const router = Router();
 
-// All admin routes require authentication
+// All admin routes require authentication + admin role
 router.use(authenticate);
+router.use(authorizeRole('admin'));
 
 // Manually trigger missed workout detection
 router.post('/trigger-missed-workout-detection', triggerDetection);
