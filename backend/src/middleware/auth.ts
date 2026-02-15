@@ -81,3 +81,41 @@ export const authorizeRole = (...allowedRoles: Array<'user' | 'admin'>) => {
     next();
   };
 };
+
+/**
+ * Optional authentication middleware
+ * Populates req.user if valid token provided, but doesn't reject unauthenticated requests
+ * Useful for public endpoints that want to personalize response for logged-in users
+ */
+export const optionalAuth = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      // No token provided - continue without user context
+      return next();
+    }
+
+    const token = authHeader.substring(7);
+    const payload = verifyAccessToken(token);
+
+    // Verify user still exists
+    const user = await User.findById(payload.userId);
+    if (user) {
+      (req as AuthRequest).user = {
+        userId: payload.userId,
+        email: payload.email,
+        role: (user.role as 'user' | 'admin') || 'user',
+      };
+    }
+
+    next();
+  } catch {
+    // Invalid token - continue without user context
+    next();
+  }
+};
