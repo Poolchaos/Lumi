@@ -104,7 +104,7 @@ Current Total Score: ${latest.total_score}/100
 
 Pillar Breakdown:
 - Fitness: ${latest.pillars?.fitness || 0}/100
-- Diet: ${latest.pillars?.diet || 0}/100  
+- Diet: ${latest.pillars?.diet || 0}/100
 - Habits: ${latest.pillars?.habits || 0}/100
 - Medications: ${latest.pillars?.meds || 0}/100
 - Mental Wellness: ${latest.pillars?.mental || 0}/100
