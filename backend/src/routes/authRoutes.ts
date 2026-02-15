@@ -14,7 +14,8 @@
 
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { signup, login, refresh } from '../controllers/authController';
+import { signup, login, refresh, logout, logoutAll } from '../controllers/authController';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
@@ -45,7 +46,13 @@ router.post(
   login
 );
 
-// Refresh token route
+// Refresh token route (now includes token rotation)
 router.post('/refresh', refresh);
+
+// Logout route (revokes current refresh token)
+router.post('/logout', logout);
+
+// Logout from all devices (requires authentication)
+router.post('/logout-all', authenticate, logoutAll);
 
 export default router;
