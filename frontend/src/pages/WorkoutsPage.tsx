@@ -21,7 +21,8 @@ import { PageTransition } from '../components/layout/PageTransition';
 import { workoutAPI } from '../api';
 import { getEmptyStateImage } from '../utils/imageHelpers';
 import { Card, Button, WorkoutCardSkeleton, ConfirmModal } from '../design-system';
-import { Dumbbell, Zap, Clock, TrendingUp, Play, Trash2, CheckCircle, Circle } from 'lucide-react';
+import { Dumbbell, Zap, Clock, TrendingUp, Play, Trash2, CheckCircle, Circle, Share2 } from 'lucide-react';
+import { ShareModal } from '../components/workout/ShareModal';
 
 export default function WorkoutsPage() {
   const navigate = useNavigate();
@@ -37,6 +38,11 @@ export default function WorkoutsPage() {
     planName: '',
     isActive: false,
   });
+  const [shareModal, setShareModal] = useState<{
+    isOpen: boolean;
+    planId: string;
+    planTitle: string;
+  }>({ isOpen: false, planId: '', planTitle: '' });
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['workouts'],
@@ -283,6 +289,14 @@ export default function WorkoutsPage() {
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
+
+                          <Button
+                            onClick={() => setShareModal({ isOpen: true, planId: plan._id, planTitle: planName })}
+                            variant="outline"
+                            title="Share plan"
+                          >
+                            <Share2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -329,6 +343,14 @@ export default function WorkoutsPage() {
           cancelText="Cancel"
           variant="danger"
           loading={deleteMutation.isPending}
+        />
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={shareModal.isOpen}
+          onClose={() => setShareModal({ isOpen: false, planId: '', planTitle: '' })}
+          planId={shareModal.planId}
+          defaultTitle={shareModal.planTitle}
         />
         </div>
       </PageTransition>
