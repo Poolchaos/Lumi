@@ -13,8 +13,10 @@
  */
 
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../middleware/auth';
 import User from '../models/User';
+import WorkoutSession from '../models/WorkoutSession';
 import {
   calculateLevel,
   getXpForNextLevel,
@@ -92,6 +94,7 @@ export const getGamificationStats = async (
 
 /**
  * Award XP for completing a workout (with optimistic locking to prevent race conditions)
+ * Requires sessionId for idempotency - prevents double XP awards
  */
 export const awardWorkoutXp = async (
   req: AuthRequest,
@@ -104,8 +107,58 @@ export const awardWorkoutXp = async (
       return;
     }
 
-    const { hadPersonalRecord = false, workoutDate } = req.body;
-    const completionDate = workoutDate ? new Date(workoutDate) : new Date();
+    const { hadPersonalRecord = false, workoutDate, sessionId } = req.body;
+
+    // Require sessionId for idempotency
+    if (!sessionId) {
+      res.status(400).json({ error: 'sessionId is required for XP awards' });
+      return;
+    }
+
+    // Validate sessionId format
+    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+      res.status(400).json({ error: 'Invalid sessionId format' });
+      return;
+    }
+
+    // Atomically mark session as xp_awarded to prevent double awards
+    const session = await WorkoutSession.findOneAndUpdate(
+      {
+        _id: sessionId,
+        user_id: userId,
+        xp_awarded: { $ne: true }, // Only if not already awarded
+      },
+      {
+        $set: {
+          xp_awarded: true,
+          xp_awarded_at: new Date(),
+        },
+      },
+      { new: true }
+    );
+
+    if (!session) {
+      // Either session doesn't exist, doesn't belong to user, or XP already awarded
+      const existingSession = await WorkoutSession.findOne({
+        _id: sessionId,
+        user_id: userId,
+      });
+
+      if (!existingSession) {
+        res.status(404).json({ error: 'Session not found' });
+        return;
+      }
+
+      if (existingSession.xp_awarded) {
+        res.status(409).json({ error: 'XP already awarded for this session' });
+        return;
+      }
+
+      res.status(400).json({ error: 'Unable to award XP for this session' });
+      return;
+    }
+
+    const completionDate = workoutDate ? new Date(workoutDate) : session.session_date;
 
     const MAX_RETRIES = 3;
     let attempt = 0;

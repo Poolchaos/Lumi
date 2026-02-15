@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../app';
 import User, { IUser } from '../models/User';
+import WorkoutSession from '../models/WorkoutSession';
 import jwt from 'jsonwebtoken';
 
 let mongoServer: MongoMemoryServer;
@@ -43,6 +44,17 @@ const createTestUser = async (gems: number = 100, purchases: string[] = []): Pro
   return user as IUser & { _id: mongoose.Types.ObjectId };
 };
 
+// Helper to create a workout session for XP tests
+const createTestSession = async (userId: mongoose.Types.ObjectId, xpAwarded: boolean = false) => {
+  const session = await WorkoutSession.create({
+    user_id: userId,
+    session_date: new Date(),
+    completion_status: 'completed',
+    xp_awarded: xpAwarded,
+  });
+  return { _id: session._id as mongoose.Types.ObjectId, session };
+};
+
 describe('Atomic Operations - Race Condition Prevention', () => {
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -58,6 +70,7 @@ describe('Atomic Operations - Race Condition Prevention', () => {
 
   beforeEach(async () => {
     await User.deleteMany({});
+    await WorkoutSession.deleteMany({});
   });
 
   describe('Shop Purchase - Atomic Gem Deduction', () => {
@@ -163,7 +176,26 @@ describe('Atomic Operations - Race Condition Prevention', () => {
   });
 
   describe('XP Award - Atomic Operations', () => {
-    it('should award XP correctly for single workout', async () => {
+    it('should award XP correctly for single workout with sessionId', async () => {
+      const user = await createTestUser(100, []);
+      const session = await createTestSession(user._id);
+      const token = createToken(user._id.toString());
+
+      const res = await request(app)
+        .post('/api/gamification/award-xp')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ hadPersonalRecord: false, sessionId: session._id.toString() });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.xpAwarded).toBeGreaterThan(0);
+
+      // Verify session is marked as xp_awarded
+      const updatedSession = await WorkoutSession.findById(session._id);
+      expect(updatedSession?.xp_awarded).toBe(true);
+    });
+
+    it('should reject XP award without sessionId', async () => {
       const user = await createTestUser(100, []);
       const token = createToken(user._id.toString());
 
@@ -172,40 +204,37 @@ describe('Atomic Operations - Race Condition Prevention', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ hadPersonalRecord: false });
 
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.xpAwarded).toBeGreaterThan(0);
+      expect(res.status).toBe(400);
+      expect(res.body.error).toContain('sessionId is required');
     });
 
-    it('should handle concurrent XP awards using optimistic locking', async () => {
+    it('should prevent double XP award for same session', async () => {
       const user = await createTestUser(100, []);
+      const session = await createTestSession(user._id);
       const token = createToken(user._id.toString());
 
-      // Simulate multiple concurrent workout completions
+      // Two concurrent XP award requests for same session
       const results = await Promise.all([
         request(app)
           .post('/api/gamification/award-xp')
           .set('Authorization', `Bearer ${token}`)
-          .send({ hadPersonalRecord: false }),
+          .send({ hadPersonalRecord: false, sessionId: session._id.toString() }),
         request(app)
           .post('/api/gamification/award-xp')
           .set('Authorization', `Bearer ${token}`)
-          .send({ hadPersonalRecord: false }),
+          .send({ hadPersonalRecord: false, sessionId: session._id.toString() }),
       ]);
 
-      // Both should eventually succeed (with retries)
-      // Or one may return 409 if max retries exceeded
+      // One should succeed, one should get 409 (already awarded)
       const successes = results.filter((r) => r.status === 200);
       const conflicts = results.filter((r) => r.status === 409);
 
-      // At least one should succeed
-      expect(successes.length + conflicts.length).toBe(2);
-      expect(successes.length).toBeGreaterThanOrEqual(1);
+      expect(successes.length).toBe(1);
+      expect(conflicts.length).toBe(1);
 
-      // Verify XP was awarded (at least once)
+      // Verify XP was only awarded once
       const updatedUser = await User.findById(user._id);
-      expect(updatedUser?.gamification?.xp).toBeGreaterThan(0);
-      expect(updatedUser?.gamification?.total_workouts_completed).toBeGreaterThanOrEqual(1);
+      expect(updatedUser?.gamification?.total_workouts_completed).toBe(1);
     });
 
     it('should update streak correctly', async () => {
@@ -215,12 +244,13 @@ describe('Atomic Operations - Race Condition Prevention', () => {
       user.gamification!.current_streak = 5;
       await user.save();
 
+      const session = await createTestSession(user._id);
       const token = createToken(user._id.toString());
 
       const res = await request(app)
         .post('/api/gamification/award-xp')
         .set('Authorization', `Bearer ${token}`)
-        .send({ hadPersonalRecord: false });
+        .send({ hadPersonalRecord: false, sessionId: session._id.toString() });
 
       expect(res.status).toBe(200);
       expect(res.body.currentStreak).toBe(6); // Streak continued
@@ -233,12 +263,13 @@ describe('Atomic Operations - Race Condition Prevention', () => {
       user.gamification!.current_streak = 5;
       await user.save();
 
+      const session = await createTestSession(user._id);
       const token = createToken(user._id.toString());
 
       const res = await request(app)
         .post('/api/gamification/award-xp')
         .set('Authorization', `Bearer ${token}`)
-        .send({ hadPersonalRecord: false });
+        .send({ hadPersonalRecord: false, sessionId: session._id.toString() });
 
       expect(res.status).toBe(200);
       expect(res.body.currentStreak).toBe(1); // Streak reset
