@@ -281,6 +281,11 @@ router.post(
 // Update medication with new bottle image
 router.put(
   '/:id/bottle-image',
+  [
+    param('id')
+      .isMongoId()
+      .withMessage('Invalid medication ID'),
+  ],
   upload.single('bottle_image'),
   updateBottleImage
 );
