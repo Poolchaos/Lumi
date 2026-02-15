@@ -518,7 +518,7 @@ export class AIOrchestrationService extends EventEmitter {
   }
 
   /**
-   * Call AI provider
+   * Call AI provider with timeout
    */
   private async callAI(
     systemPrompt: string,
@@ -535,7 +535,7 @@ export class AIOrchestrationService extends EventEmitter {
           { role: 'user', content: userPrompt },
         ],
         temperature: 0.7,
-      });
+      }, { timeout: 30000 });
 
       return response.choices[0]?.message?.content || '';
 
@@ -545,7 +545,7 @@ export class AIOrchestrationService extends EventEmitter {
         max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }],
-      });
+      }, { timeout: 30000 });
 
       const textBlock = response.content.find(block => block.type === 'text');
       return textBlock?.text || '';

@@ -154,7 +154,7 @@ Generate 2-4 personalized coaching recommendations for this user.`;
         },
       ],
       system: systemPrompt,
-    });
+    }, { timeout: 30000 });
 
     const textContent = response.content.find((block) => block.type === 'text');
     if (!textContent || textContent.type !== 'text') {
