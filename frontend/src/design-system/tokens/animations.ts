@@ -106,7 +106,7 @@ export const animations = {
       '0%': { transform: 'scaleX(0)', transformOrigin: 'left' },
       '100%': { transform: 'scaleX(1)', transformOrigin: 'left' },
     },
-    // Aurora background layers — GPU-compositable opacity crossfade
+    // Aurora background layers - GPU-compositable opacity crossfade
     auroraA: {
       '0%, 100%': { opacity: '0.3' },
       '33%': { opacity: '0' },

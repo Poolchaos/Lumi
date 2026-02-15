@@ -49,7 +49,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   };
 
   const getStatusEmoji = (day: DailyAdherence): string => {
-    if (day.total === 0) return '—';
+    if (day.total === 0) return '-';
     if (day.percentage >= 80) return '✓';
     if (day.percentage >= 50) return '~';
     return '✗';

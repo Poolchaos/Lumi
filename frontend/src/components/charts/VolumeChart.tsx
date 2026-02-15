@@ -20,7 +20,7 @@ interface VolumeChartProps {
 }
 
 export default function VolumeChart({ workouts }: VolumeChartProps) {
-  // Calculate volume (sets Ã— reps) for each workout
+  // Calculate volume (sets Ã- reps) for each workout
   // Note: Now calculating from weekly_schedule in workout plans
   const chartData = workouts
     .flatMap(plan => {

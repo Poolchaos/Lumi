@@ -26,15 +26,15 @@ import WorkoutPlan from '../models/WorkoutPlan';
 /**
  * Mass Assignment Prevention Tests (S0-1)
  * ========================================
- * 
+ *
  * These tests verify that controllers reject attempts to overwrite
  * protected fields (user_id, _id, session_id, created_at, updated_at)
  * via req.body injection.
  *
  * Coverage rationale:
- *   POSITIVE — Normal CRUD works correctly with whitelisted fields
- *   NEGATIVE — Protected fields in body are silently stripped (not errors)
- *   EDGE     — Empty body, extra unknown fields, nested injection attempts
+ *   POSITIVE - Normal CRUD works correctly with whitelisted fields
+ *   NEGATIVE - Protected fields in body are silently stripped (not errors)
+ *   EDGE     - Empty body, extra unknown fields, nested injection attempts
  *
  * Attack vector: Without this fix, `{ user_id: 'attacker_id', ...req.body }`
  * with spread AFTER user_id allows an attacker's `user_id` in the body to
@@ -88,7 +88,7 @@ beforeEach(async () => {
 
 // ─── Session Controller ─────────────────────────────────────────────────────────
 
-describe('Session Controller — Mass Assignment Prevention', () => {
+describe('Session Controller - Mass Assignment Prevention', () => {
   // ── POSITIVE CASES ──
 
   describe('POST /api/sessions (createSession)', () => {
@@ -185,7 +185,7 @@ describe('Session Controller — Mass Assignment Prevention', () => {
       expect(res.body.session.user_id).toBe(userId);
     });
 
-    it('should work with attacker token — session owned by attacker', async () => {
+    it('should work with attacker token - session owned by attacker', async () => {
       const res = await request(app)
         .post('/api/sessions')
         .set('Authorization', `Bearer ${attackerToken}`)
@@ -395,7 +395,7 @@ describe('Session Controller — Mass Assignment Prevention', () => {
 
 // ─── Metrics Controller ─────────────────────────────────────────────────────────
 
-describe('Metrics Controller — Mass Assignment Prevention', () => {
+describe('Metrics Controller - Mass Assignment Prevention', () => {
   describe('POST /api/metrics (createMetrics)', () => {
     it('should create metrics with whitelisted fields', async () => {
       const res = await request(app)
@@ -541,7 +541,7 @@ describe('Metrics Controller — Mass Assignment Prevention', () => {
 
 // ─── Equipment Controller ────────────────────────────────────────────────────────
 
-describe('Equipment Controller — Mass Assignment Prevention', () => {
+describe('Equipment Controller - Mass Assignment Prevention', () => {
   describe('POST /api/equipment (createEquipment)', () => {
     it('should create equipment with whitelisted fields', async () => {
       const res = await request(app)

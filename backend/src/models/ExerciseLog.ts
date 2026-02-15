@@ -41,7 +41,7 @@ export interface IExerciseLog extends Document {
   };
   equipment_used?: string[];
   target_muscles: string[];
-  total_volume_kg?: number; // sets Ã— reps Ã— weight
+  total_volume_kg?: number; // sets Ã- reps Ã- weight
   total_duration_seconds?: number;
   personal_record?: boolean;
   difficulty_rating?: number; // 1-10 scale

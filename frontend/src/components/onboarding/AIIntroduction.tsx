@@ -45,7 +45,7 @@ export const AIIntroduction = ({ userName, insight, onContinue }: AIIntroduction
   return (
     <OnboardingScreen>
       <div className="space-y-8 text-center">
-        {/* AI Avatar — simplified: 1 CSS ring rotation + static orb */}
+        {/* AI Avatar - simplified: 1 CSS ring rotation + static orb */}
         <motion.div
           className="flex justify-center"
           initial={{ scale: 0, opacity: 0 }}
@@ -53,7 +53,7 @@ export const AIIntroduction = ({ userName, insight, onContinue }: AIIntroduction
           transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
         >
           <div className="relative w-32 h-32">
-            {/* Single rotating ring — CSS animation (GPU transform) */}
+            {/* Single rotating ring - CSS animation (GPU transform) */}
             <div
               className="absolute inset-0 rounded-full border-2 border-primary-500/30 animate-spin"
               style={{
@@ -62,7 +62,7 @@ export const AIIntroduction = ({ userName, insight, onContinue }: AIIntroduction
                 willChange: 'transform',
               }}
             />
-            {/* Second ring — counter-rotate, CSS only */}
+            {/* Second ring - counter-rotate, CSS only */}
             <div
               className="absolute inset-0 rounded-full border border-primary-400/20 animate-spin"
               style={{
@@ -73,7 +73,7 @@ export const AIIntroduction = ({ userName, insight, onContinue }: AIIntroduction
               }}
             />
 
-            {/* Lumi Spark Logo — slow CSS rotation */}
+            {/* Lumi Spark Logo - slow CSS rotation */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div
                 className="animate-spin"
@@ -87,7 +87,7 @@ export const AIIntroduction = ({ userName, insight, onContinue }: AIIntroduction
               </div>
             </div>
 
-            {/* Central orb image — static (no scale pulse) */}
+            {/* Central orb image - static (no scale pulse) */}
             <div className="absolute inset-0 flex items-center justify-center">
               <img
                 src="/images/onboarding/ai-avatar-orb.jpg"

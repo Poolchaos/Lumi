@@ -61,7 +61,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
       console.log('âœ“ Models accessible:', modelArray.length, 'models found');
       console.log('Sample models:', modelArray.slice(0, 3).join(', '));
     } catch (error) {
-      console.error('âœ— Model list failed:', error);
+      console.error('âœ- Model list failed:', error);
       result.error = 'Cannot access models';
       result.errorCode = (error as { code?: string }).code;
       result.errorType = (error as { type?: string }).type;
@@ -90,7 +90,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
         details.quotaRemaining = true;
       }
     } catch (error) {
-      console.error('âœ— Completion failed:', error);
+      console.error('âœ- Completion failed:', error);
       const err = error as {
         status?: number;
         code?: string;
@@ -124,7 +124,7 @@ export async function validateOpenAIKey(apiKey: string): Promise<OpenAIValidatio
 
   } catch (error) {
     const duration = Date.now() - startTime;
-    console.error('\nâœ— Validation failed with exception');
+    console.error('\nâœ- Validation failed with exception');
     console.error('Duration:', duration + 'ms');
     console.error('Error:', error);
     console.error('=== Validation Failed ===\n');

@@ -30,7 +30,7 @@ export const ProgressDots = ({ totalSteps, currentStep, className }: ProgressDot
 
         return (
           <div key={index} className="relative">
-            {/* Dot — static glow instead of animated box-shadow */}
+            {/* Dot - static glow instead of animated box-shadow */}
             <div
               className={cn(
                 'w-2.5 h-2.5 rounded-full transition-all duration-300',

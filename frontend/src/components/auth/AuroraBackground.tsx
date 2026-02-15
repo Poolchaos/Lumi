@@ -35,7 +35,7 @@ export const AuroraBackground = () => {
     if (!container) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Throttle to animation frame (~60fps) — no React re-renders
+      // Throttle to animation frame (~60fps) - no React re-renders
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
         const x = e.clientX / window.innerWidth;
@@ -58,10 +58,10 @@ export const AuroraBackground = () => {
       className="fixed inset-0 overflow-hidden"
       style={{ '--mx': '0.5', '--my': '0.5' } as React.CSSProperties}
     >
-      {/* Base gradient — static */}
+      {/* Base gradient - static */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0F1729] via-[#2D1B69] to-[#0F1729]" />
 
-      {/* Aurora layers — CSS opacity crossfade (GPU-compositable) */}
+      {/* Aurora layers - CSS opacity crossfade (GPU-compositable) */}
       <div
         className="absolute inset-0 animate-aurora-a"
         style={{
@@ -84,7 +84,7 @@ export const AuroraBackground = () => {
         }}
       />
 
-      {/* Parallax orbs — CSS custom property driven (zero re-renders) */}
+      {/* Parallax orbs - CSS custom property driven (zero re-renders) */}
       {/* Blur radii halved: 120→60, 100→50, 80→40 for massive GPU savings */}
       <div
         className="absolute w-[500px] h-[500px] rounded-full blur-[60px] bg-[#7C3AED] opacity-20"

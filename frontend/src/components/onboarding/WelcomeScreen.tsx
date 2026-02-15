@@ -48,9 +48,9 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
           transition={{ duration: 0.8, delay: 0.3, type: 'spring', stiffness: 100 }}
         >
           <div className="relative">
-            {/* Static glow — no animation */}
+            {/* Static glow - no animation */}
             <div className="absolute inset-0 blur-2xl bg-[#7C3AED]/30 rounded-full scale-150" />
-            {/* CSS rotation — GPU-compositable transform */}
+            {/* CSS rotation - GPU-compositable transform */}
             <div
               className="animate-spin relative"
               style={{ animationDuration: '20s', willChange: 'transform' }}
@@ -87,7 +87,7 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
         >
           Lumi translates your health data into insights.
           <br />
-          Track fitness, manage medications, understand patterns—all powered by AI.
+          Track fitness, manage medications, understand patterns-all powered by AI.
         </motion.p>
 
         {/* CTA Button */}

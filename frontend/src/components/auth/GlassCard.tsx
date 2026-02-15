@@ -28,7 +28,7 @@ export const GlassCard = ({ children, className }: GlassCardProps) => {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        // Base glass effect — backdrop-blur-md for performance (12px vs 24px)
+        // Base glass effect - backdrop-blur-md for performance (12px vs 24px)
         'relative backdrop-blur-md bg-white/[0.12]',
         // Border with glow
         'border border-white/20',

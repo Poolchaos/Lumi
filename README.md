@@ -33,7 +33,7 @@ See the [LICENSE](LICENSE) file for full terms.
 
 ## 🎯 What is Lumi?
 
-Lumi is an all-in-one health ecosystem that illuminates your path to wellness through AI-powered insights. Combining vision AI (fridge/grocery scanning), medication management, mental wellness tracking, intelligent workout generation, and comprehensive habit architecture — all while keeping your data private on your own server. Lumi brings clarity to your health journey through predictive analytics and proactive guidance.
+Lumi is an all-in-one health ecosystem that illuminates your path to wellness through AI-powered insights. Combining vision AI (fridge/grocery scanning), medication management, mental wellness tracking, intelligent workout generation, and comprehensive habit architecture - all while keeping your data private on your own server. Lumi brings clarity to your health journey through predictive analytics and proactive guidance.
 
 ---
 
@@ -71,16 +71,16 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 
 ## ✨ Key Features
 
-- **🎮 Gamification System** — XP, levels, 42 achievements, daily challenges, streak tracking, leaderboards, rewards shop
-- **🤖 Multi-LLM AI Engine** — OpenAI GPT-4o, Anthropic Claude, Google Gemini, Moonshot Kimi — swap providers via config
-- **📅 Smart Scheduling** — Visual calendar, weekly preview, progress tracking
-- **💪 Workout Management** — Multiple plans, session logging, active plan system
-- **� Workout Sharing** — Generate shareable links, public plan preview, one-click import for authenticated users
-- **�📊 Progress Tracking** — Body metrics, charts, progress photos with S3 storage
-- **💊 Medicine & Supplement Manager** — Track medications, dosages, adherence, health insights, OCR bottle scanning
-- **⚙️ Settings Hub** — Notifications, privacy, data management, appearance customization
-- **🔐 Privacy-First** — Self-hosted, your data on your server
-- **🛡️ Production-Ready** — Rate limiting, security headers, 170+ tests
+- **🎮 Gamification System** - XP, levels, 42 achievements, daily challenges, streak tracking, leaderboards, rewards shop
+- **🤖 Multi-LLM AI Engine** - OpenAI GPT-4o, Anthropic Claude, Google Gemini, Moonshot Kimi - swap providers via config
+- **📅 Smart Scheduling** - Visual calendar, weekly preview, progress tracking
+- **💪 Workout Management** - Multiple plans, session logging, active plan system
+- **� Workout Sharing** - Generate shareable links, public plan preview, one-click import for authenticated users
+- **�📊 Progress Tracking** - Body metrics, charts, progress photos with S3 storage
+- **💊 Medicine & Supplement Manager** - Track medications, dosages, adherence, health insights, OCR bottle scanning
+- **⚙️ Settings Hub** - Notifications, privacy, data management, appearance customization
+- **🔐 Privacy-First** - Self-hosted, your data on your server
+- **🛡️ Production-Ready** - Rate limiting, security headers, 170+ tests
 
 ---
 
@@ -93,7 +93,7 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 - ⚠️ Track warnings and contraindications
 - 📅 Adherence logging with mood/energy tracking before/after doses
 - 🔄 Plan regeneration with medications context in AI prompts
-- 🧅 Onboarding integration — collect medications during signup
+- 🧅 Onboarding integration - collect medications during signup
 
 **Phase 2 (AI Vision & Analytics):**
 - 📸 Scan medication bottle labels with camera or photo upload
@@ -105,10 +105,10 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 - ✨ Auto-fill medication forms from extracted/parsed data
 
 **Phase 3 (Advanced Gamification & Rewards):**
-- 🏆 **Leaderboards** — Global and weekly rankings by XP, streak, level, workout count
-- 💎 **Gems Currency** — Earn gems by reaching milestones (levels, streaks)
-- 🛍️ **Rewards Shop** — Purchase themes, badges, titles, profile items with gems
-- 🎁 **Milestone Rewards** — Auto-claim gems at level 5/10/15/20 or streak 7/14/30 days
+- 🏆 **Leaderboards** - Global and weekly rankings by XP, streak, level, workout count
+- 💎 **Gems Currency** - Earn gems by reaching milestones (levels, streaks)
+- 🛍️ **Rewards Shop** - Purchase themes, badges, titles, profile items with gems
+- 🎁 **Milestone Rewards** - Auto-claim gems at level 5/10/15/20 or streak 7/14/30 days
 
 ---
 
@@ -116,7 +116,7 @@ Lumi is an all-in-one health ecosystem that illuminates your path to wellness th
 
 **Backend:** Node.js 22, Express 5.1, TypeScript 5.9, MongoDB 8.x, Jest
 
-**AI Providers:** OpenAI (GPT-4o), Anthropic (Claude 3.5 Sonnet), Google Gemini (1.5 Pro/Flash), Moonshot (Kimi) — pluggable provider architecture with automatic fallback
+**AI Providers:** OpenAI (GPT-4o), Anthropic (Claude 3.5 Sonnet), Google Gemini (1.5 Pro/Flash), Moonshot (Kimi) - pluggable provider architecture with automatic fallback
 
 **Frontend:** React 19, Vite 7, TypeScript 5.9, TailwindCSS 3, Framer Motion, Recharts, Playwright
 
@@ -154,7 +154,7 @@ JWT_REFRESH_SECRET=your-refresh-secret
 ENCRYPTION_SECRET=your-32-char-encryption-key
 CORS_ORIGIN=http://localhost:3000
 
-# Multi-LLM — configure at least one provider
+# Multi-LLM - configure at least one provider
 OPENAI_API_KEY=sk-...           # GPT-4o, GPT-4o-mini
 ANTHROPIC_API_KEY=sk-ant-...     # Claude 3.5 Sonnet
 GEMINI_API_KEY=AI...             # Gemini 1.5 Pro/Flash

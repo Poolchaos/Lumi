@@ -45,11 +45,11 @@ export function HealthScoreCard() {
           <div className="space-y-3">
             <div className="text-3xl font-bold text-neutral-900">{latest.total_score}</div>
             <div className="grid grid-cols-2 gap-2 text-xs text-neutral-600">
-              <div>Fitness: {latest.pillars?.fitness ?? '—'}</div>
-              <div>Diet: {latest.pillars?.diet ?? '—'}</div>
-              <div>Habits: {latest.pillars?.habits ?? '—'}</div>
-              <div>Meds: {latest.pillars?.meds ?? '—'}</div>
-              <div>Mental: {latest.pillars?.mental ?? '—'}</div>
+              <div>Fitness: {latest.pillars?.fitness ?? '-'}</div>
+              <div>Diet: {latest.pillars?.diet ?? '-'}</div>
+              <div>Habits: {latest.pillars?.habits ?? '-'}</div>
+              <div>Meds: {latest.pillars?.meds ?? '-'}</div>
+              <div>Mental: {latest.pillars?.mental ?? '-'}</div>
             </div>
           </div>
         )}

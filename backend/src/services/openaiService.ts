@@ -342,7 +342,7 @@ You MUST follow these non-negotiable quality standards:
 
 7. **PROGRESSIVE OVERLOAD VERIFICATION**
    Every week MUST show measurable progression through:
-   - Increased volume (sets Ã— reps)
+   - Increased volume (sets Ã- reps)
    - Increased intensity (load, tempo, leverage)
    - Increased complexity (exercise variation)
 

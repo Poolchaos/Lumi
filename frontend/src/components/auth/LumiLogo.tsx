@@ -28,14 +28,14 @@ export const LumiLogo = ({ className = '' }: LumiLogoProps) => {
     >
       {/* Glow container */}
       <div className="relative">
-        {/* Static glow — no animation, just a soft halo */}
+        {/* Static glow - no animation, just a soft halo */}
         <div
           className="absolute inset-0 blur-2xl bg-[#7C3AED]/30 rounded-full scale-150"
         />
 
         {/* Logo content */}
         <div className="relative flex items-center gap-3">
-          {/* Logo Icon — single slow CSS rotation (GPU-compositable transform) */}
+          {/* Logo Icon - single slow CSS rotation (GPU-compositable transform) */}
           <div
             className="relative animate-spin"
             style={{

@@ -30,9 +30,9 @@ import User from '../models/User';
  * 5. Unauthenticated requests get 401
  *
  * Coverage rationale:
- *   POSITIVE — Admin role can access admin endpoints
- *   NEGATIVE — User role gets 403, no auth gets 401
- *   EDGE     — Role not present defaults to 'user', invalid role handling
+ *   POSITIVE - Admin role can access admin endpoints
+ *   NEGATIVE - User role gets 403, no auth gets 401
+ *   EDGE     - Role not present defaults to 'user', invalid role handling
  */
 
 let mongoServer: MongoMemoryServer;

@@ -52,7 +52,7 @@ export default {
         'confetti': 'confetti 1000ms ease-out',
         'shimmer': 'shimmer 750ms linear infinite',
         'progress-bar': 'progressBar 500ms ease-out',
-        // Aurora background — 10s opacity crossfade cycle
+        // Aurora background - 10s opacity crossfade cycle
         'aurora-a': 'auroraA 10s linear infinite',
         'aurora-b': 'auroraB 10s linear infinite',
         'aurora-c': 'auroraC 10s linear infinite',
