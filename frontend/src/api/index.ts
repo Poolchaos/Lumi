@@ -36,6 +36,8 @@ export { healthEcosystemAPI, healthEcosystemQueryKeys } from './healthEcosystem'
 export { analyticsAPI } from './analytics';
 export { queryKeys, invalidationKeys } from './queryKeys';
 export { goalsAPI, goalsQueryKeys } from './goals';
+export { sharedAPI, sharedQueryKeys } from './shared';
+export type { SharedPlanSummary, SharedPlanDetail, CreateShareResponse } from './shared';
 
 // Auth API
 export const authAPI = {

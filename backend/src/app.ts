@@ -40,6 +40,7 @@ import healthScoreRoutes from './routes/healthScoreRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import dailyHealthLoopRoutes from './routes/dailyHealthLoopRoutes';
 import goalsRoutes from './routes/goalsRoutes';
+import sharedRoutes from './routes/sharedRoutes';
 
 const app: Application = express();
 
@@ -213,6 +214,7 @@ app.use('/api/health-scores', healthScoreRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/daily-loop', dailyHealthLoopRoutes);
 app.use('/api/goals', goalsRoutes);
+app.use('/api/shared', sharedRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
