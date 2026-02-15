@@ -38,6 +38,8 @@ const WorkoutSessionPage = lazy(() => import('./pages/WorkoutSessionPage'));
 const MedicationsPage = lazy(() => import('./pages/MedicationsPage'));
 const CorrelationInsightsPage = lazy(() => import('./pages/CorrelationInsightsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const SharedPlanPage = lazy(() => import('./pages/SharedPlanPage'));
+const MySharesPage = lazy(() => import('./pages/MySharesPage'));
 
 // Loading fallback component
 function PageLoader() {
@@ -109,6 +111,15 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            {/* Public route - shared plan viewing */}
+            <Route
+              path="/shared/:code"
+              element={
+                <ErrorBoundary>
+                  <SharedPlanPage />
+                </ErrorBoundary>
+              }
+            />
             <Route
               path="/onboarding"
               element={
@@ -162,6 +173,14 @@ function App() {
               element={
                 <ProtectedRouteWithBoundary>
                   <WorkoutsPage />
+                </ProtectedRouteWithBoundary>
+              }
+            />
+            <Route
+              path="/my-shares"
+              element={
+                <ProtectedRouteWithBoundary>
+                  <MySharesPage />
                 </ProtectedRouteWithBoundary>
               }
             />
